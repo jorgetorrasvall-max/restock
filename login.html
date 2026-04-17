@@ -45,7 +45,7 @@
         <button type="submit" class="btn btn-primary btn-full btn-lg">Entrar →</button>
         <p class="auth-note">¿No tienes cuenta? <a href="#" id="switchToRegister">Regístrate gratis</a></p>
         <div class="auth-divider">o prueba con</div>
-        <button type="button" class="btn btn-outline btn-full" id="demoBtn">👤 Cuenta demo (jorgetorrasvall@gmail.com)</button>
+        <button type="button" class="btn btn-outline btn-full" id="demoBtn">🔐 Acceso privado</button>
       </form>
 
       <!-- REGISTER -->
@@ -128,6 +128,12 @@ loginForm.addEventListener('submit', e => {
 });
 
 document.getElementById('demoBtn').onclick = () => {
+  const pwd = prompt('Introduce la contraseña de acceso privado:');
+  if (pwd === null) return;
+  if (pwd !== 'jorretorritas2026') {
+    alert('Contraseña incorrecta.');
+    return;
+  }
   localStorage.setItem('rs_user', JSON.stringify(MOCK_USERS[0]));
   window.location.href = 'marketplace.html';
 };
