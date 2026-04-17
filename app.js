@@ -29,14 +29,13 @@ const spotsBar = document.getElementById('spotsBar');
 const spotsLeft = document.getElementById('spotsLeft');
 const totalSpots = 10;
 const usedSpots = 3;
-const remaining = totalSpots - usedSpots;
 
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       setTimeout(() => {
         spotsBar.style.width = ((usedSpots / totalSpots) * 100) + '%';
-        spotsLeft.textContent = remaining;
+        spotsLeft.textContent = totalSpots - usedSpots;
       }, 300);
       observer.disconnect();
     }
@@ -45,14 +44,10 @@ const observer = new IntersectionObserver((entries) => {
 
 if (spotsBar) observer.observe(spotsBar);
 
-// Invitation code validation
-const validCodes = [
-  'RESTOCK-ALPHA-001', 'RESTOCK-ALPHA-002', 'RESTOCK-ALPHA-003',
-  'RESTOCK-ALPHA-004', 'RESTOCK-ALPHA-005',
-  'FOUNDER-001', 'FOUNDER-002', 'FOUNDER-003', 'FOUNDER-004',
-  'FOUNDER-005', 'FOUNDER-006', 'FOUNDER-007', 'FOUNDER-008',
-  'FOUNDER-009', 'FOUNDER-010',
-];
+// 20 alpha codes (RESTOCK-ALPHA-001 to 020)
+const validCodes = Array.from({ length: 20 }, (_, i) =>
+  'RESTOCK-ALPHA-' + String(i + 1).padStart(3, '0')
+);
 
 const codeForm = document.getElementById('codeForm');
 const codeInput = document.getElementById('codeInput');
@@ -65,10 +60,10 @@ if (codeForm) {
     codeResult.className = 'code-result';
     if (validCodes.includes(val)) {
       codeResult.classList.add('success');
-      codeResult.textContent = '✓ Código válido. ¡Bienvenido a REstock! Te redirigiremos a la plataforma en breve.';
+      codeResult.textContent = '✓ Código válido. ¡Bienvenido a ReStock! Te redirigiremos a la plataforma en breve.';
     } else {
       codeResult.classList.add('error');
-      codeResult.textContent = '✗ Código no reconocido. Comprueba que está escrito correctamente.';
+      codeResult.textContent = '✗ Código no reconocido. Comprueba que está escrito correctamente (ej: RESTOCK-ALPHA-001).';
     }
   });
 }
@@ -87,7 +82,7 @@ if (requestForm) {
 }
 
 // Fade-up on scroll
-const fadeEls = document.querySelectorAll('.problem-card, .how-step, .benefit-card, .pricing-card, .why-list li');
+const fadeEls = document.querySelectorAll('.problem-card, .how-step, .benefit-card, .tier, .why-list li');
 fadeEls.forEach(el => el.classList.add('fade-up'));
 
 const fadeObserver = new IntersectionObserver((entries) => {
@@ -97,6 +92,6 @@ const fadeObserver = new IntersectionObserver((entries) => {
       fadeObserver.unobserve(entry.target);
     }
   });
-}, { threshold: 0.15 });
+}, { threshold: 0.12 });
 
 fadeEls.forEach(el => fadeObserver.observe(el));

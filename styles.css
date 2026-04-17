@@ -523,77 +523,159 @@ h2 em {
 .spots-text { font-size: 15px; color: var(--gray-600); }
 .spots-text strong { color: var(--navy); font-weight: 700; }
 
-/* === PRICING === */
+/* === PRICING / TIERS === */
 .pricing { text-align: center; }
-.pricing h2 { margin-bottom: 48px; }
+.pricing h2 { margin-bottom: 12px; }
 
-.pricing-cards {
+.pricing-intro {
+  font-size: 17px;
+  color: var(--gray-600);
+  margin-bottom: 52px;
+}
+
+.tiers {
   display: flex;
-  gap: 24px;
+  gap: 20px;
   justify-content: center;
   flex-wrap: wrap;
+  margin-bottom: 48px;
 }
 
-.pricing-card {
+.tier {
+  flex: 1;
+  min-width: 220px;
+  max-width: 300px;
+  background: var(--gray-50);
+  border: 2px solid var(--gray-200);
+  border-radius: var(--radius-lg);
+  padding: 36px 28px 28px;
+  text-align: center;
+  position: relative;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.tier:hover { transform: translateY(-4px); box-shadow: var(--shadow); }
+
+.tier--mid {
+  background: var(--white);
+  border-color: var(--navy);
+  transform: scale(1.04);
+}
+.tier--mid:hover { transform: scale(1.04) translateY(-4px); }
+
+.tier--top {
+  background: var(--navy);
+  border-color: var(--navy);
+  color: var(--white);
+}
+
+.tier-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
   background: var(--navy);
   color: var(--white);
-  border-radius: var(--radius-lg);
-  padding: 48px 40px;
-  min-width: 280px;
-  max-width: 340px;
-  flex: 1;
-  text-align: center;
-}
-.pricing-card--buyer {
-  background: var(--gray-50);
-  color: var(--text);
-  border: 2px solid var(--gray-200);
-}
-
-.pricing-tag {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
+  padding: 4px 14px;
+  border-radius: 100px;
+  white-space: nowrap;
+}
+
+.tier-range {
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
   color: var(--gold);
+  margin-bottom: 20px;
+}
+.tier--top .tier-range { color: var(--gold); }
+
+.tier-split {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
   margin-bottom: 16px;
 }
-.pricing-card--buyer .pricing-tag { color: var(--navy); }
-
-.pricing-num {
-  font-size: 5rem;
+.tier-side { display: flex; flex-direction: column; align-items: center; gap: 4px; }
+.tier-pct {
+  font-size: 2.8rem;
   font-weight: 900;
   line-height: 1;
-  color: var(--gold);
+  color: var(--navy);
   letter-spacing: -0.04em;
-  margin-bottom: 8px;
 }
-.pricing-card--buyer .pricing-num { color: var(--navy); }
+.tier--top .tier-pct { color: var(--gold); }
+.tier-who {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--gray-400);
+}
+.tier--top .tier-who { color: rgba(255,255,255,0.5); }
+.tier-plus {
+  font-size: 1.4rem;
+  font-weight: 300;
+  color: var(--gray-400);
+  margin-top: -8px;
+}
+.tier--top .tier-plus { color: rgba(255,255,255,0.4); }
 
-.pricing-desc {
+.tier-total {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--gray-400);
+  background: var(--gray-100);
+  padding: 5px 14px;
+  border-radius: 100px;
+  display: inline-block;
+}
+.tier--top .tier-total { color: rgba(255,255,255,0.6); background: rgba(255,255,255,0.1); }
+
+.pricing-perks {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px 28px;
+  justify-content: center;
+  margin-bottom: 48px;
+}
+.perk {
+  font-size: 14px;
+  color: var(--gray-600);
+  font-weight: 500;
+}
+
+.premium-teaser {
+  background: linear-gradient(135deg, var(--navy) 0%, var(--navy-dark) 100%);
+  border-radius: var(--radius-lg);
+  padding: 40px 48px;
+  text-align: center;
+  max-width: 560px;
+  margin: 0 auto;
+}
+.premium-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--gold);
+  margin-bottom: 10px;
+}
+.premium-teaser h3 {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: var(--white);
+  margin-bottom: 10px;
+}
+.premium-teaser p {
   font-size: 15px;
   color: rgba(255,255,255,0.65);
-  margin-bottom: 32px;
-}
-.pricing-card--buyer .pricing-desc { color: var(--gray-600); }
-
-.pricing-features {
-  list-style: none;
-  text-align: left;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.pricing-features li {
-  font-size: 14px;
-  color: rgba(255,255,255,0.8);
-}
-.pricing-card--buyer .pricing-features li { color: var(--gray-600); }
-
-.pricing-note {
-  margin-top: 32px;
-  font-size: 14px;
-  color: var(--gray-400);
+  line-height: 1.65;
 }
 
 /* === ACCESS === */
