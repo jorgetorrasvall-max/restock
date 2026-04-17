@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>REstock — El marketplace B2B del stock sobrante</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav" id="nav">
+    <div class="container nav-inner">
+      <a href="#" class="logo">RE<span>stock</span></a>
+      <ul class="nav-links">
+        <li><a href="#como-funciona">Cómo funciona</a></li>
+        <li><a href="#founders">Founders</a></li>
+        <li><a href="#precios">Precios</a></li>
+        <li><a href="#acceso" class="btn-nav">Solicitar acceso</a></li>
+      </ul>
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="container hero-inner">
+      <div class="badge-pill">
+        <span class="badge-dot"></span>
+        Fase beta — acceso por invitación
+      </div>
+      <h1>El marketplace B2B<br />del <em>stock sobrante</em></h1>
+      <p class="hero-sub">
+        Convierte tu inventario parado en liquidez. Compra producto barato para revender.
+        Todo dentro de una plataforma pensada para negocios, no para particulares.
+      </p>
+      <div class="hero-ctas">
+        <a href="#acceso" class="btn-primary">Quiero acceso early</a>
+        <a href="#como-funciona" class="btn-ghost">Ver cómo funciona</a>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <span class="stat-num">8%</span>
+          <span class="stat-label">Comisión única por venta</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">92%</span>
+          <span class="stat-label">Cobras tú como vendedor</span>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <span class="stat-num">10.000M€</span>
+          <span class="stat-label">Stock sobrante en Europa/año</span>
+        </div>
+      </div>
+    </div>
+    <div class="hero-bg"></div>
+  </section>
+
+  <!-- PROBLEMA -->
+  <section class="section problem" id="problema">
+    <div class="container">
+      <div class="section-label">El problema</div>
+      <h2>El stock no se vende porque<br />el canal y el precio son incorrectos</h2>
+      <div class="problem-grid">
+        <div class="problem-card">
+          <div class="problem-icon">📦</div>
+          <h3>Capital inmovilizado</h3>
+          <p>Producto que no rota ocupa espacio y congela liquidez que necesitas para operar.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">📉</div>
+          <h3>Liquidación a pérdidas</h3>
+          <p>Sin un canal específico, la única salida es malvender muy por debajo del coste.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🔍</div>
+          <h3>Sin canal B2B</h3>
+          <p>Wallapop y Vinted son para particulares. No hay nada hecho para negocios con NIF.</p>
+        </div>
+        <div class="problem-card">
+          <div class="problem-icon">🤝</div>
+          <h3>Revendedores sin proveedor</h3>
+          <p>Pequeños revendedores y tiendas físicas no encuentran producto barato y ágil.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CÓMO FUNCIONA -->
+  <section class="section how" id="como-funciona">
+    <div class="container">
+      <div class="section-label">La solución</div>
+      <h2>Así funciona REstock</h2>
+      <div class="how-grid">
+        <div class="how-step">
+          <div class="step-num">01</div>
+          <h3>Publica tu lote</h3>
+          <p>Sube fotos, descripción, cantidad, estado y precio. Vende por unidad o por lote completo.</p>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-step">
+          <div class="step-num">02</div>
+          <h3>Comprador lo encuentra</h3>
+          <p>Filtros por categoría, país y cantidad. Descubrimiento según intereses del comprador.</p>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-step">
+          <div class="step-num">03</div>
+          <h3>Negocian y pagan</h3>
+          <p>Mensajería en tiempo real dentro de la plataforma. Pago seguro a través de Stripe.</p>
+        </div>
+        <div class="how-arrow">→</div>
+        <div class="how-step">
+          <div class="step-num">04</div>
+          <h3>Tú cobras el 92%</h3>
+          <p>REstock se queda el 8%. El resto va directamente a tu cuenta bancaria de forma automática.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- POR QUÉ FUNCIONA -->
+  <section class="section why" id="por-que">
+    <div class="container">
+      <div class="why-inner">
+        <div class="why-text">
+          <div class="section-label">Por qué funciona</div>
+          <h2>Ambos lados<br />ganan dinero</h2>
+          <p>No es venta de producto, es circulación de capital. El vendedor convierte inventario en liquidez; el comprador consigue producto barato con el que ganar margen.</p>
+          <ul class="why-list">
+            <li>
+              <span class="why-check">✓</span>
+              <div>
+                <strong>Liquidar sin perder</strong>
+                <p>El producto es bueno; el canal era equivocado. REstock da el canal correcto.</p>
+              </div>
+            </li>
+            <li>
+              <span class="why-check">✓</span>
+              <div>
+                <strong>Red que se retroalimenta</strong>
+                <p>Cada nuevo usuario aumenta el valor para todos: más variedad, más liquidez.</p>
+              </div>
+            </li>
+            <li>
+              <span class="why-check">✓</span>
+              <div>
+                <strong>B2B desde el primer día</strong>
+                <p>Ambas partes son negocios con NIF. Reputación, factura y seriedad garantizada.</p>
+              </div>
+            </li>
+          </ul>
+        </div>
+        <div class="why-visual">
+          <div class="flow-card seller">
+            <div class="flow-icon">🏪</div>
+            <strong>Vendedor</strong>
+            <p>eCommerce · Dropshipper · Almacén</p>
+            <div class="flow-tag">Stock parado → Liquidez</div>
+          </div>
+          <div class="flow-center">
+            <div class="flow-logo">RE<span>stock</span></div>
+            <div class="flow-commission">8% comisión</div>
+          </div>
+          <div class="flow-card buyer">
+            <div class="flow-icon">🛒</div>
+            <strong>Comprador</strong>
+            <p>Revendedor · Tienda física · Importador</p>
+            <div class="flow-tag">Producto barato → Margen</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOUNDERS -->
+  <section class="section founders" id="founders">
+    <div class="container">
+      <div class="section-label">Programa Early Adopter</div>
+      <h2>Sé uno de los<br /><em>10 founders</em></h2>
+      <p class="founders-sub">Los primeros 10 vendedores en entrar obtienen condiciones exclusivas que no se repetirán.</p>
+      <div class="founders-benefits">
+        <div class="benefit-card">
+          <div class="benefit-icon">🎯</div>
+          <h3>0% comisión</h3>
+          <p>Durante los primeros 3 meses. Sin letra pequeña.</p>
+        </div>
+        <div class="benefit-card highlight">
+          <div class="benefit-icon">⭐</div>
+          <h3>Insignia Fundador</h3>
+          <p>Badge "⭐ Fundador REstock" visible en tu perfil para siempre.</p>
+        </div>
+        <div class="benefit-card">
+          <div class="benefit-icon">🚀</div>
+          <h3>Acceso prioritario</h3>
+          <p>Antes que nadie a nuevas funcionalidades y mejoras de la plataforma.</p>
+        </div>
+      </div>
+      <div class="spots-counter">
+        <div class="spots-bar">
+          <div class="spots-fill" id="spotsBar"></div>
+        </div>
+        <p class="spots-text">Quedan <strong id="spotsLeft">7</strong> plazas founder de 10</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRECIOS -->
+  <section class="section pricing" id="precios">
+    <div class="container">
+      <div class="section-label">Modelo de ingresos</div>
+      <h2>Simple y justo</h2>
+      <div class="pricing-cards">
+        <div class="pricing-card">
+          <div class="pricing-tag">Vendedor</div>
+          <div class="pricing-num">8%</div>
+          <div class="pricing-desc">de comisión por transacción</div>
+          <ul class="pricing-features">
+            <li>✓ Cobras el 92% directo a tu banco</li>
+            <li>✓ Sin cuota mensual</li>
+            <li>✓ Sin costes de publicación</li>
+            <li>✓ Pago automático vía Stripe</li>
+            <li>✓ Mensajería con compradores</li>
+          </ul>
+        </div>
+        <div class="pricing-card pricing-card--buyer">
+          <div class="pricing-tag">Comprador</div>
+          <div class="pricing-num">0%</div>
+          <div class="pricing-desc">sin comisión para el comprador</div>
+          <ul class="pricing-features">
+            <li>✓ Acceso a todos los lotes</li>
+            <li>✓ Filtros avanzados</li>
+            <li>✓ Mensajería directa</li>
+            <li>✓ Pago seguro con Stripe</li>
+            <li>✓ Perfil con historial y reputación</li>
+          </ul>
+        </div>
+      </div>
+      <p class="pricing-note">Los founders obtienen 0% durante 3 meses.</p>
+    </div>
+  </section>
+
+  <!-- ACCESO -->
+  <section class="section access" id="acceso">
+    <div class="container">
+      <div class="access-inner">
+        <div class="section-label">Acceso beta</div>
+        <h2>Entra antes que nadie</h2>
+        <p>REstock está en fase beta por invitación. Solicita tu código founder o introduce uno si ya lo tienes.</p>
+        <div class="access-tabs">
+          <button class="tab-btn active" data-tab="solicitar">Solicitar acceso</button>
+          <button class="tab-btn" data-tab="codigo">Tengo código</button>
+        </div>
+        <div class="tab-panel active" id="tab-solicitar">
+          <form class="access-form" id="requestForm">
+            <div class="form-row">
+              <input type="text" placeholder="Nombre" required />
+              <input type="email" placeholder="Email del negocio" required />
+            </div>
+            <input type="text" placeholder="Nombre de tu empresa o tienda" required />
+            <select required>
+              <option value="" disabled selected>¿Cómo usarás REstock?</option>
+              <option>Quiero vender mi stock sobrante</option>
+              <option>Quiero comprar producto para revender</option>
+              <option>Las dos cosas</option>
+            </select>
+            <button type="submit" class="btn-primary btn-full">Solicitar plaza founder →</button>
+            <p class="form-note">Te contactamos en menos de 24h. Sin spam.</p>
+          </form>
+        </div>
+        <div class="tab-panel" id="tab-codigo">
+          <form class="access-form" id="codeForm">
+            <input type="text" placeholder="Introduce tu código (ej: FOUNDER-001)" class="code-input" id="codeInput" />
+            <button type="submit" class="btn-primary btn-full">Activar código →</button>
+          </form>
+          <div class="code-result" id="codeResult"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="container footer-inner">
+      <div class="footer-brand">
+        <a href="#" class="logo">RE<span>stock</span></a>
+        <p>El marketplace B2B del stock sobrante.<br />Barcelona · España · 2026</p>
+      </div>
+      <div class="footer-links">
+        <div class="footer-col">
+          <strong>Producto</strong>
+          <a href="#como-funciona">Cómo funciona</a>
+          <a href="#precios">Precios</a>
+          <a href="#founders">Programa founder</a>
+        </div>
+        <div class="footer-col">
+          <strong>Contacto</strong>
+          <a href="mailto:jorgetorrasvall@gmail.com">jorgetorrasvall@gmail.com</a>
+          <a href="#">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <div class="container">
+        <p>© 2026 REstock. Todos los derechos reservados.</p>
+        <p>restock.es — próximamente</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
