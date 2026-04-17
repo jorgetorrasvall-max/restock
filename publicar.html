@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Publicar lote — ReStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<nav class="app-nav">
+  <div class="app-nav-inner">
+    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
+    <div class="nav-search">
+      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
+    </div>
+    <div class="nav-links-app">
+      <a href="marketplace.html">Explorar</a>
+      <a href="publicar.html" class="btn-publish active">+ Publicar lote</a>
+      <a href="mensajes.html" class="nav-msg">💬 <span class="msg-badge" id="msgBadge"></span></a>
+    </div>
+    <div class="user-dropdown">
+      <button class="user-btn" id="userBtn">
+        <span class="user-avatar" id="userAvatar">?</span>
+        <span id="userName">Entrar</span> ▾
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="perfil.html">👤 Mi perfil</a>
+        <a href="mensajes.html">💬 Mensajes</a>
+        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
+        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="publish-layout">
+    <div style="margin-bottom:24px">
+      <a href="marketplace.html" class="back-link">← Volver al marketplace</a>
+      <h1 style="font-size:1.5rem;font-weight:800;color:var(--navy);margin-top:8px">Publicar nuevo lote</h1>
+      <p style="font-size:14px;color:var(--gray-500);margin-top:4px">Completa los datos del lote. Cuanto más detallado, más rápido se vende.</p>
+    </div>
+
+    <form id="publishForm">
+
+      <!-- INFO BÁSICA -->
+      <div class="publish-card">
+        <div class="publish-card-title"><span>📦</span> Información básica</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div class="form-group">
+            <label class="form-label">Título del lote <span>*</span></label>
+            <input class="form-input" type="text" id="pTitle" placeholder="Ej: Lote 200 camisetas polo hombre talla L" maxlength="100" required />
+            <span class="form-hint" id="titleCount">0/100 caracteres</span>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Categoría <span>*</span></label>
+              <select class="form-select" id="pCategory" required>
+                <option value="" disabled selected>Selecciona…</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Ciudad / Origen <span>*</span></label>
+              <input class="form-input" type="text" id="pCity" placeholder="Barcelona, Madrid…" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Descripción <span>*</span></label>
+            <textarea class="form-textarea" id="pDesc" rows="4" placeholder="Describe el producto, el estado real, el motivo de venta y cualquier detalle relevante para el comprador…" required minlength="50"></textarea>
+            <span class="form-hint" id="descCount">0/500 caracteres. Mínimo 50.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ESTADO Y CANTIDAD -->
+      <div class="publish-card">
+        <div class="publish-card-title"><span>🔍</span> Estado y cantidad</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div class="form-group">
+            <label class="form-label">Estado del producto <span>*</span></label>
+            <div class="condition-grid" id="conditionGrid">
+              <label class="condition-option" id="cond_A">
+                <input type="radio" name="condition" value="A" required />
+                <div class="condition-grade" style="color:#059669">A</div>
+                <div class="condition-label">Nuevo con etiqueta</div>
+              </label>
+              <label class="condition-option" id="cond_B">
+                <input type="radio" name="condition" value="B" />
+                <div class="condition-grade" style="color:#0284c7">B</div>
+                <div class="condition-label">Nuevo sin etiqueta</div>
+              </label>
+              <label class="condition-option" id="cond_C">
+                <input type="radio" name="condition" value="C" />
+                <div class="condition-grade" style="color:#d97706">C</div>
+                <div class="condition-label">Buen estado</div>
+              </label>
+              <label class="condition-option" id="cond_D">
+                <input type="radio" name="condition" value="D" />
+                <div class="condition-grade" style="color:#dc2626">D</div>
+                <div class="condition-label">Defecto visible</div>
+              </label>
+            </div>
+          </div>
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Cantidad <span>*</span></label>
+              <input class="form-input" type="number" id="pQuantity" placeholder="Ej: 250" min="1" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Unidad</label>
+              <select class="form-select" id="pUnit">
+                <option value="unidades">Unidades</option>
+                <option value="pares">Pares</option>
+                <option value="kg">Kilogramos</option>
+                <option value="cajas">Cajas</option>
+                <option value="palés">Palés</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRECIO -->
+      <div class="publish-card">
+        <div class="publish-card-title"><span>💶</span> Precio</div>
+        <div style="display:flex;flex-direction:column;gap:18px">
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Precio total del lote (€) <span>*</span></label>
+              <input class="form-input" type="number" id="pPrice" placeholder="Ej: 850" min="1" required />
+            </div>
+            <div class="form-group">
+              <label class="form-label">Precio por unidad (calculado)</label>
+              <input class="form-input" type="text" id="pPricePerUnit" disabled placeholder="—" style="background:var(--gray-50);color:var(--gray-500)" />
+            </div>
+          </div>
+          <div class="commission-box" id="commissionPreview" style="display:none">
+            <div class="commission-box-title">Previsión de cobro</div>
+            <div id="commissionDetails"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- IMÁGENES -->
+      <div class="publish-card">
+        <div class="publish-card-title"><span>📷</span> Imágenes</div>
+        <div class="image-upload-area" id="uploadArea" onclick="document.getElementById('imgInput').click()">
+          <div class="image-upload-icon">📷</div>
+          <div class="image-upload-text">Sube fotos del lote</div>
+          <div class="image-upload-hint">Mínimo 3 fotos: lote completo, detalle de unidad y etiqueta/estado. JPG o PNG.</div>
+        </div>
+        <input type="file" id="imgInput" accept="image/*" multiple style="display:none" />
+        <div id="imgPreview" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"></div>
+      </div>
+
+      <!-- PREVIEW -->
+      <div class="publish-card" id="previewCard" style="display:none">
+        <div class="publish-card-title"><span>👁</span> Vista previa</div>
+        <div class="publish-preview">
+          <div class="publish-preview-title">Así verán tu lote los compradores</div>
+          <div id="previewContent"></div>
+        </div>
+      </div>
+
+      <div style="display:flex;gap:12px;justify-content:flex-end">
+        <button type="button" class="btn btn-outline" onclick="window.location.href='marketplace.html'">Cancelar</button>
+        <button type="button" class="btn btn-outline" id="previewBtn">Vista previa</button>
+        <button type="submit" class="btn btn-primary btn-lg">Publicar lote →</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+requireAuth();
+
+// Fill categories
+const catSel = document.getElementById('pCategory');
+CATEGORIES.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.icon + ' ' + c.name; catSel.appendChild(o); });
+
+// Condition selector
+document.querySelectorAll('.condition-option input[type=radio]').forEach(radio => {
+  radio.addEventListener('change', () => {
+    document.querySelectorAll('.condition-option').forEach(el => el.classList.remove('selected'));
+    radio.closest('.condition-option').classList.add('selected');
+  });
+});
+
+// Title counter
+document.getElementById('pTitle').addEventListener('input', function() {
+  document.getElementById('titleCount').textContent = this.value.length + '/100 caracteres';
+});
+
+// Desc counter
+document.getElementById('pDesc').addEventListener('input', function() {
+  document.getElementById('descCount').textContent = this.value.length + '/500 caracteres. Mínimo 50.';
+});
+
+// Price calc
+function updatePrice() {
+  const price = parseFloat(document.getElementById('pPrice').value) || 0;
+  const qty = parseFloat(document.getElementById('pQuantity').value) || 0;
+  if (price && qty) document.getElementById('pPricePerUnit').value = (price / qty).toFixed(2) + '€';
+  if (price) {
+    const comm = getCommission(price);
+    const receives = (price * (1 - comm.seller / 100)).toFixed(2);
+    document.getElementById('commissionPreview').style.display = 'block';
+    document.getElementById('commissionDetails').innerHTML = `
+      <div class="commission-row"><span>Precio publicado</span><span>${formatPrice(price)}</span></div>
+      <div class="commission-row"><span>Comisión ReStock (${comm.seller}%)</span><span>−${(price * comm.seller / 100).toFixed(2)}€</span></div>
+      <div class="commission-row commission-total"><span>Tú recibes</span><span>${parseFloat(receives).toLocaleString('es-ES')}€</span></div>`;
+  }
+}
+document.getElementById('pPrice').addEventListener('input', updatePrice);
+document.getElementById('pQuantity').addEventListener('input', updatePrice);
+
+// Image upload
+document.getElementById('imgInput').addEventListener('change', function() {
+  const preview = document.getElementById('imgPreview');
+  preview.innerHTML = '';
+  [...this.files].forEach(file => {
+    const reader = new FileReader();
+    reader.onload = e => {
+      const img = document.createElement('img');
+      img.src = e.target.result;
+      img.style.cssText = 'width:80px;height:60px;object-fit:cover;border-radius:6px;border:1.5px solid var(--gray-200)';
+      preview.appendChild(img);
+    };
+    reader.readAsDataURL(file);
+  });
+});
+
+// Preview
+document.getElementById('previewBtn').onclick = () => {
+  const title = document.getElementById('pTitle').value;
+  const price = parseFloat(document.getElementById('pPrice').value) || 0;
+  const qty = document.getElementById('pQuantity').value;
+  const unit = document.getElementById('pUnit').value;
+  const cond = document.querySelector('input[name=condition]:checked')?.value || '?';
+  const cat = document.getElementById('pCategory').value;
+  if (!title || !price) { showToast('Rellena al menos título y precio para la vista previa', 'error'); return; }
+  const card = document.getElementById('previewCard');
+  card.style.display = 'block';
+  document.getElementById('previewContent').innerHTML = `
+    <div style="display:flex;gap:12px;align-items:flex-start;margin-top:8px">
+      <div style="width:80px;height:60px;background:var(--gray-200);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem">${getCategoryIcon(cat)}</div>
+      <div>
+        <div style="font-weight:700;color:var(--navy)">${title}</div>
+        <div style="font-size:13px;color:var(--gray-500);margin-top:2px">${qty} ${unit} · <span class="badge badge-${cond}">${cond}</span></div>
+        <div style="font-size:1.1rem;font-weight:900;color:var(--navy);margin-top:6px">${formatPrice(price)}</div>
+      </div>
+    </div>`;
+  card.scrollIntoView({ behavior: 'smooth' });
+};
+
+// Submit
+document.getElementById('publishForm').addEventListener('submit', e => {
+  e.preventDefault();
+  const user = JSON.parse(localStorage.getItem('rs_user') || 'null');
+  const cond = document.querySelector('input[name=condition]:checked')?.value;
+  if (!cond) { showToast('Selecciona el estado del producto', 'error'); return; }
+
+  const newProduct = {
+    id: Date.now(),
+    title: document.getElementById('pTitle').value,
+    category: document.getElementById('pCategory').value,
+    condition: cond,
+    price: parseFloat(document.getElementById('pPrice').value),
+    quantity: parseInt(document.getElementById('pQuantity').value),
+    unit: document.getElementById('pUnit').value,
+    seller: { id: user?.id || 0, name: user?.name || 'Tú', city: document.getElementById('pCity').value || user?.city || 'España', rating: 0, reviews: 0, avatar: user?.avatar || 'U', since: 'Abr 2026' },
+    description: document.getElementById('pDesc').value,
+    images: ['https://placehold.co/640x420/1A3C6E/FFFFFF?text=' + encodeURIComponent(document.getElementById('pTitle').value.substring(0,20))],
+    created: new Date().toISOString().split('T')[0],
+    views: 0, active: true,
+  };
+
+  const saved = JSON.parse(localStorage.getItem('rs_products') || '[]');
+  saved.push(newProduct);
+  localStorage.setItem('rs_products', JSON.stringify(saved));
+
+  showToast('¡Lote publicado correctamente!', 'success');
+  setTimeout(() => window.location.href = 'producto.html?id=' + newProduct.id, 1000);
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mensajes — ReStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<nav class="app-nav">
+  <div class="app-nav-inner">
+    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
+    <div class="nav-search">
+      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
+    </div>
+    <div class="nav-links-app">
+      <a href="marketplace.html">Explorar</a>
+      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
+      <a href="mensajes.html" class="active nav-msg">💬 Mensajes <span class="msg-badge" id="msgBadge"></span></a>
+    </div>
+    <div class="user-dropdown">
+      <button class="user-btn" id="userBtn">
+        <span class="user-avatar" id="userAvatar">?</span>
+        <span id="userName">Entrar</span> ▾
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="perfil.html">👤 Mi perfil</a>
+        <a href="publicar.html">📦 Publicar lote</a>
+        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
+        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div style="padding-top: var(--nav-h)">
+  <div class="messages-layout">
+    <!-- LISTA DE CONVERSACIONES -->
+    <div class="conv-list" id="convList">
+      <div class="conv-list-header">Mensajes</div>
+      <div id="convItems"></div>
+    </div>
+
+    <!-- CHAT -->
+    <div class="chat-area" id="chatArea">
+      <div class="chat-empty" id="chatEmpty">
+        <div class="chat-empty-icon">💬</div>
+        <p style="font-weight:600;color:var(--gray-600)">Selecciona una conversación</p>
+        <p style="font-size:13px">o <a href="marketplace.html" style="color:var(--navy);font-weight:600">explora el marketplace</a> para contactar vendedores</p>
+      </div>
+      <div id="chatMain" style="display:none;flex-direction:column;height:100%">
+        <div class="chat-header" id="chatHeader"></div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-area">
+          <textarea class="chat-input" id="msgInput" placeholder="Escribe un mensaje…" rows="1"></textarea>
+          <button class="btn btn-navy" id="sendBtn">Enviar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+requireAuth();
+
+let conversations = JSON.parse(localStorage.getItem('rs_conversations') || 'null') || [...MOCK_CONVERSATIONS];
+let activeConvId = null;
+
+// Check if coming from product page
+const newProductId = parseInt(new URLSearchParams(location.search).get('new'));
+if (newProductId) {
+  const allProducts = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
+  const prod = allProducts.find(p => p.id === newProductId);
+  if (prod) {
+    const exists = conversations.find(c => c.productId === newProductId);
+    if (!exists) {
+      const newConv = {
+        id: Date.now(), productId: prod.id,
+        with: { id: prod.seller.id, name: prod.seller.name, avatar: prod.seller.avatar },
+        lastMessage: '', time: 'ahora', unread: 0,
+        messages: [],
+      };
+      conversations.unshift(newConv);
+      activeConvId = newConv.id;
+    } else {
+      activeConvId = exists.id;
+    }
+  }
+}
+
+function saveConversations() {
+  localStorage.setItem('rs_conversations', JSON.stringify(conversations));
+}
+
+function renderConvList() {
+  const container = document.getElementById('convItems');
+  const allProducts = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
+  container.innerHTML = conversations.map(c => {
+    const prod = allProducts.find(p => p.id === c.productId);
+    return `
+    <div class="conv-item ${c.id === activeConvId ? 'active' : ''}" onclick="openConv(${c.id})">
+      <div class="conv-avatar">${c.with.avatar}</div>
+      <div class="conv-info">
+        <div class="conv-name">${c.with.name}</div>
+        <div class="conv-product">${prod ? prod.title : 'Producto'}</div>
+        <div class="conv-last">${c.lastMessage || 'Sin mensajes aún'}</div>
+      </div>
+      <div class="conv-meta">
+        <span class="conv-time">${c.time}</span>
+        ${c.unread > 0 ? `<span class="conv-unread">${c.unread}</span>` : ''}
+      </div>
+    </div>`;
+  }).join('') || '<div style="padding:20px;text-align:center;font-size:13px;color:var(--gray-400)">Sin conversaciones aún</div>';
+}
+
+function openConv(id) {
+  activeConvId = id;
+  const conv = conversations.find(c => c.id === id);
+  if (!conv) return;
+  conv.unread = 0;
+  saveConversations();
+  renderConvList();
+
+  const allProducts = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
+  const prod = allProducts.find(p => p.id === conv.productId);
+
+  document.getElementById('chatEmpty').style.display = 'none';
+  const main = document.getElementById('chatMain');
+  main.style.display = 'flex';
+
+  document.getElementById('chatHeader').innerHTML = `
+    <div class="conv-avatar" style="width:36px;height:36px;font-size:14px">${conv.with.avatar}</div>
+    <div>
+      <div class="chat-header-name">${conv.with.name}</div>
+      <div class="chat-header-product">${prod ? `Re: <a href="producto.html?id=${prod.id}" style="color:var(--navy)">${prod.title}</a>` : ''}</div>
+    </div>
+    ${prod ? `<a href="producto.html?id=${prod.id}" class="btn btn-outline" style="margin-left:auto;font-size:12px">Ver lote →</a>` : ''}`;
+
+  renderMessages(conv);
+}
+
+function renderMessages(conv) {
+  const container = document.getElementById('chatMessages');
+  if (!conv.messages.length) {
+    container.innerHTML = `<div style="text-align:center;font-size:13px;color:var(--gray-400);padding:20px">Inicia la conversación sobre este lote.</div>`;
+    return;
+  }
+  container.innerHTML = conv.messages.map(m => `
+    <div class="msg msg--${m.from}">
+      <div class="msg-bubble">${m.text}</div>
+      <div class="msg-time">${m.time}</div>
+    </div>`).join('');
+  container.scrollTop = container.scrollHeight;
+}
+
+function sendMessage() {
+  const input = document.getElementById('msgInput');
+  const text = input.value.trim();
+  if (!text || !activeConvId) return;
+  const conv = conversations.find(c => c.id === activeConvId);
+  if (!conv) return;
+  const now = new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' });
+  conv.messages.push({ from: 'me', text, time: now });
+  conv.lastMessage = text;
+  conv.time = 'ahora';
+  input.value = '';
+  input.style.height = 'auto';
+
+  // Simulate reply
+  setTimeout(() => {
+    const replies = [
+      '¡Hola! Gracias por tu interés en el lote.',
+      '¿Cuándo podríais hacer el envío?',
+      'El lote sigue disponible. ¿Necesitas factura proforma?',
+      'Podemos negociar el precio si compras más de un lote.',
+      'Hacemos envío a toda España. El transporte va a cargo del comprador.',
+    ];
+    conv.messages.push({ from: 'them', text: replies[Math.floor(Math.random() * replies.length)], time: new Date().toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' }) });
+    saveConversations();
+    renderConvList();
+    renderMessages(conv);
+  }, 1200);
+
+  saveConversations();
+  renderConvList();
+  renderMessages(conv);
+}
+
+document.getElementById('sendBtn').onclick = sendMessage;
+document.getElementById('msgInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendMessage(); }
+});
+document.getElementById('msgInput').addEventListener('input', function() {
+  this.style.height = 'auto';
+  this.style.height = Math.min(this.scrollHeight, 120) + 'px';
+});
+
+renderConvList();
+if (activeConvId) openConv(activeConvId);
+else if (conversations.length) openConv(conversations[0].id);
+</script>
+</body>
+</html>

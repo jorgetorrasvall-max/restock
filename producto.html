@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Producto — ReStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<nav class="app-nav">
+  <div class="app-nav-inner">
+    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
+    <div class="nav-search">
+      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
+    </div>
+    <div class="nav-links-app">
+      <a href="marketplace.html">Explorar</a>
+      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
+      <a href="mensajes.html" class="nav-msg">💬 <span class="msg-badge" id="msgBadge"></span></a>
+    </div>
+    <div class="user-dropdown">
+      <button class="user-btn" id="userBtn">
+        <span class="user-avatar" id="userAvatar">?</span>
+        <span id="userName">Entrar</span> ▾
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="perfil.html">👤 Mi perfil</a>
+        <a href="mensajes.html">💬 Mensajes</a>
+        <a href="publicar.html">📦 Publicar lote</a>
+        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
+        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="container" style="padding-top:24px;padding-bottom:48px">
+    <a href="javascript:history.back()" class="back-link">← Volver al marketplace</a>
+    <div id="productContent"></div>
+    <div id="relatedSection" style="margin-top:48px"></div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+const id = parseInt(new URLSearchParams(location.search).get('id'));
+const localProducts = JSON.parse(localStorage.getItem('rs_products') || '[]');
+const all = [...PRODUCTS, ...localProducts];
+const p = all.find(x => x.id === id);
+
+if (!p) {
+  document.getElementById('productContent').innerHTML = `
+    <div class="empty-state"><div class="empty-icon">😕</div>
+    <div class="empty-title">Producto no encontrado</div>
+    <a href="marketplace.html" class="btn btn-navy" style="margin-top:16px">Volver al marketplace</a></div>`;
+} else {
+  document.title = p.title + ' — ReStock';
+  const comm = getCommission(p.price);
+  const priceAfterComm = (p.price * (1 - comm.seller / 100)).toFixed(2);
+  const buyerPays = (p.price * (1 + comm.buyer / 100)).toFixed(2);
+
+  document.getElementById('productContent').innerHTML = `
+    <div class="product-detail-layout">
+      <div>
+        <img class="product-img-main" src="${p.images[0]}" alt="${p.title}" />
+        <div style="margin-top:28px">
+          <h1 style="font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:12px">${p.title}</h1>
+          <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
+            <span class="badge badge-${p.condition}">${p.condition} — ${CONDITIONS[p.condition].label}</span>
+            <span style="font-size:13px;color:var(--gray-400)">${getCategoryIcon(p.category)} ${getCategoryName(p.category)}</span>
+            <span style="font-size:13px;color:var(--gray-400)">👁 ${p.views} vistas</span>
+            <span style="font-size:13px;color:var(--gray-400)">📅 Publicado ${daysAgo(p.created)}</span>
+          </div>
+          <div class="product-info-grid">
+            <div class="product-info-item">
+              <div class="product-info-label">Precio del lote</div>
+              <div class="product-info-value" style="color:var(--navy);font-size:1.2rem">${formatPrice(p.price)}</div>
+            </div>
+            <div class="product-info-item">
+              <div class="product-info-label">Cantidad</div>
+              <div class="product-info-value">${p.quantity} ${p.unit}</div>
+            </div>
+            <div class="product-info-item">
+              <div class="product-info-label">Precio por unidad</div>
+              <div class="product-info-value">${(p.price / p.quantity).toFixed(2)}€/${p.unit.replace('unidades','ud').replace('pares','par')}</div>
+            </div>
+            <div class="product-info-item">
+              <div class="product-info-label">Ubicación</div>
+              <div class="product-info-value">📍 ${p.seller.city}</div>
+            </div>
+          </div>
+          <div style="margin-top:24px">
+            <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px">Descripción</h3>
+            <p class="product-desc">${p.description}</p>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="product-detail-card">
+          <div class="product-detail-price">${formatPrice(p.price)}</div>
+          <div class="product-detail-qty">${p.quantity} ${p.unit} · ${(p.price/p.quantity).toFixed(2)}€/ud</div>
+
+          <div class="commission-box">
+            <div class="commission-box-title">Desglose de comisión (${comm.total}% total)</div>
+            <div class="commission-row"><span>Precio del lote</span><span>${formatPrice(p.price)}</span></div>
+            <div class="commission-row"><span>Comisión comprador (${comm.buyer}%)</span><span>+${(p.price*comm.buyer/100).toFixed(2)}€</span></div>
+            <div class="commission-row commission-total"><span>Tú pagas</span><span>${parseFloat(buyerPays).toLocaleString('es-ES')}€</span></div>
+            <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--gray-200)">
+              <div class="commission-row" style="font-size:12px;color:var(--gray-400)"><span>El vendedor recibe</span><span>${parseFloat(priceAfterComm).toLocaleString('es-ES')}€ (−${comm.seller}%)</span></div>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-full btn-lg" id="contactBtn">💬 Contactar al vendedor</button>
+          <button class="btn btn-outline btn-full" style="margin-top:10px" onclick="showToast('Lote guardado en favoritos','success')">🔖 Guardar lote</button>
+
+          <div class="seller-card">
+            <div class="seller-card-header">
+              <div class="seller-avatar-lg">${p.seller.avatar}</div>
+              <div>
+                <div class="seller-name">${p.seller.name}</div>
+                <div class="seller-city">📍 ${p.seller.city} · Desde ${p.seller.since}</div>
+              </div>
+            </div>
+            <div class="seller-stats">
+              <span>⭐ ${p.seller.rating}</span>
+              <span>${p.seller.reviews} valoraciones</span>
+            </div>
+            <a href="perfil.html?id=${p.seller.id}" class="btn btn-outline btn-full" style="font-size:13px">Ver perfil del vendedor</a>
+          </div>
+        </div>
+      </div>
+    </div>`;
+
+  document.getElementById('contactBtn').onclick = () => {
+    const user = JSON.parse(localStorage.getItem('rs_user') || 'null');
+    if (!user) { window.location.href = 'login.html'; return; }
+    localStorage.setItem('rs_active_conv_product', JSON.stringify(p));
+    window.location.href = 'mensajes.html?new=' + p.id;
+  };
+
+  // Related products
+  const related = all.filter(x => x.id !== p.id && x.category === p.category).slice(0, 3);
+  if (related.length) {
+    document.getElementById('relatedSection').innerHTML = `
+      <h3 style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px">Lotes similares</h3>
+      <div class="product-grid">
+        ${related.map(r => `
+          <div class="product-card" onclick="window.location='producto.html?id=${r.id}'">
+            <img class="product-card-img" src="${r.images[0]}" alt="${r.title}" />
+            <div class="product-card-body">
+              <div class="product-card-top">
+                <div class="product-card-title">${r.title}</div>
+                <span class="badge badge-${r.condition}">${r.condition}</span>
+              </div>
+              <div class="product-card-price">${formatPrice(r.price)}</div>
+              <div class="product-card-meta">
+                <span class="product-card-qty">${r.quantity} ${r.unit}</span>
+                <span class="product-card-city">📍 ${r.seller.city}</span>
+              </div>
+            </div>
+          </div>`).join('')}
+      </div>`;
+  }
+}
+</script>
+</body>
+</html>

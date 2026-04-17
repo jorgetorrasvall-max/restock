@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Entrar — ReStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<div class="auth-page">
+  <div class="auth-left">
+    <div class="auth-brand">
+      <a href="index.html" class="logo">Re<span>Stock</span></a>
+      <h2>El marketplace B2B<br />del stock sobrante</h2>
+      <p>Conectamos vendedores con stock parado y compradores que necesitan producto barato para revender.</p>
+      <ul class="auth-features">
+        <li>Vende tu stock sobrante en minutos</li>
+        <li>Comisión desde el 3% por transacción</li>
+        <li>Mensajería directa con compradores</li>
+        <li>Pago seguro a través de Stripe</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-box">
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tabLogin">Entrar</button>
+        <button class="auth-tab" id="tabRegister">Registrarse</button>
+      </div>
+
+      <!-- LOGIN -->
+      <form class="auth-form" id="loginForm">
+        <div class="form-group">
+          <label class="form-label">Email</label>
+          <input class="form-input" type="email" id="loginEmail" placeholder="tu@empresa.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña</label>
+          <input class="form-input" type="password" id="loginPwd" placeholder="••••••••" required />
+        </div>
+        <div id="loginError" class="form-error" style="display:none"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg">Entrar →</button>
+        <p class="auth-note">¿No tienes cuenta? <a href="#" id="switchToRegister">Regístrate gratis</a></p>
+        <div class="auth-divider">o prueba con</div>
+        <button type="button" class="btn btn-outline btn-full" id="demoBtn">👤 Cuenta demo (jorgetorrasvall@gmail.com)</button>
+      </form>
+
+      <!-- REGISTER -->
+      <form class="auth-form" id="registerForm" style="display:none">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Nombre <span>*</span></label>
+            <input class="form-input" type="text" id="regName" placeholder="Tu nombre" required />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Empresa <span>*</span></label>
+            <input class="form-input" type="text" id="regCompany" placeholder="Nombre del negocio" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Email <span>*</span></label>
+          <input class="form-input" type="email" id="regEmail" placeholder="tu@empresa.com" required />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Contraseña <span>*</span></label>
+          <input class="form-input" type="password" id="regPwd" placeholder="Mínimo 8 caracteres" required minlength="8" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Ciudad</label>
+          <input class="form-input" type="text" id="regCity" placeholder="Barcelona, Madrid…" />
+        </div>
+        <div class="form-group">
+          <label class="form-label">Tipo de negocio</label>
+          <select class="form-select" id="regType">
+            <option value="Vendedor">Principalmente vendedor</option>
+            <option value="Comprador">Principalmente comprador</option>
+            <option value="Ambos" selected>Vendedor y comprador</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Código de invitación</label>
+          <input class="form-input" type="text" id="regCode" placeholder="RESTOCK-ALPHA-001 (opcional)" style="text-transform:uppercase;font-family:monospace" />
+          <span class="form-hint">Necesitas un código para acceder durante la beta</span>
+        </div>
+        <div id="regError" class="form-error" style="display:none"></div>
+        <button type="submit" class="btn btn-primary btn-full btn-lg">Crear cuenta →</button>
+        <p class="auth-note">¿Ya tienes cuenta? <a href="#" id="switchToLogin">Entra aquí</a></p>
+      </form>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script>
+const VALID_CODES = Array.from({length:20},(_,i)=>'RESTOCK-ALPHA-'+String(i+1).padStart(3,'0'));
+
+const tabLogin = document.getElementById('tabLogin');
+const tabRegister = document.getElementById('tabRegister');
+const loginForm = document.getElementById('loginForm');
+const registerForm = document.getElementById('registerForm');
+
+function showLogin() {
+  loginForm.style.display = 'flex'; registerForm.style.display = 'none';
+  tabLogin.classList.add('active'); tabRegister.classList.remove('active');
+}
+function showRegister() {
+  loginForm.style.display = 'none'; registerForm.style.display = 'flex';
+  tabRegister.classList.add('active'); tabLogin.classList.remove('active');
+}
+
+tabLogin.onclick = showLogin;
+tabRegister.onclick = showRegister;
+document.getElementById('switchToRegister').onclick = e => { e.preventDefault(); showRegister(); };
+document.getElementById('switchToLogin').onclick = e => { e.preventDefault(); showLogin(); };
+
+loginForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const email = document.getElementById('loginEmail').value.trim();
+  const err = document.getElementById('loginError');
+  const found = MOCK_USERS.find(u => u.email.toLowerCase() === email.toLowerCase());
+  if (!found) { err.textContent = 'Email no encontrado. Prueba con la cuenta demo.'; err.style.display='block'; return; }
+  err.style.display='none';
+  localStorage.setItem('rs_user', JSON.stringify(found));
+  window.location.href = 'marketplace.html';
+});
+
+document.getElementById('demoBtn').onclick = () => {
+  localStorage.setItem('rs_user', JSON.stringify(MOCK_USERS[0]));
+  window.location.href = 'marketplace.html';
+};
+
+registerForm.addEventListener('submit', e => {
+  e.preventDefault();
+  const code = document.getElementById('regCode').value.trim().toUpperCase();
+  const err = document.getElementById('regError');
+  if (code && !VALID_CODES.includes(code)) {
+    err.textContent = 'Código de invitación no válido.'; err.style.display='block'; return;
+  }
+  const newUser = {
+    id: Date.now(), name: document.getElementById('regName').value + ' — ' + document.getElementById('regCompany').value,
+    email: document.getElementById('regEmail').value,
+    avatar: document.getElementById('regName').value[0].toUpperCase(),
+    city: document.getElementById('regCity').value || 'España',
+    type: document.getElementById('regType').value,
+    isAdmin: false, isFounder: false, products: 0,
+  };
+  localStorage.setItem('rs_user', JSON.stringify(newUser));
+  window.location.href = 'marketplace.html';
+});
+
+if (localStorage.getItem('rs_user')) window.location.href = 'marketplace.html';
+</script>
+</body>
+</html>

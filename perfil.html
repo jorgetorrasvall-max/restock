@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Perfil — ReStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<nav class="app-nav">
+  <div class="app-nav-inner">
+    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
+    <div class="nav-search">
+      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
+    </div>
+    <div class="nav-links-app">
+      <a href="marketplace.html">Explorar</a>
+      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
+      <a href="mensajes.html" class="nav-msg">💬 <span class="msg-badge" id="msgBadge"></span></a>
+    </div>
+    <div class="user-dropdown">
+      <button class="user-btn" id="userBtn">
+        <span class="user-avatar" id="userAvatar">?</span>
+        <span id="userName">Entrar</span> ▾
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="perfil.html">👤 Mi perfil</a>
+        <a href="mensajes.html">💬 Mensajes</a>
+        <a href="publicar.html">📦 Publicar lote</a>
+        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
+        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="profile-layout" id="profileContent"></div>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+const viewId = parseInt(new URLSearchParams(location.search).get('id'));
+const currentUser = JSON.parse(localStorage.getItem('rs_user') || 'null');
+const isOwnProfile = !viewId || (currentUser && viewId === currentUser.id);
+
+const user = isOwnProfile
+  ? (currentUser || { name: 'Usuario', avatar: 'U', city: 'España', type: 'Ambos', isFounder: false, isAdmin: false })
+  : (MOCK_USERS.find(u => u.id === viewId) || null);
+
+const allProducts = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
+const userProducts = allProducts.filter(p =>
+  isOwnProfile
+    ? (p.seller?.id === (currentUser?.id || 0) || currentUser?.id === 0)
+    : p.seller?.id === viewId
+);
+
+const container = document.getElementById('profileContent');
+
+if (!user) {
+  container.innerHTML = `<div class="empty-state"><div class="empty-icon">😕</div><div class="empty-title">Usuario no encontrado</div><a href="marketplace.html" class="btn btn-navy" style="margin-top:16px">Volver</a></div>`;
+} else {
+  const sellerProducts = isOwnProfile ? userProducts.slice(0, 6) : allProducts.filter(p => p.seller.id === viewId);
+  const avgRating = sellerProducts.length ? (sellerProducts.reduce((s, p) => s + p.seller.rating, 0) / sellerProducts.length).toFixed(1) : '—';
+
+  container.innerHTML = `
+    <!-- HEADER -->
+    <div class="profile-header">
+      <div class="profile-avatar">${user.avatar || user.name[0]}</div>
+      <div class="profile-info">
+        <div class="profile-name">
+          ${user.name}
+          ${user.isFounder ? '<span class="badge badge-founder">⭐ Fundador</span>' : ''}
+          ${user.isAdmin ? '<span class="badge badge-admin">Admin</span>' : ''}
+        </div>
+        <div class="profile-meta">
+          ${user.city ? '📍 ' + user.city + ' · ' : ''}
+          ${user.type ? user.type + ' · ' : ''}
+          Miembro desde 2025
+        </div>
+        <div class="profile-stats">
+          <div class="profile-stat"><div class="profile-stat-num">${sellerProducts.length}</div><div class="profile-stat-label">Lotes activos</div></div>
+          <div class="profile-stat"><div class="profile-stat-num">${avgRating}</div><div class="profile-stat-label">Valoración</div></div>
+          <div class="profile-stat"><div class="profile-stat-num">${sellerProducts.reduce((s,p)=>s+p.views,0)}</div><div class="profile-stat-label">Visitas totales</div></div>
+        </div>
+      </div>
+      ${isOwnProfile ? `
+        <div style="margin-left:auto">
+          <button class="btn btn-outline" onclick="showEditModal()">✏️ Editar perfil</button>
+        </div>` : `
+        <div style="margin-left:auto">
+          <a href="mensajes.html" class="btn btn-navy">💬 Enviar mensaje</a>
+        </div>`}
+    </div>
+
+    ${isOwnProfile ? `
+    <!-- MIS ESTADÍSTICAS -->
+    <div class="profile-card">
+      <div class="profile-card-title">Resumen de actividad</div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
+        <div style="text-align:center;padding:16px;background:var(--gray-50);border-radius:var(--radius)">
+          <div style="font-size:1.8rem;font-weight:900;color:var(--navy)">${sellerProducts.length}</div>
+          <div style="font-size:12px;color:var(--gray-500)">Lotes publicados</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:var(--gray-50);border-radius:var(--radius)">
+          <div style="font-size:1.8rem;font-weight:900;color:var(--gold)">0€</div>
+          <div style="font-size:12px;color:var(--gray-500)">Ventas totales</div>
+        </div>
+        <div style="text-align:center;padding:16px;background:var(--gray-50);border-radius:var(--radius)">
+          <div style="font-size:1.8rem;font-weight:900;color:var(--green)">
+            ${user.isFounder ? '⭐ Activo' : 'Normal'}
+          </div>
+          <div style="font-size:12px;color:var(--gray-500)">Plan actual</div>
+        </div>
+      </div>
+      ${user.isFounder ? `
+        <div style="margin-top:16px;padding:14px;background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.3);border-radius:var(--radius);font-size:13px;color:var(--gray-600)">
+          ⭐ <strong>Eres Fundador ReStock</strong> — Comisión 0% durante los primeros 2 meses en tus transacciones.
+        </div>` : ''}
+    </div>` : ''}
+
+    <!-- LOTES ACTIVOS -->
+    <div class="profile-card">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
+        <div class="profile-card-title" style="margin:0">Lotes activos (${sellerProducts.length})</div>
+        ${isOwnProfile ? `<a href="publicar.html" class="btn btn-primary" style="font-size:13px">+ Publicar nuevo</a>` : ''}
+      </div>
+      ${sellerProducts.length ? `
+        <div class="product-grid">
+          ${sellerProducts.map(p => `
+            <div class="product-card" onclick="window.location='producto.html?id=${p.id}'">
+              <img class="product-card-img" src="${p.images[0]}" alt="${p.title}" />
+              <div class="product-card-body">
+                <div class="product-card-top">
+                  <div class="product-card-title">${p.title}</div>
+                  <span class="badge badge-${p.condition}">${p.condition}</span>
+                </div>
+                <div class="product-card-price">${formatPrice(p.price)}</div>
+                <div class="product-card-meta">
+                  <span class="product-card-qty">${p.quantity} ${p.unit}</span>
+                  <span style="font-size:11px;color:var(--gray-400)">👁 ${p.views}</span>
+                  <span style="font-size:11px;color:var(--gray-400);margin-left:auto">${daysAgo(p.created)}</span>
+                </div>
+              </div>
+            </div>`).join('')}
+        </div>` : `
+        <div class="empty-state" style="padding:40px">
+          <div class="empty-icon">📦</div>
+          <div class="empty-title">Sin lotes publicados</div>
+          ${isOwnProfile ? `<a href="publicar.html" class="btn btn-primary" style="margin-top:12px">Publicar primer lote</a>` : ''}
+        </div>`}
+    </div>
+
+    <!-- VALORACIONES -->
+    <div class="profile-card">
+      <div class="profile-card-title">Valoraciones (${sellerProducts.length > 0 ? sellerProducts[0].seller.reviews || 0 : 0})</div>
+      ${sellerProducts.length && sellerProducts[0].seller.reviews > 0 ? `
+        <div style="display:flex;flex-direction:column;gap:12px">
+          ${['Trato excelente y producto tal como se describe. Muy recomendable.', 'Envío rápido y lote en perfectas condiciones. Repetiremos.', 'El lote llegó completo y sin problemas. Buena comunicación.'].slice(0, sellerProducts[0].seller.reviews || 2).map((text, i) => `
+            <div style="padding:14px;background:var(--gray-50);border-radius:var(--radius);font-size:14px;color:var(--gray-600)">
+              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+                <strong style="color:var(--text)">Comprador verificado</strong>
+                <span style="color:var(--gold)">${'★'.repeat(5)}</span>
+              </div>
+              ${text}
+            </div>`).join('')}
+        </div>` : `
+        <div style="text-align:center;padding:24px;color:var(--gray-400);font-size:14px">Sin valoraciones aún.</div>`}
+    </div>`;
+
+  // Edit modal (own profile)
+  if (isOwnProfile) {
+    window.showEditModal = () => showToast('Edición de perfil disponible próximamente con Supabase', 'success');
+  }
+}
+</script>
+</body>
+</html>

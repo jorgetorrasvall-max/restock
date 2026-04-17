@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Explorar lotes — ReStock</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="app.css" />
+</head>
+<body>
+<nav class="app-nav">
+  <div class="app-nav-inner">
+    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
+    <div class="nav-search">
+      <input type="text" id="navSearch" placeholder="Buscar lotes, categorías, ciudades…" />
+    </div>
+    <div class="nav-links-app" id="appNavMenu">
+      <a href="marketplace.html" class="active">Explorar</a>
+      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
+      <a href="mensajes.html" class="nav-msg">💬 Mensajes <span class="msg-badge" id="msgBadge"></span></a>
+    </div>
+    <div class="user-dropdown">
+      <button class="user-btn" id="userBtn">
+        <span class="user-avatar" id="userAvatar">?</span>
+        <span id="userName">Entrar</span> ▾
+      </button>
+      <div class="dropdown-menu" id="dropdownMenu">
+        <a href="perfil.html">👤 Mi perfil</a>
+        <a href="mensajes.html">💬 Mensajes</a>
+        <a href="publicar.html">📦 Publicar lote</a>
+        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
+        <hr />
+        <button class="danger" onclick="logout()">Cerrar sesión</button>
+      </div>
+    </div>
+    <button class="mobile-nav-toggle" id="mobileNavToggle"><span></span><span></span><span></span></button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="container">
+    <div class="market-layout">
+
+      <!-- SIDEBAR FILTROS -->
+      <aside class="filters-sidebar" id="filtersSidebar">
+        <div class="filters-title">
+          Filtros
+          <span class="filters-clear" id="clearFilters">Limpiar</span>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Categoría</div>
+          <div id="catFilters"></div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Estado</div>
+          <div class="filter-option"><input type="checkbox" id="cA" value="A"><label for="cA"><span class="badge badge-A">A</span> Nuevo con etiqueta</label></div>
+          <div class="filter-option"><input type="checkbox" id="cB" value="B"><label for="cB"><span class="badge badge-B">B</span> Nuevo sin etiqueta</label></div>
+          <div class="filter-option"><input type="checkbox" id="cC" value="C"><label for="cC"><span class="badge badge-C">C</span> Buen estado</label></div>
+          <div class="filter-option"><input type="checkbox" id="cD" value="D"><label for="cD"><span class="badge badge-D">D</span> Defecto visible</label></div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Precio del lote</div>
+          <div class="filter-price-row">
+            <input type="number" id="priceMin" placeholder="Mín €" min="0" />
+            <span class="filter-price-sep">—</span>
+            <input type="number" id="priceMax" placeholder="Máx €" min="0" />
+          </div>
+        </div>
+
+        <div class="filter-group">
+          <div class="filter-group-title">Ciudad</div>
+          <input class="form-input" type="text" id="cityFilter" placeholder="Barcelona, Madrid…" style="font-size:13px;padding:8px 10px;" />
+        </div>
+
+        <button class="btn btn-navy btn-full" id="applyFilters" style="margin-top:4px">Aplicar filtros</button>
+      </aside>
+
+      <!-- CONTENIDO PRINCIPAL -->
+      <main>
+        <div class="market-head">
+          <div>
+            <span id="resultCount" class="market-count"></span>
+            <span id="activeQuery" style="margin-left:8px;font-size:13px;color:var(--gold);font-weight:600"></span>
+          </div>
+          <div class="market-sort">
+            <select id="sortSelect">
+              <option value="reciente">Más recientes</option>
+              <option value="precio-asc">Precio ↑</option>
+              <option value="precio-desc">Precio ↓</option>
+              <option value="vistos">Más vistos</option>
+            </select>
+          </div>
+          <button class="btn btn-outline" id="toggleFilters" style="display:none">⚙ Filtros</button>
+        </div>
+
+        <div class="product-grid" id="productGrid"></div>
+        <div class="empty-state" id="emptyState" style="display:none">
+          <div class="empty-icon">📦</div>
+          <div class="empty-title">Sin resultados</div>
+          <div class="empty-text">Prueba con otros filtros o busca una categoría diferente.</div>
+        </div>
+      </main>
+    </div>
+  </div>
+</div>
+
+<script src="data.js"></script>
+<script src="shared.js"></script>
+<script>
+let products = [...PRODUCTS];
+let localProducts = JSON.parse(localStorage.getItem('rs_products') || '[]');
+let allProducts = [...products, ...localProducts];
+
+// Category filters
+const catContainer = document.getElementById('catFilters');
+CATEGORIES.forEach(cat => {
+  catContainer.innerHTML += `
+    <div class="filter-option">
+      <input type="checkbox" id="cat_${cat.id}" value="${cat.id}">
+      <label for="cat_${cat.id}">${cat.icon} ${cat.name}</label>
+    </div>`;
+});
+
+function getFilters() {
+  const cats = [...document.querySelectorAll('#catFilters input:checked')].map(i => i.value);
+  const conds = [...document.querySelectorAll('.filter-option input[id^="c"]:checked')].map(i => i.value);
+  const priceMin = parseFloat(document.getElementById('priceMin').value) || 0;
+  const priceMax = parseFloat(document.getElementById('priceMax').value) || Infinity;
+  const city = document.getElementById('cityFilter').value.trim().toLowerCase();
+  return { cats, conds, priceMin, priceMax, city };
+}
+
+function applySort(arr) {
+  const sort = document.getElementById('sortSelect').value;
+  return [...arr].sort((a, b) => {
+    if (sort === 'precio-asc') return a.price - b.price;
+    if (sort === 'precio-desc') return b.price - a.price;
+    if (sort === 'vistos') return b.views - a.views;
+    return new Date(b.created) - new Date(a.created);
+  });
+}
+
+function render() {
+  const q = new URLSearchParams(location.search).get('q')?.toLowerCase() || '';
+  const f = getFilters();
+  let filtered = allProducts.filter(p => {
+    if (f.cats.length && !f.cats.includes(p.category)) return false;
+    if (f.conds.length && !f.conds.includes(p.condition)) return false;
+    if (p.price < f.priceMin || p.price > f.priceMax) return false;
+    if (f.city && !p.seller.city.toLowerCase().includes(f.city)) return false;
+    if (q && !p.title.toLowerCase().includes(q) && !p.description.toLowerCase().includes(q) && !p.seller.city.toLowerCase().includes(q)) return false;
+    return true;
+  });
+  filtered = applySort(filtered);
+
+  const grid = document.getElementById('productGrid');
+  const empty = document.getElementById('emptyState');
+  const count = document.getElementById('resultCount');
+  const qEl = document.getElementById('activeQuery');
+
+  count.innerHTML = `<strong>${filtered.length}</strong> lote${filtered.length !== 1 ? 's' : ''}`;
+  qEl.textContent = q ? `para "${q}"` : '';
+
+  if (!filtered.length) { grid.innerHTML = ''; empty.style.display = 'block'; return; }
+  empty.style.display = 'none';
+
+  grid.innerHTML = filtered.map(p => {
+    const cond = CONDITIONS[p.condition];
+    const comm = getCommission(p.price);
+    return `
+    <div class="product-card" onclick="window.location='producto.html?id=${p.id}'">
+      <img class="product-card-img" src="${p.images[0]}" alt="${p.title}" loading="lazy" />
+      <div class="product-card-body">
+        <div class="product-card-top">
+          <div>
+            <div class="product-card-cat">${getCategoryIcon(p.category)} ${getCategoryName(p.category)}</div>
+            <div class="product-card-title">${p.title}</div>
+          </div>
+          <span class="badge badge-${p.condition}">${p.condition}</span>
+        </div>
+        <div class="product-card-price">${formatPrice(p.price)}</div>
+        <div class="product-card-meta">
+          <span class="product-card-qty">${p.quantity} ${p.unit}</span>
+          <span class="product-card-seller">🏪 ${p.seller.name}</span>
+          <span class="product-card-city">📍 ${p.seller.city}</span>
+          <span style="font-size:11px;color:var(--gray-400);margin-left:auto">${daysAgo(p.created)}</span>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+document.getElementById('applyFilters').onclick = render;
+document.getElementById('clearFilters').onclick = () => {
+  document.querySelectorAll('.filters-sidebar input[type=checkbox]').forEach(i => i.checked = false);
+  document.getElementById('priceMin').value = '';
+  document.getElementById('priceMax').value = '';
+  document.getElementById('cityFilter').value = '';
+  history.pushState({}, '', 'marketplace.html');
+  render();
+};
+document.getElementById('sortSelect').onchange = render;
+
+// Mobile filters toggle
+const toggleBtn = document.getElementById('toggleFilters');
+const sidebar = document.getElementById('filtersSidebar');
+toggleBtn.style.display = window.innerWidth < 900 ? 'inline-flex' : 'none';
+toggleBtn.onclick = () => sidebar.classList.toggle('open');
+
+// Apply category from URL
+const catParam = new URLSearchParams(location.search).get('cat');
+if (catParam) {
+  const cb = document.getElementById('cat_' + catParam);
+  if (cb) cb.checked = true;
+}
+
+render();
+</script>
+</body>
+</html>
