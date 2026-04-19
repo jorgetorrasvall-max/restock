@@ -106,13 +106,10 @@ if (!p) {
           <div class="product-detail-qty">${p.quantity} ${p.unit} · ${(p.price/p.quantity).toFixed(2)}€/ud</div>
 
           <div class="commission-box">
-            <div class="commission-box-title">Desglose de comisión (${comm.total}% total)</div>
+            <div class="commission-box-title">Desglose de comisión</div>
             <div class="commission-row"><span>Precio del lote</span><span>${formatPrice(p.price)}</span></div>
             <div class="commission-row"><span>Comisión comprador (${comm.buyer}%)</span><span>+${(p.price*comm.buyer/100).toFixed(2)}€</span></div>
             <div class="commission-row commission-total"><span>Tú pagas</span><span>${parseFloat(buyerPays).toLocaleString('es-ES')}€</span></div>
-            <div style="margin-top:8px;padding-top:8px;border-top:1px dashed var(--gray-200)">
-              <div class="commission-row" style="font-size:12px;color:var(--gray-400)"><span>El vendedor recibe</span><span>${parseFloat(priceAfterComm).toLocaleString('es-ES')}€ (−${comm.seller}%)</span></div>
-            </div>
           </div>
 
           <button class="btn btn-primary btn-full btn-lg" id="contactBtn">💬 Contactar al vendedor</button>
