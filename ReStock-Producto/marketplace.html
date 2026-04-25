@@ -5,323 +5,451 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Explorar lotes — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            paper: '#FDFBF7',
+            navy: '#1A3C6E',
+            'navy-dark': '#142d54',
+            gold: '#E8A020',
+            'gold-light': '#FEF3DC',
+            ink: '#1A1A1A',
+            muted: '#5C5C5C',
+            warm: '#E8E4DC',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    * { font-family: 'Inter', sans-serif; }
-
-    #dropdownMenu { display: none; }
-    #dropdownMenu.open { display: block; }
-    #mobileNavMenu { display: none; }
-    #mobileNavMenu.open { display: block; }
-    #filtersSidebar { display: none; }
-    #filtersSidebar.open { display: block; }
-    @media (min-width: 1024px) { #filtersSidebar { display: block !important; } }
-
-    .toast { position:fixed; bottom:20px; right:20px; z-index:9999; padding:10px 16px; border-radius:8px; font-size:13px; font-weight:500; box-shadow:0 2px 12px rgba(0,0,0,0.12); opacity:0; transform:translateY(6px); transition:opacity 0.2s,transform 0.2s; pointer-events:none; }
-    .toast.show { opacity:1; transform:translateY(0); }
-    .toast--success { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
-    .toast--error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
-
-    .p-card { background:#fff; border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; cursor:pointer; transition:border-color 0.15s, box-shadow 0.15s; }
-    .p-card:hover { border-color:#94a3b8; box-shadow:0 2px 8px rgba(0,0,0,0.06); }
-    .p-card-img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#f8fafc; }
-    .p-card-body { padding:12px 14px 14px; }
-    .p-card-cat { font-size:11px; color:#94a3b8; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
-    .p-card-title { font-weight:600; font-size:13px; line-height:1.4; color:#0f172a; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .p-card-price { font-weight:700; font-size:20px; color:#0f172a; margin-bottom:8px; }
-    .p-card-meta { display:flex; flex-wrap:wrap; align-items:center; gap:3px 6px; font-size:11px; color:#64748b; }
-    .p-card-meta-dot { color:#cbd5e1; }
-    .p-cond-badge { position:absolute; top:8px; right:8px; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; letter-spacing:0.02em; }
-    .cond-A { color:#059669; background:#ecfdf5; }
-    .cond-B { color:#0284c7; background:#eff6ff; }
-    .cond-C { color:#d97706; background:#fffbeb; }
-    .cond-D { color:#dc2626; background:#fef2f2; }
-
-    .filter-cb { display:flex; align-items:center; gap:8px; padding:4px 0; cursor:pointer; font-size:13px; color:#374151; }
-    .filter-cb input[type=checkbox] { accent-color:#2563eb; width:14px; height:14px; cursor:pointer; flex-shrink:0; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    .font-serif, h1, h2, h3 { font-family: 'Newsreader', Georgia, serif; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    .sidebar-cat.active { color: #1A3C6E; font-weight: 600; background: rgba(26,60,110,0.06); }
+    .cond-badge-A { background: #ecfdf5; color: #059669; }
+    .cond-badge-B { background: #eff6ff; color: #0284c7; }
+    .cond-badge-C { background: #fffbeb; color: #d97706; }
+    .cond-badge-D { background: #fef2f2; color: #dc2626; }
+    #mobileFilters { display: none; }
+    #mobileFilters.open { display: block; }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased">
+<body class="bg-paper text-ink antialiased">
 
   <!-- NAV -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 h-14">
-    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
-
-      <a href="marketplace.html" class="font-bold text-sm text-slate-900 flex-shrink-0">ReStock</a>
-
-      <div class="flex-1 max-w-md hidden sm:block">
-        <div class="relative">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-          </svg>
-          <input id="navSearch" type="text" placeholder="Buscar lotes, categorías, ciudades…"
-            class="w-full pl-9 pr-4 py-1.5 rounded-md border border-slate-200 text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-        </div>
+  <header class="sticky top-0 z-50 bg-paper/95 backdrop-blur-sm border-b border-warm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-6">
+      <a href="index.html" class="font-serif italic text-xl font-semibold text-navy flex-shrink-0 hover:opacity-80 transition-opacity duration-150">ReStock</a>
+      <nav class="hidden md:flex items-center gap-1 flex-1">
+        <a href="marketplace.html" class="px-3 py-1.5 text-sm text-ink font-medium transition-colors duration-150">Explorar lotes</a>
+        <a href="index.html#como-funciona" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Cómo funciona</a>
+        <a href="index.html#comisiones" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Comisiones</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-4 ml-auto" id="navAuth">
+        <a href="login.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Entrar</a>
+        <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
       </div>
-
-      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
-        <a href="marketplace.html" class="px-3 py-1.5 rounded-md text-sm font-medium text-blue-600 bg-blue-50 cursor-pointer">Explorar</a>
-        <a href="publicar.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-colors duration-150 cursor-pointer">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Publicar
-        </a>
-        <a href="mensajes.html" class="relative p-2 rounded-md text-slate-500 hover:bg-slate-100 transition-colors duration-150 cursor-pointer">
-          <svg class="w-4.5 h-4.5 w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/>
-          </svg>
-          <span id="msgBadge" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[9px] font-bold items-center justify-center" style="display:none"></span>
-        </a>
-        <div class="relative">
-          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-md hover:bg-slate-100 transition-colors duration-150 cursor-pointer">
-            <span id="userAvatar" class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">?</span>
-            <span id="userName" class="text-sm text-slate-700">Entrar</span>
-            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg border border-slate-200 shadow-lg py-1 z-50">
-            <a href="perfil.html"    class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
-              Mi perfil
-            </a>
-            <a href="mensajes.html"  class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
-              Mensajes
-            </a>
-            <a href="publicar.html"  class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 4.5v15m7.5-7.5h-15"/></svg>
-              Publicar lote
-            </a>
-            <a href="admin.html" id="adminLink" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer" style="display:none">
-              <svg class="w-4 h-4 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.594 3.94c.09-.542.56-.94 1.11-.94h2.593c.55 0 1.02.398 1.11.94l.213 1.281c.063.374.313.686.645.87.074.04.147.083.22.127.325.196.72.257 1.075.124l1.217-.456a1.125 1.125 0 011.37.49l1.296 2.247a1.125 1.125 0 01-.26 1.431l-1.003.827c-.293.241-.438.613-.43.992a7.723 7.723 0 010 .255c-.008.378.137.75.43.991l1.004.827c.424.35.534.955.26 1.43l-1.298 2.247a1.125 1.125 0 01-1.369.491l-1.217-.456c-.355-.133-.75-.072-1.076.124a6.47 6.47 0 01-.22.128c-.331.183-.581.495-.644.869l-.213 1.281c-.09.543-.56.94-1.11.94h-2.594c-.55 0-1.019-.398-1.11-.94l-.213-1.281c-.062-.374-.312-.686-.644-.87a6.52 6.52 0 01-.22-.127c-.325-.196-.72-.257-1.076-.124l-1.217.456a1.125 1.125 0 01-1.369-.49l-1.297-2.247a1.125 1.125 0 01.26-1.43l1.004-.827c.292-.24.437-.613.43-.991a6.932 6.932 0 010-.255c.007-.38-.138-.751-.43-.992l-1.004-.827a1.125 1.125 0 01-.26-1.43l1.297-2.247a1.125 1.125 0 011.37-.491l1.216.456c.356.133.751.072 1.076-.124.072-.044.146-.086.22-.128.332-.183.582-.495.644-.869l.214-1.28z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
-              Panel admin
-            </a>
-            <div class="border-t border-slate-100 my-1"></div>
-            <button onclick="logout()" class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 9V5.25A2.25 2.25 0 0013.5 3h-6a2.25 2.25 0 00-2.25 2.25v13.5A2.25 2.25 0 007.5 21h6a2.25 2.25 0 002.25-2.25V15M12 9l-3 3m0 0l3 3m-3-3h12.75"/></svg>
-              Cerrar sesión
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-md text-slate-500 hover:bg-slate-100 transition-colors duration-150 cursor-pointer" aria-label="Menú">
+      <button id="mobileMenuBtn" class="md:hidden ml-auto p-2 text-muted hover:text-ink cursor-pointer" aria-label="Abrir menú">
         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
     </div>
+  </header>
 
-    <div id="mobileNavMenu" class="border-t border-slate-200 bg-white">
-      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
-        <div class="pb-2">
-          <input id="navSearchMobile" type="text" placeholder="Buscar lotes…"
-            class="w-full px-3 py-2 rounded-md border border-slate-200 text-sm bg-slate-50 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500" />
+  <!-- PAGE HEADER -->
+  <div class="border-b border-warm bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
+      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
+        <div class="flex-1">
+          <h1 class="font-serif text-2xl font-semibold text-ink">Lotes disponibles</h1>
+          <p id="resultCount" class="text-sm text-muted mt-0.5">Cargando…</p>
         </div>
-        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-blue-600 font-medium bg-blue-50">Explorar</a>
-        <a href="publicar.html"    class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Publicar lote</a>
-        <a href="mensajes.html"    class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Mensajes</a>
-        <a href="perfil.html"      class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Mi perfil</a>
-        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+        <!-- Search bar -->
+        <div class="flex items-center gap-2 bg-paper border border-warm rounded-lg p-1 focus-within:border-navy/40 focus-within:ring-2 focus-within:ring-navy/10 transition-all duration-150 w-full sm:w-72">
+          <svg class="w-4 h-4 text-muted ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          <input id="searchInput" type="text" placeholder="Buscar lotes…" class="flex-1 text-sm py-2 focus:outline-none bg-transparent text-ink placeholder:text-muted" />
+        </div>
+        <!-- Mobile filter toggle -->
+        <button id="filterToggle" class="sm:hidden flex items-center gap-2 px-3 py-2 border border-warm rounded-lg text-sm text-muted bg-white cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
+          Filtros
+        </button>
+      </div>
+
+      <!-- Sort + active filters -->
+      <div class="flex items-center gap-3 mt-3 flex-wrap">
+        <select id="sortSelect" class="text-xs border border-warm rounded-md px-2 py-1.5 bg-white text-muted focus:outline-none focus:border-navy/40 cursor-pointer">
+          <option value="recent">Más recientes</option>
+          <option value="price-asc">Precio: menor primero</option>
+          <option value="price-desc">Precio: mayor primero</option>
+          <option value="views">Más vistos</option>
+        </select>
+        <div id="activeFilters" class="flex items-center gap-2 flex-wrap"></div>
       </div>
     </div>
-  </nav>
+  </div>
 
-  <!-- PAGE -->
-  <div class="pt-14 min-h-screen">
-    <div class="max-w-screen-xl mx-auto flex">
+  <!-- LAYOUT -->
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+    <div class="flex gap-8">
 
-      <!-- SIDEBAR -->
-      <aside id="filtersSidebar" class="w-60 flex-shrink-0 bg-white border-r border-slate-200 lg:sticky lg:top-14 lg:h-[calc(100vh-56px)] lg:overflow-y-auto p-5">
-        <div class="flex items-center justify-between mb-5">
-          <span class="font-semibold text-slate-900 text-sm">Filtros</span>
-          <button id="clearFilters" class="text-xs text-blue-600 font-medium hover:underline cursor-pointer">Limpiar</button>
-        </div>
+      <!-- SIDEBAR (desktop) -->
+      <aside class="hidden lg:block w-52 flex-shrink-0">
+        <div class="sticky top-20 space-y-6">
 
-        <div class="space-y-6">
+          <!-- Categories -->
           <div>
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Categoría</div>
-            <div id="catFilters" class="space-y-0.5"></div>
+            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Categoría</p>
+            <nav class="space-y-0.5" id="catNav">
+              <button data-cat="" class="sidebar-cat active w-full text-left px-3 py-2 rounded-md text-sm transition-colors duration-150 cursor-pointer hover:bg-warm/60">Todos los lotes</button>
+            </nav>
           </div>
 
+          <div class="border-t border-warm"></div>
+
+          <!-- Condition -->
           <div>
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Estado</div>
-            <div class="space-y-0.5">
-              <label class="filter-cb"><input type="checkbox" id="cA" value="A" /><span class="inline-flex items-center gap-1.5"><span class="w-4 h-4 rounded text-[9px] font-bold flex items-center justify-center cond-A">A</span>Nuevo con etiqueta</span></label>
-              <label class="filter-cb"><input type="checkbox" id="cB" value="B" /><span class="inline-flex items-center gap-1.5"><span class="w-4 h-4 rounded text-[9px] font-bold flex items-center justify-center cond-B">B</span>Nuevo sin etiqueta</span></label>
-              <label class="filter-cb"><input type="checkbox" id="cC" value="C" /><span class="inline-flex items-center gap-1.5"><span class="w-4 h-4 rounded text-[9px] font-bold flex items-center justify-center cond-C">C</span>Buen estado</span></label>
-              <label class="filter-cb"><input type="checkbox" id="cD" value="D" /><span class="inline-flex items-center gap-1.5"><span class="w-4 h-4 rounded text-[9px] font-bold flex items-center justify-center cond-D">D</span>Defecto visible</span></label>
+            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Condición</p>
+            <div class="space-y-1.5" id="condFilters">
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <input type="checkbox" value="A" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
+                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-A font-medium">Nuevo con etiqueta</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <input type="checkbox" value="B" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
+                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-B font-medium">Nuevo sin etiqueta</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <input type="checkbox" value="C" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
+                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-C font-medium">Buen estado</span>
+              </label>
+              <label class="flex items-center gap-2.5 cursor-pointer group">
+                <input type="checkbox" value="D" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
+                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-D font-medium">Defecto visible</span>
+              </label>
             </div>
           </div>
 
+          <div class="border-t border-warm"></div>
+
+          <!-- Price range -->
           <div>
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Precio</div>
-            <div class="flex items-center gap-2">
-              <input type="number" id="priceMin" placeholder="Mín €" min="0"
-                class="w-full px-2.5 py-1.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white" />
-              <span class="text-slate-300 flex-shrink-0 text-xs">—</span>
-              <input type="number" id="priceMax" placeholder="Máx €" min="0"
-                class="w-full px-2.5 py-1.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white" />
+            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Precio máximo</p>
+            <div class="space-y-1.5">
+              <button data-maxprice="" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Sin límite</button>
+              <button data-maxprice="500" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Hasta 500€</button>
+              <button data-maxprice="1000" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Hasta 1.000€</button>
+              <button data-maxprice="2000" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Hasta 2.000€</button>
             </div>
           </div>
 
-          <div>
-            <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Ciudad</div>
-            <input type="text" id="cityFilter" placeholder="Barcelona, Madrid…"
-              class="w-full px-2.5 py-1.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 bg-white" />
-          </div>
-
-          <button id="applyFilters" class="w-full py-2 rounded-md bg-blue-600 text-white text-sm font-medium hover:bg-blue-700 transition-colors duration-150 cursor-pointer">
-            Aplicar filtros
-          </button>
         </div>
       </aside>
 
-      <!-- MAIN -->
-      <main class="flex-1 min-w-0 p-4 sm:p-6">
-
-        <div class="flex items-center justify-between mb-5 gap-4">
-          <div class="flex items-center gap-2 min-w-0">
-            <span id="resultCount" class="font-semibold text-slate-900 text-sm whitespace-nowrap"></span>
-            <span id="activeQuery" class="text-sm text-slate-400 truncate"></span>
-          </div>
-          <div class="flex items-center gap-2 flex-shrink-0">
-            <select id="sortSelect" class="px-3 py-1.5 rounded-md border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 cursor-pointer text-slate-700">
-              <option value="reciente">Más recientes</option>
-              <option value="precio-asc">Precio ↑</option>
-              <option value="precio-desc">Precio ↓</option>
-              <option value="vistos">Más vistos</option>
-            </select>
-            <button id="toggleFilters" class="lg:hidden flex items-center gap-1.5 px-3 py-1.5 rounded-md border border-slate-200 text-sm text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer bg-white">
-              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10.5 6h9.75M10.5 6a1.5 1.5 0 11-3 0m3 0a1.5 1.5 0 10-3 0M3.75 6H7.5m3 12h9.75m-9.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-3.75 0H7.5m9-6h3.75m-3.75 0a1.5 1.5 0 01-3 0m3 0a1.5 1.5 0 00-3 0m-9.75 0h9.75"/></svg>
-              Filtros
-            </button>
-          </div>
+      <!-- MOBILE FILTERS -->
+      <div id="mobileFilters" class="lg:hidden fixed inset-0 z-40 bg-paper overflow-y-auto">
+        <div class="flex items-center justify-between px-4 py-3 border-b border-warm">
+          <h2 class="font-serif text-lg font-semibold text-ink">Filtros</h2>
+          <button id="closeFilters" class="p-2 text-muted hover:text-ink cursor-pointer" aria-label="Cerrar">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+          </button>
         </div>
-
-        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-
-        <div id="emptyState" class="hidden flex-col items-center justify-center py-24 text-center">
-          <div class="w-12 h-12 rounded-lg bg-slate-100 flex items-center justify-center mx-auto mb-4">
-            <svg class="w-6 h-6 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
-            </svg>
+        <div class="px-4 py-5 space-y-6">
+          <div>
+            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Categoría</p>
+            <nav class="space-y-0.5" id="catNavMobile"></nav>
           </div>
-          <div class="font-semibold text-slate-900 text-sm mb-1">Sin resultados</div>
-          <div class="text-sm text-slate-500">Prueba con otros filtros o busca una categoría diferente.</div>
+          <div class="border-t border-warm"></div>
+          <div>
+            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Condición</p>
+            <div class="space-y-2" id="condFiltersMobile"></div>
+          </div>
+          <div class="border-t border-warm"></div>
+          <div>
+            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Precio máximo</p>
+            <div class="space-y-1" id="priceFiltersMobile"></div>
+          </div>
+          <button id="applyFilters" class="w-full py-2.5 bg-navy text-white text-sm font-medium rounded-md hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Aplicar filtros</button>
+        </div>
+      </div>
+
+      <!-- PRODUCT GRID -->
+      <main class="flex-1 min-w-0">
+        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
+        <div id="emptyState" class="hidden text-center py-20">
+          <div class="font-serif text-5xl font-semibold text-warm mb-4">—</div>
+          <p class="text-base font-medium text-ink mb-1">Sin resultados</p>
+          <p class="text-sm text-muted">Prueba con otros filtros o categoría.</p>
+          <button onclick="resetFilters()" class="mt-4 text-sm text-navy font-medium hover:underline cursor-pointer">Limpiar filtros</button>
         </div>
       </main>
+
     </div>
   </div>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-warm mt-12">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
+      <a href="index.html" class="font-serif italic text-base font-semibold text-navy hover:opacity-80 transition-opacity duration-150">ReStock</a>
+      <p class="text-xs text-muted">© 2026 ReStock · Barcelona · <a href="mailto:hola@restock.es" class="hover:text-ink transition-colors duration-150">hola@restock.es</a></p>
+    </div>
+  </footer>
 
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    if (!requireAuth()) throw new Error('Unauthenticated');
+    // ── State ──────────────────────────────────────────────────────────────────
+    let state = {
+      cat: getParam('cat') || '',
+      q: getParam('q') || '',
+      conds: ['A','B','C','D'],
+      maxPrice: null,
+      sort: 'recent',
+    };
 
-    let localProducts = JSON.parse(localStorage.getItem('rs_products') || '[]');
-    let allProducts = [...PRODUCTS, ...localProducts];
+    // ── Init nav auth ──────────────────────────────────────────────────────────
+    (function initNav() {
+      const user = getUser();
+      if (user) {
+        const nav = document.getElementById('navAuth');
+        nav.innerHTML = `
+          <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Mensajes</a>
+          <a href="perfil.html" class="flex items-center gap-2 cursor-pointer group">
+            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${user.avatar}</div>
+            <span class="text-sm text-muted group-hover:text-ink transition-colors duration-150 hidden lg:block">${user.name.split('—')[0].trim()}</span>
+          </a>
+          <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
+        `;
+      }
+    })();
 
-    const catContainer = document.getElementById('catFilters');
-    CATEGORIES.forEach(cat => {
-      catContainer.innerHTML += `<label class="filter-cb"><input type="checkbox" id="cat_${cat.id}" value="${cat.id}" /><span>${cat.name}</span></label>`;
-    });
+    // ── Build sidebar ──────────────────────────────────────────────────────────
+    function buildSidebar() {
+      const cats = [{ id: '', name: 'Todos los lotes' }, ...CATEGORIES];
 
-    function getFilters() {
-      return {
-        cats:     [...document.querySelectorAll('#catFilters input:checked')].map(i => i.value),
-        conds:    [...document.querySelectorAll('#cA,#cB,#cC,#cD').values()].filter(i => i.checked).map(i => i.value),
-        priceMin: parseFloat(document.getElementById('priceMin').value) || 0,
-        priceMax: parseFloat(document.getElementById('priceMax').value) || Infinity,
-        city:     document.getElementById('cityFilter').value.trim().toLowerCase(),
-      };
+      function catBtn(c, mobile) {
+        const active = state.cat === c.id;
+        return `<button data-cat="${c.id}" class="sidebar-cat${active ? ' active' : ''} w-full text-left px-3 py-2 rounded-md text-sm transition-colors duration-150 cursor-pointer hover:bg-warm/60 ${mobile ? '' : ''}">${c.name}</button>`;
+      }
+
+      document.getElementById('catNav').innerHTML = cats.map(c => catBtn(c, false)).join('');
+      document.getElementById('catNavMobile').innerHTML = cats.map(c => catBtn(c, true)).join('');
+
+      const condHtml = CONDITIONS
+        ? Object.entries(CONDITIONS).map(([k,v]) => `
+          <label class="flex items-center gap-2.5 cursor-pointer">
+            <input type="checkbox" value="${k}" class="cond-check-m rounded border-warm cursor-pointer" ${state.conds.includes(k) ? 'checked' : ''} />
+            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${v.bg};color:${v.color}">${v.label}</span>
+          </label>`).join('')
+        : '';
+      document.getElementById('condFiltersMobile').innerHTML = condHtml;
+
+      const priceOpts = [
+        { val: '', label: 'Sin límite' },
+        { val: '500', label: 'Hasta 500€' },
+        { val: '1000', label: 'Hasta 1.000€' },
+        { val: '2000', label: 'Hasta 2.000€' },
+      ];
+      document.getElementById('priceFiltersMobile').innerHTML = priceOpts.map(p =>
+        `<button data-maxprice-m="${p.val}" class="price-filter-m w-full text-left px-3 py-1.5 rounded-md text-sm ${state.maxPrice === (p.val||null) ? 'text-navy font-semibold' : 'text-muted'} hover:bg-warm/60 transition-colors duration-150 cursor-pointer">${p.label}</button>`
+      ).join('');
     }
 
-    function applySort(arr) {
-      const s = document.getElementById('sortSelect').value;
-      return [...arr].sort((a, b) => {
-        if (s === 'precio-asc')  return a.price - b.price;
-        if (s === 'precio-desc') return b.price - a.price;
-        if (s === 'vistos')      return b.views - a.views;
-        return new Date(b.created) - new Date(a.created);
-      });
+    // ── Render products ────────────────────────────────────────────────────────
+    function condBadge(key) {
+      const c = CONDITIONS[key];
+      return `<span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${c.bg};color:${c.color}">${c.label}</span>`;
     }
 
-    function render() {
-      const q = new URLSearchParams(location.search).get('q')?.toLowerCase() || '';
-      const f = getFilters();
+    function priceStr(n) {
+      return n.toLocaleString('es-ES') + '€';
+    }
 
-      let filtered = allProducts.filter(p => {
-        if (f.cats.length  && !f.cats.includes(p.category))  return false;
-        if (f.conds.length && !f.conds.includes(p.condition)) return false;
-        if (p.price < f.priceMin || p.price > f.priceMax)    return false;
-        if (f.city && !p.seller.city.toLowerCase().includes(f.city)) return false;
-        if (q && !p.title.toLowerCase().includes(q) &&
-                 !p.description.toLowerCase().includes(q) &&
-                 !p.seller.city.toLowerCase().includes(q)) return false;
-        return true;
-      });
-      filtered = applySort(filtered);
+    function renderProducts() {
+      let items = PRODUCTS.filter(p => p.active);
 
-      const grid  = document.getElementById('productGrid');
+      if (state.cat) items = items.filter(p => p.category === state.cat);
+      if (state.q) {
+        const q = state.q.toLowerCase();
+        items = items.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
+      }
+      if (state.conds.length < 4) items = items.filter(p => state.conds.includes(p.condition));
+      if (state.maxPrice) items = items.filter(p => p.price <= state.maxPrice);
+
+      if (state.sort === 'price-asc') items.sort((a,b) => a.price - b.price);
+      else if (state.sort === 'price-desc') items.sort((a,b) => b.price - a.price);
+      else if (state.sort === 'views') items.sort((a,b) => b.views - a.views);
+      else items.sort((a,b) => new Date(b.created) - new Date(a.created));
+
+      const count = items.length;
+      document.getElementById('resultCount').textContent = count === 0
+        ? 'Ningún lote encontrado'
+        : count === 1 ? '1 lote disponible' : `${count} lotes disponibles`;
+
+      const grid = document.getElementById('productGrid');
       const empty = document.getElementById('emptyState');
-      document.getElementById('resultCount').textContent = `${filtered.length} lote${filtered.length !== 1 ? 's' : ''}`;
-      document.getElementById('activeQuery').textContent = q ? `para "${q}"` : '';
 
-      if (!filtered.length) {
-        grid.innerHTML = '';
+      if (count === 0) {
+        grid.classList.add('hidden');
         empty.classList.remove('hidden');
-        empty.classList.add('flex');
         return;
       }
+      grid.classList.remove('hidden');
       empty.classList.add('hidden');
-      empty.classList.remove('flex');
 
-      grid.innerHTML = filtered.map(p => `
-        <div class="p-card" onclick="window.location='producto.html?id=${p.id}'" role="link" tabindex="0">
-          <div style="position:relative">
-            <img class="p-card-img" src="${p.images[0]}" alt="${p.title}" loading="lazy" />
-            <span class="p-cond-badge cond-${p.condition}">${CONDITIONS[p.condition].label}</span>
+      grid.innerHTML = items.map(p => `
+        <a href="producto.html?id=${p.id}" class="group flex flex-col bg-white border border-warm rounded-xl overflow-hidden hover:border-navy/30 hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <div class="relative aspect-[4/3] bg-warm overflow-hidden">
+            <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
           </div>
-          <div class="p-card-body">
-            <div class="p-card-cat">${getCategoryName(p.category)}</div>
-            <div class="p-card-title">${p.title}</div>
-            <div class="p-card-price">${formatPrice(p.price)}</div>
-            <div class="p-card-meta">
-              <span>${p.quantity} ${p.unit}</span>
-              <span class="p-card-meta-dot">·</span>
-              <span>${p.seller.name}</span>
-              <span class="p-card-meta-dot">·</span>
-              <span>${p.seller.city}</span>
-              <span style="margin-left:auto;font-size:10px;color:#94a3b8">${daysAgo(p.created)}</span>
+          <div class="p-4 flex flex-col flex-1">
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h2 class="font-serif text-base font-semibold text-ink leading-snug group-hover:text-navy transition-colors duration-150 line-clamp-2">${p.title}</h2>
+              <div class="font-serif text-lg font-semibold text-navy flex-shrink-0">${priceStr(p.price)}</div>
+            </div>
+            <div class="flex items-center gap-2 mb-3 flex-wrap">
+              ${condBadge(p.condition)}
+              <span class="text-xs text-muted">${p.quantity} ${p.unit}</span>
+            </div>
+            <div class="mt-auto flex items-center justify-between">
+              <div class="flex items-center gap-1.5">
+                <div class="w-5 h-5 rounded-full bg-navy text-white text-[10px] font-semibold flex items-center justify-center flex-shrink-0">${p.seller.avatar}</div>
+                <span class="text-xs text-muted truncate max-w-[120px]">${p.seller.name}</span>
+              </div>
+              <div class="flex items-center gap-1 text-xs text-muted">
+                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
+                ${p.views}
+              </div>
             </div>
           </div>
-        </div>`).join('');
+        </a>
+      `).join('');
     }
 
-    document.getElementById('applyFilters').onclick = render;
-    document.getElementById('sortSelect').onchange  = render;
-    document.getElementById('clearFilters').onclick = () => {
-      document.querySelectorAll('#filtersSidebar input[type=checkbox]').forEach(i => i.checked = false);
-      document.getElementById('priceMin').value   = '';
-      document.getElementById('priceMax').value   = '';
-      document.getElementById('cityFilter').value = '';
-      history.pushState({}, '', 'marketplace.html');
-      render();
-    };
-
-    document.getElementById('toggleFilters').onclick = () => {
-      document.getElementById('filtersSidebar').classList.toggle('open');
-    };
-
-    const catParam = new URLSearchParams(location.search).get('cat');
-    if (catParam) {
-      const cb = document.getElementById('cat_' + catParam);
-      if (cb) cb.checked = true;
+    // ── Active filter chips ────────────────────────────────────────────────────
+    function renderFilterChips() {
+      const chips = [];
+      if (state.cat) {
+        const c = CATEGORIES.find(c => c.id === state.cat);
+        if (c) chips.push(`<button onclick="setCat('')" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-navy/8 border border-navy/20 text-xs text-navy font-medium cursor-pointer hover:bg-navy/15 transition-colors duration-150">${c.name} <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>`);
+      }
+      if (state.q) {
+        chips.push(`<button onclick="setQ('')" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-navy/8 border border-navy/20 text-xs text-navy font-medium cursor-pointer hover:bg-navy/15 transition-colors duration-150">"${state.q}" <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>`);
+      }
+      if (state.maxPrice) {
+        chips.push(`<button onclick="setMaxPrice(null)" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-navy/8 border border-navy/20 text-xs text-navy font-medium cursor-pointer hover:bg-navy/15 transition-colors duration-150">Hasta ${priceStr(state.maxPrice)} <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>`);
+      }
+      document.getElementById('activeFilters').innerHTML = chips.join('');
     }
 
-    document.addEventListener('keydown', e => {
-      if (e.key === 'Enter' && e.target.classList.contains('p-card')) e.target.click();
+    // ── State setters ──────────────────────────────────────────────────────────
+    function setCat(val) {
+      state.cat = val;
+      document.querySelectorAll('.sidebar-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === val));
+      refresh();
+    }
+    function setQ(val) {
+      state.q = val;
+      document.getElementById('searchInput').value = val;
+      refresh();
+    }
+    function setMaxPrice(val) {
+      state.maxPrice = val;
+      document.querySelectorAll('.price-filter').forEach(b => {
+        const bval = b.dataset.maxprice ? parseInt(b.dataset.maxprice) : null;
+        b.classList.toggle('text-navy', bval === val);
+        b.classList.toggle('font-semibold', bval === val);
+        b.classList.toggle('text-muted', bval !== val);
+      });
+      refresh();
+    }
+    function resetFilters() {
+      state = { cat: '', q: '', conds: ['A','B','C','D'], maxPrice: null, sort: 'recent' };
+      document.getElementById('searchInput').value = '';
+      document.getElementById('sortSelect').value = 'recent';
+      document.querySelectorAll('.cond-check').forEach(cb => cb.checked = true);
+      buildSidebar();
+      refresh();
+    }
+    function refresh() {
+      renderProducts();
+      renderFilterChips();
+    }
+
+    // ── Event listeners ────────────────────────────────────────────────────────
+    document.addEventListener('click', e => {
+      // Category nav
+      const catBtn = e.target.closest('.sidebar-cat');
+      if (catBtn) { setCat(catBtn.dataset.cat); return; }
+      // Price filter
+      const priceBtn = e.target.closest('.price-filter');
+      if (priceBtn) {
+        const val = priceBtn.dataset.maxprice ? parseInt(priceBtn.dataset.maxprice) : null;
+        setMaxPrice(val); return;
+      }
     });
 
-    render();
+    document.getElementById('searchInput').addEventListener('input', e => {
+      state.q = e.target.value.trim();
+      refresh();
+    });
+
+    document.getElementById('sortSelect').addEventListener('change', e => {
+      state.sort = e.target.value;
+      refresh();
+    });
+
+    document.querySelectorAll('.cond-check').forEach(cb => {
+      cb.addEventListener('change', () => {
+        state.conds = Array.from(document.querySelectorAll('.cond-check:checked')).map(c => c.value);
+        refresh();
+      });
+    });
+
+    // Mobile filters
+    document.getElementById('filterToggle').addEventListener('click', () => {
+      document.getElementById('mobileFilters').classList.add('open');
+    });
+    document.getElementById('closeFilters').addEventListener('click', () => {
+      document.getElementById('mobileFilters').classList.remove('open');
+    });
+    document.getElementById('applyFilters').addEventListener('click', () => {
+      // Read mobile state
+      state.conds = Array.from(document.querySelectorAll('.cond-check-m:checked')).map(c => c.value);
+      document.getElementById('mobileFilters').classList.remove('open');
+      buildSidebar();
+      refresh();
+    });
+    document.addEventListener('click', e => {
+      const mCat = e.target.closest('[data-cat]');
+      if (mCat && document.getElementById('catNavMobile').contains(mCat)) {
+        document.querySelectorAll('#catNavMobile .sidebar-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === mCat.dataset.cat));
+        state.cat = mCat.dataset.cat;
+      }
+      const mPrice = e.target.closest('[data-maxprice-m]');
+      if (mPrice) {
+        state.maxPrice = mPrice.dataset.maxpriceM ? parseInt(mPrice.dataset.maxpriceM) : null;
+        document.querySelectorAll('.price-filter-m').forEach(b => {
+          const bval = b.dataset.maxpriceMM ? parseInt(b.dataset.maxpriceM) : null;
+          b.classList.toggle('text-navy', bval === state.maxPrice);
+          b.classList.toggle('font-semibold', bval === state.maxPrice);
+          b.classList.toggle('text-muted', bval !== state.maxPrice);
+        });
+      }
+    });
+
+    // ── Boot ───────────────────────────────────────────────────────────────────
+    if (state.q) document.getElementById('searchInput').value = state.q;
+    buildSidebar();
+    refresh();
   </script>
 </body>
 </html>

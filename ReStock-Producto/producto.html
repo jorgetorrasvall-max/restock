@@ -3,247 +3,291 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Producto — ReStock</title>
+  <title>Detalle de lote — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            paper: '#FDFBF7',
+            navy: '#1A3C6E',
+            'navy-dark': '#142d54',
+            gold: '#E8A020',
+            'gold-light': '#FEF3DC',
+            ink: '#1A1A1A',
+            muted: '#5C5C5C',
+            warm: '#E8E4DC',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    * { font-family: 'Inter', sans-serif; }
-    #dropdownMenu { display:none; } #dropdownMenu.open { display:block; }
-    #mobileNavMenu { display:none; } #mobileNavMenu.open { display:block; }
-    .toast { position:fixed; bottom:20px; right:20px; z-index:9999; padding:10px 16px; border-radius:8px; font-size:13px; font-weight:500; box-shadow:0 2px 12px rgba(0,0,0,0.12); opacity:0; transform:translateY(6px); transition:opacity 0.2s,transform 0.2s; pointer-events:none; }
-    .toast.show { opacity:1; transform:translateY(0); }
-    .toast--success { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
-    .toast--error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
-    .cond-A { color:#059669; background:#ecfdf5; }
-    .cond-B { color:#0284c7; background:#eff6ff; }
-    .cond-C { color:#d97706; background:#fffbeb; }
-    .cond-D { color:#dc2626; background:#fef2f2; }
-    .p-card { background:#fff; border-radius:8px; border:1px solid #e2e8f0; overflow:hidden; cursor:pointer; transition:border-color 0.15s; }
-    .p-card:hover { border-color:#94a3b8; }
-    .p-card-img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#f8fafc; }
-    .p-card-body { padding:12px 14px 14px; }
-    .p-card-cat { font-size:11px; color:#94a3b8; font-weight:500; text-transform:uppercase; letter-spacing:0.05em; margin-bottom:4px; }
-    .p-card-title { font-weight:600; font-size:13px; line-height:1.4; color:#0f172a; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
-    .p-card-price { font-weight:700; font-size:18px; color:#0f172a; margin-bottom:6px; }
-    .p-card-meta { font-size:11px; color:#64748b; }
-    .p-cond-badge { position:absolute; top:8px; right:8px; padding:2px 7px; border-radius:4px; font-size:10px; font-weight:600; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    .font-serif, h1, h2, h3 { font-family: 'Newsreader', Georgia, serif; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased">
+<body class="bg-paper text-ink antialiased">
 
   <!-- NAV -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 h-14">
-    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
-      <a href="marketplace.html" class="font-bold text-sm text-slate-900 flex-shrink-0">ReStock</a>
-      <div class="flex-1 max-w-md hidden sm:block">
-        <div class="relative">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-          <input id="navSearch" type="text" placeholder="Buscar lotes…" class="w-full pl-9 pr-4 py-1.5 rounded-md border border-slate-200 text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-        </div>
-      </div>
-      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
-        <a href="marketplace.html" class="px-3 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Explorar</a>
-        <a href="publicar.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm font-medium hover:bg-slate-700 transition-colors duration-150 cursor-pointer">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Publicar
-        </a>
-        <a href="mensajes.html" class="relative p-2 rounded-md text-slate-500 hover:bg-slate-100 cursor-pointer">
-          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
-          <span id="msgBadge" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[9px] font-bold items-center justify-center" style="display:none"></span>
-        </a>
-        <div class="relative">
-          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-md hover:bg-slate-100 cursor-pointer">
-            <span id="userAvatar" class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">?</span>
-            <span id="userName" class="text-sm text-slate-700">Entrar</span>
-            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg border border-slate-200 shadow-lg py-1 z-50">
-            <a href="perfil.html"    class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Mi perfil</a>
-            <a href="mensajes.html"  class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Mensajes</a>
-            <a href="publicar.html"  class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Publicar lote</a>
-            <a href="admin.html" id="adminLink" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer" style="display:none">Panel admin</a>
-            <div class="border-t border-slate-100 my-1"></div>
-            <button onclick="logout()" class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
-          </div>
-        </div>
-      </div>
-      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-md text-slate-500 hover:bg-slate-100 cursor-pointer">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
-    <div id="mobileNavMenu" class="border-t border-slate-200 bg-white">
-      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
-        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Explorar</a>
-        <a href="publicar.html"    class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Publicar lote</a>
-        <a href="mensajes.html"    class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Mensajes</a>
-        <a href="perfil.html"      class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Mi perfil</a>
-        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+  <header class="sticky top-0 z-50 bg-paper/95 backdrop-blur-sm border-b border-warm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-6">
+      <a href="index.html" class="font-serif italic text-xl font-semibold text-navy flex-shrink-0 hover:opacity-80 transition-opacity duration-150">ReStock</a>
+      <nav class="hidden md:flex items-center gap-1 flex-1">
+        <a href="marketplace.html" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Explorar lotes</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-4 ml-auto" id="navAuth">
+        <a href="login.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Entrar</a>
+        <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
       </div>
     </div>
-  </nav>
+  </header>
 
-  <!-- PAGE -->
-  <div class="pt-14 min-h-screen">
-    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors duration-150 mb-6 cursor-pointer">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Volver al marketplace
-      </a>
-      <div id="productContent"></div>
-      <div id="relatedSection"></div>
+  <!-- BREADCRUMB -->
+  <div class="border-b border-warm bg-white">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 flex items-center gap-2 text-xs text-muted">
+      <a href="marketplace.html" class="hover:text-ink transition-colors duration-150 cursor-pointer">Explorar lotes</a>
+      <svg class="w-3 h-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+      <span id="breadcrumbTitle" class="text-ink truncate max-w-[200px]">Cargando…</span>
+    </div>
+  </div>
+
+  <!-- PRODUCT NOT FOUND -->
+  <div id="notFound" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24 text-center">
+    <div class="font-serif text-5xl font-semibold text-warm mb-4">—</div>
+    <p class="text-base font-medium text-ink mb-1">Lote no encontrado</p>
+    <p class="text-sm text-muted mb-6">Este lote puede haber sido retirado o la URL es incorrecta.</p>
+    <a href="marketplace.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">← Ver todos los lotes</a>
+  </div>
+
+  <!-- PRODUCT DETAIL -->
+  <div id="productDetail" class="hidden max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <div class="grid lg:grid-cols-[1fr_380px] gap-10 lg:gap-14 items-start">
+
+      <!-- LEFT: image + description -->
+      <div>
+        <!-- Image -->
+        <div class="aspect-[4/3] rounded-xl overflow-hidden bg-warm mb-6">
+          <img id="productImg" src="" alt="" class="w-full h-full object-cover" />
+        </div>
+
+        <!-- Title + meta (mobile) -->
+        <div class="lg:hidden mb-6">
+          <div class="flex items-start justify-between gap-3 mb-3">
+            <h1 id="productTitleM" class="font-serif text-2xl font-semibold text-ink leading-snug flex-1"></h1>
+            <div id="productPriceM" class="font-serif text-3xl font-semibold text-navy flex-shrink-0"></div>
+          </div>
+          <div id="productMetaM" class="flex flex-wrap items-center gap-2 mb-4"></div>
+          <div id="mobileCTA"></div>
+        </div>
+
+        <!-- Description -->
+        <div class="border-t border-warm pt-6">
+          <h2 class="font-serif text-lg font-semibold text-ink mb-3">Descripción del lote</h2>
+          <p id="productDesc" class="text-sm text-muted leading-relaxed"></p>
+        </div>
+
+        <!-- Details table -->
+        <div class="border-t border-warm mt-6 pt-6">
+          <h2 class="font-serif text-lg font-semibold text-ink mb-4">Detalles</h2>
+          <dl id="productDetails" class="grid grid-cols-2 gap-x-8 gap-y-3 text-sm"></dl>
+        </div>
+
+        <!-- Similar products -->
+        <div class="border-t border-warm mt-8 pt-8">
+          <h2 class="font-serif text-lg font-semibold text-ink mb-4">Más lotes similares</h2>
+          <div id="similarGrid" class="grid grid-cols-2 sm:grid-cols-3 gap-3"></div>
+        </div>
+      </div>
+
+      <!-- RIGHT: sticky sidebar (desktop) -->
+      <aside class="hidden lg:block sticky top-20">
+        <div class="bg-white border border-warm rounded-xl p-6 space-y-5">
+
+          <!-- Title + price -->
+          <div>
+            <h1 id="productTitle" class="font-serif text-xl font-semibold text-ink leading-snug mb-3"></h1>
+            <div id="productMeta" class="flex flex-wrap items-center gap-2 mb-4"></div>
+            <div id="productPrice" class="font-serif text-4xl font-semibold text-navy"></div>
+            <p id="productUnit" class="text-xs text-muted mt-1"></p>
+          </div>
+
+          <div class="border-t border-warm"></div>
+
+          <!-- Commission breakdown -->
+          <div>
+            <p class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Comisión ReStock</p>
+            <div id="commissionInfo" class="space-y-1.5 text-sm"></div>
+          </div>
+
+          <div class="border-t border-warm"></div>
+
+          <!-- CTA buttons -->
+          <div id="desktopCTA" class="space-y-2"></div>
+
+          <!-- Seller -->
+          <div class="border-t border-warm pt-5">
+            <p class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Vendedor</p>
+            <div id="sellerCard"></div>
+          </div>
+
+        </div>
+      </aside>
     </div>
   </div>
 
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    if (!requireAuth()) throw new Error('Unauthenticated');
-
-    const id = parseInt(new URLSearchParams(location.search).get('id'));
-    const localProducts = JSON.parse(localStorage.getItem('rs_products') || '[]');
-    const all = [...PRODUCTS, ...localProducts];
-    const p = all.find(x => x.id === id);
-
-    if (!p) {
-      document.getElementById('productContent').innerHTML = `
-        <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;padding:96px 0;text-align:center">
-          <div style="width:48px;height:48px;border-radius:8px;background:#f1f5f9;display:flex;align-items:center;justify-content:center;margin-bottom:16px">
-            <svg style="width:24px;height:24px;color:#94a3b8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
-          </div>
-          <div style="font-weight:600;font-size:14px;color:#0f172a;margin-bottom:4px">Producto no encontrado</div>
-          <a href="marketplace.html" style="margin-top:16px;padding:8px 20px;border-radius:6px;background:#0f172a;color:white;font-size:13px;font-weight:500;text-decoration:none">Volver al marketplace</a>
-        </div>`;
-    } else {
-      document.title = p.title + ' — ReStock';
-      const comm = getCommission(p.price);
-      const buyerPays = (p.price * (1 + comm.buyer / 100)).toFixed(2);
-      const pricePerUnit = (p.price / p.quantity).toFixed(2);
-      const unitShort = p.unit.replace('unidades','ud').replace('pares','par');
-      const cond = CONDITIONS[p.condition];
-
-      document.getElementById('productContent').innerHTML = `
-        <div style="display:grid;grid-template-columns:1fr 340px;gap:32px;align-items:start" class="detail-grid">
-
-          <div>
-            <div style="position:relative;border-radius:8px;overflow:hidden;background:#f8fafc">
-              <img src="${p.images[0]}" alt="${p.title}" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block" />
-              <span style="position:absolute;top:10px;right:10px;padding:3px 8px;border-radius:4px;font-size:10px;font-weight:600" class="cond-${p.condition}">${cond.label}</span>
-            </div>
-
-            <div style="margin-top:24px">
-              <div style="display:flex;align-items:center;gap:6px;margin-bottom:8px;flex-wrap:wrap">
-                <span style="font-size:11px;color:#64748b;background:#f1f5f9;padding:2px 8px;border-radius:4px;font-weight:500">${getCategoryName(p.category)}</span>
-                <span style="font-size:11px;color:#cbd5e1">·</span>
-                <span style="font-size:11px;color:#94a3b8">${p.views} vistas</span>
-                <span style="font-size:11px;color:#cbd5e1">·</span>
-                <span style="font-size:11px;color:#94a3b8">Publicado ${daysAgo(p.created)}</span>
-              </div>
-              <h1 style="font-size:1.5rem;font-weight:700;color:#0f172a;line-height:1.25;margin-bottom:20px">${p.title}</h1>
-
-              <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid #e2e8f0;border-radius:8px;overflow:hidden;gap:1px;background:#e2e8f0;margin-bottom:24px">
-                <div style="background:white;padding:14px">
-                  <div style="font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Precio del lote</div>
-                  <div style="font-size:1.1rem;font-weight:700;color:#0f172a">${formatPrice(p.price)}</div>
-                </div>
-                <div style="background:white;padding:14px">
-                  <div style="font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Cantidad</div>
-                  <div style="font-size:1.1rem;font-weight:700;color:#0f172a">${p.quantity} ${p.unit}</div>
-                </div>
-                <div style="background:white;padding:14px">
-                  <div style="font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Precio por unidad</div>
-                  <div style="font-size:1.1rem;font-weight:700;color:#0f172a">${pricePerUnit}€/${unitShort}</div>
-                </div>
-                <div style="background:white;padding:14px">
-                  <div style="font-size:10px;color:#94a3b8;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:3px">Ubicación</div>
-                  <div style="font-size:1.1rem;font-weight:700;color:#0f172a">${p.seller.city}</div>
-                </div>
-              </div>
-
-              <h3 style="font-size:13px;font-weight:600;color:#0f172a;margin-bottom:8px">Descripción</h3>
-              <p style="font-size:14px;color:#475569;line-height:1.7">${p.description}</p>
-            </div>
-          </div>
-
-          <div style="position:sticky;top:72px">
-            <div style="background:white;border-radius:8px;border:1px solid #e2e8f0;padding:20px">
-              <div style="font-size:1.75rem;font-weight:700;color:#0f172a;margin-bottom:2px">${formatPrice(p.price)}</div>
-              <div style="font-size:12px;color:#94a3b8;margin-bottom:16px">${p.quantity} ${p.unit} · ${pricePerUnit}€/${unitShort}</div>
-
-              <div style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:6px;padding:14px;margin-bottom:16px">
-                <div style="font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#94a3b8;margin-bottom:10px">Lo que pagarás</div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;margin-bottom:6px">
-                  <span>Precio del lote</span><span>${formatPrice(p.price)}</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-size:12px;color:#64748b;padding-bottom:10px;border-bottom:1px solid #e2e8f0;margin-bottom:10px">
-                  <span>Comisión (${comm.buyer}%)</span><span>+${(p.price * comm.buyer / 100).toFixed(2)}€</span>
-                </div>
-                <div style="display:flex;justify-content:space-between;font-weight:700;font-size:14px;color:#0f172a">
-                  <span>Total</span><span>${parseFloat(buyerPays).toLocaleString('es-ES')}€</span>
-                </div>
-              </div>
-
-              <button id="contactBtn" style="width:100%;padding:10px;border-radius:6px;background:#2563eb;color:white;font-weight:600;font-size:14px;border:none;cursor:pointer;margin-bottom:8px;transition:background 0.15s" onmouseover="this.style.background='#1d4ed8'" onmouseout="this.style.background='#2563eb'">
-                Contactar al vendedor
-              </button>
-              <button onclick="showToast('Lote guardado en favoritos','success')" style="width:100%;padding:9px;border-radius:6px;background:white;color:#0f172a;font-size:13px;font-weight:500;border:1px solid #e2e8f0;cursor:pointer;transition:border-color 0.15s" onmouseover="this.style.borderColor='#94a3b8'" onmouseout="this.style.borderColor='#e2e8f0'">
-                Guardar lote
-              </button>
-
-              <div style="margin-top:16px;padding-top:16px;border-top:1px solid #f1f5f9">
-                <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
-                  <div style="width:36px;height:36px;border-radius:50%;background:#0f172a;color:white;font-weight:700;font-size:14px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${p.seller.avatar}</div>
-                  <div>
-                    <div style="font-weight:600;font-size:13px;color:#0f172a">${p.seller.name}</div>
-                    <div style="font-size:11px;color:#94a3b8">${p.seller.city} · Desde ${p.seller.since}</div>
-                  </div>
-                </div>
-                <div style="display:flex;align-items:center;gap:4px;margin-bottom:12px">
-                  ${Array.from({length:5},(_,i)=>`<svg style="width:12px;height:12px;color:${i<Math.floor(p.seller.rating)?'#f59e0b':'#e2e8f0'}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`).join('')}
-                  <span style="font-size:12px;font-weight:600;color:#0f172a;margin-left:4px">${p.seller.rating}</span>
-                  <span style="font-size:11px;color:#94a3b8">(${p.seller.reviews})</span>
-                </div>
-                <a href="perfil.html?id=${p.seller.id}" style="display:block;width:100%;padding:8px;border-radius:6px;text-align:center;background:white;color:#0f172a;font-size:12px;font-weight:500;border:1px solid #e2e8f0;cursor:pointer;text-decoration:none;transition:border-color 0.15s" onmouseover="this.style.borderColor='#94a3b8'" onmouseout="this.style.borderColor='#e2e8f0'">
-                  Ver perfil del vendedor
-                </a>
-              </div>
-            </div>
-          </div>
-        </div>`;
-
-      document.getElementById('contactBtn').onclick = () => {
-        const user = getUser();
-        if (!user) { window.location.href = 'login.html'; return; }
-        localStorage.setItem('rs_active_conv_product', JSON.stringify(p));
-        window.location.href = 'mensajes.html?new=' + p.id;
-      };
-
-      const related = all.filter(x => x.id !== p.id && x.category === p.category).slice(0, 3);
-      if (related.length) {
-        document.getElementById('relatedSection').innerHTML = `
-          <div style="margin-top:40px;padding-top:32px;border-top:1px solid #e2e8f0">
-            <h3 style="font-weight:600;font-size:14px;color:#0f172a;margin-bottom:16px">Lotes similares</h3>
-            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
-              ${related.map(r => `
-                <div class="p-card" onclick="window.location='producto.html?id=${r.id}'" role="link" tabindex="0">
-                  <div style="position:relative">
-                    <img class="p-card-img" src="${r.images[0]}" alt="${r.title}" loading="lazy" />
-                    <span class="p-cond-badge cond-${r.condition}">${CONDITIONS[r.condition].label}</span>
-                  </div>
-                  <div class="p-card-body">
-                    <div class="p-card-cat">${getCategoryName(r.category)}</div>
-                    <div class="p-card-title">${r.title}</div>
-                    <div class="p-card-price">${formatPrice(r.price)}</div>
-                    <div class="p-card-meta">${r.quantity} ${r.unit} · ${r.seller.city}</div>
-                  </div>
-                </div>`).join('')}
-            </div>
-          </div>`;
+    // ── Auth nav ───────────────────────────────────────────────────────────────
+    (function() {
+      const user = getUser();
+      if (user) {
+        document.getElementById('navAuth').innerHTML = `
+          <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Mensajes</a>
+          <a href="perfil.html" class="flex items-center gap-2 cursor-pointer group">
+            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.avatar}</div>
+          </a>
+          <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
+        `;
       }
+    })();
+
+    // ── Load product ───────────────────────────────────────────────────────────
+    const id = parseInt(getParam('id'));
+    const product = PRODUCTS.find(p => p.id === id);
+
+    if (!product) {
+      document.getElementById('notFound').classList.remove('hidden');
+    } else {
+      document.getElementById('productDetail').classList.remove('hidden');
+
+      // Breadcrumb
+      document.getElementById('breadcrumbTitle').textContent = product.title;
+      document.title = product.title + ' — ReStock';
+
+      // Image
+      const img = document.getElementById('productImg');
+      img.src = product.images[0];
+      img.alt = product.title;
+
+      // Condition badge helper
+      const cond = CONDITIONS[product.condition];
+      const condBadge = `<span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${cond.bg};color:${cond.color}">${cond.label}</span>`;
+      const catObj = CATEGORIES.find(c => c.id === product.category);
+      const metaHtml = `
+        ${condBadge}
+        <span class="text-xs text-muted">${product.quantity} ${product.unit}</span>
+        ${catObj ? `<span class="text-xs px-2 py-0.5 rounded-full bg-warm text-muted font-medium">${catObj.name}</span>` : ''}
+      `;
+
+      // Desktop sidebar
+      document.getElementById('productTitle').textContent = product.title;
+      document.getElementById('productMeta').innerHTML = metaHtml;
+      document.getElementById('productPrice').textContent = product.price.toLocaleString('es-ES') + '€';
+      document.getElementById('productUnit').textContent = `${(product.price / product.quantity).toFixed(2).replace('.',',')}€ por ${product.unit.slice(0,-1) || 'unidad'}`;
+
+      // Mobile
+      document.getElementById('productTitleM').textContent = product.title;
+      document.getElementById('productPriceM').textContent = product.price.toLocaleString('es-ES') + '€';
+      document.getElementById('productMetaM').innerHTML = metaHtml;
+
+      // Commission
+      let rate = product.price >= 1000 ? 3 : product.price >= 500 ? 4 : 5;
+      const commAmt = Math.round(product.price * rate / 100);
+      document.getElementById('commissionInfo').innerHTML = `
+        <div class="flex justify-between text-muted">
+          <span>Comisión vendedor (${rate}%)</span>
+          <span>${commAmt.toLocaleString('es-ES')}€</span>
+        </div>
+        <div class="flex justify-between text-muted">
+          <span>Comisión comprador (${rate}%)</span>
+          <span>${commAmt.toLocaleString('es-ES')}€</span>
+        </div>
+        <div class="flex justify-between font-medium text-ink border-t border-warm pt-1.5 mt-1.5">
+          <span>Recibirás</span>
+          <span class="text-navy">${(product.price - commAmt).toLocaleString('es-ES')}€</span>
+        </div>
+      `;
+
+      // CTA buttons
+      const user = getUser();
+      const isOwner = user && (user.id === product.seller.id || user.isAdmin);
+      const ctaHtml = isOwner
+        ? `<div class="px-3 py-2 rounded-md border border-warm text-xs text-muted text-center">Tu lote</div>
+           <a href="perfil.html" class="block w-full text-center py-2.5 rounded-md border border-warm text-sm font-medium text-muted hover:bg-warm/40 transition-colors duration-150 cursor-pointer">Ver mis lotes</a>`
+        : `<button onclick="contactSeller()" class="w-full py-2.5 rounded-md bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Contactar vendedor →</button>
+           <p class="text-xs text-muted text-center">Mensajería directa · sin intermediarios</p>`;
+      document.getElementById('desktopCTA').innerHTML = ctaHtml;
+      document.getElementById('mobileCTA').innerHTML = isOwner
+        ? `<div class="px-3 py-2 rounded-md border border-warm text-xs text-muted text-center">Tu lote</div>`
+        : `<button onclick="contactSeller()" class="w-full py-2.5 rounded-md bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Contactar vendedor →</button>`;
+
+      // Seller card
+      const s = product.seller;
+      document.getElementById('sellerCard').innerHTML = `
+        <div class="flex items-center gap-3 mb-3">
+          <div class="w-9 h-9 rounded-full bg-navy text-white text-sm font-semibold flex items-center justify-center flex-shrink-0">${s.avatar}</div>
+          <div>
+            <p class="text-sm font-medium text-ink">${s.name}</p>
+            <p class="text-xs text-muted">${s.city} · desde ${s.since}</p>
+          </div>
+        </div>
+        <div class="flex items-center gap-3 text-xs text-muted">
+          <span class="flex items-center gap-1">
+            <svg class="w-3.5 h-3.5 text-gold flex-shrink-0" viewBox="0 0 20 20" fill="currentColor"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+            ${s.rating} (${s.reviews} reseñas)
+          </span>
+        </div>
+      `;
+
+      // Description
+      document.getElementById('productDesc').textContent = product.description;
+
+      // Details table
+      const created = new Date(product.created).toLocaleDateString('es-ES', { day:'numeric', month:'long', year:'numeric' });
+      document.getElementById('productDetails').innerHTML = `
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Categoría</dt><dd class="font-medium text-sm text-ink">${catObj ? catObj.name : product.category}</dd></div>
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Condición</dt><dd>${condBadge}</dd></div>
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Cantidad</dt><dd class="font-medium text-sm text-ink">${product.quantity} ${product.unit}</dd></div>
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Precio/ud</dt><dd class="font-medium text-sm text-ink">${(product.price / product.quantity).toFixed(2).replace('.',',')}€</dd></div>
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Ubicación</dt><dd class="font-medium text-sm text-ink">${s.city}</dd></div>
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Publicado</dt><dd class="font-medium text-sm text-ink">${created}</dd></div>
+        <div><dt class="text-xs text-muted uppercase tracking-wider mb-0.5">Visitas</dt><dd class="font-medium text-sm text-ink">${product.views}</dd></div>
+      `;
+
+      // Similar products
+      const similar = PRODUCTS.filter(p => p.active && p.id !== product.id && p.category === product.category).slice(0, 3);
+      const fallback = PRODUCTS.filter(p => p.active && p.id !== product.id).slice(0, 3);
+      const shown = similar.length ? similar : fallback;
+      document.getElementById('similarGrid').innerHTML = shown.map(p => `
+        <a href="producto.html?id=${p.id}" class="group flex flex-col bg-white border border-warm rounded-lg overflow-hidden hover:border-navy/30 hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <div class="aspect-[4/3] bg-warm overflow-hidden">
+            <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
+          </div>
+          <div class="p-3">
+            <p class="text-xs font-medium text-ink line-clamp-2 group-hover:text-navy transition-colors duration-150 mb-1">${p.title}</p>
+            <p class="font-serif text-sm font-semibold text-navy">${p.price.toLocaleString('es-ES')}€</p>
+          </div>
+        </a>
+      `).join('');
+    }
+
+    // ── Contact seller ─────────────────────────────────────────────────────────
+    function contactSeller() {
+      const user = getUser();
+      if (!user) { window.location.href = 'login.html'; return; }
+      window.location.href = `mensajes.html?product=${product.id}`;
     }
   </script>
-  <style>
-    @media (max-width: 1024px) { .detail-grid { grid-template-columns: 1fr !important; } }
-  </style>
 </body>
 </html>

@@ -5,285 +5,272 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Publicar lote — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            paper: '#FDFBF7',
+            navy: '#1A3C6E',
+            'navy-dark': '#142d54',
+            gold: '#E8A020',
+            'gold-light': '#FEF3DC',
+            ink: '#1A1A1A',
+            muted: '#5C5C5C',
+            warm: '#E8E4DC',
+          }
+        }
+      }
+    }
+  </script>
   <style>
-    * { font-family: 'Inter', sans-serif; }
-    #dropdownMenu { display:none; } #dropdownMenu.open { display:block; }
-    #mobileNavMenu { display:none; } #mobileNavMenu.open { display:block; }
-    .toast { position:fixed; bottom:20px; right:20px; z-index:9999; padding:10px 16px; border-radius:8px; font-size:13px; font-weight:500; box-shadow:0 2px 12px rgba(0,0,0,0.12); opacity:0; transform:translateY(6px); transition:opacity 0.2s,transform 0.2s; pointer-events:none; }
-    .toast.show { opacity:1; transform:translateY(0); }
-    .toast--success { background:#f0fdf4; color:#166534; border:1px solid #bbf7d0; }
-    .toast--error   { background:#fef2f2; color:#991b1b; border:1px solid #fecaca; }
-    .cond-opt input { display:none; }
-    .cond-opt { cursor:pointer; border:1.5px solid #e2e8f0; border-radius:8px; padding:12px; text-align:center; transition:border-color 0.15s, background 0.15s; }
-    .cond-opt:hover { border-color:#64748b; }
-    .cond-opt.selected { border-color:#0f172a; background:#f8fafc; }
-    .cond-A-color { color:#059669; } .cond-B-color { color:#0284c7; } .cond-C-color { color:#d97706; } .cond-D-color { color:#dc2626; }
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    .font-serif, h1, h2, h3 { font-family: 'Newsreader', Georgia, serif; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+    .field-label { display:block; font-size:.75rem; font-weight:600; color:#5C5C5C; text-transform:uppercase; letter-spacing:.05em; margin-bottom:.375rem; }
+    .field-input { width:100%; padding:.625rem .875rem; border-radius:.375rem; border:1px solid #E8E4DC; font-size:.875rem; background:#fff; transition:border-color 150ms, box-shadow 150ms; outline:none; color:#1A1A1A; }
+    .field-input:focus { border-color:rgba(26,60,110,.4); box-shadow:0 0 0 2px rgba(26,60,110,.1); }
+    .cond-radio { display:none; }
+    .cond-radio:checked + label { border-color:#1A3C6E; background:rgba(26,60,110,.04); }
+    .cond-radio + label { display:flex; flex-direction:column; gap:2px; padding:.75rem; border:1px solid #E8E4DC; border-radius:.5rem; cursor:pointer; transition:border-color 150ms, background 150ms; background:#fff; }
+    .cond-radio + label:hover { border-color:rgba(26,60,110,.3); }
   </style>
 </head>
-<body class="bg-slate-50 text-slate-900 antialiased">
+<body class="bg-paper text-ink antialiased">
 
   <!-- NAV -->
-  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-slate-200 h-14">
-    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
-      <a href="marketplace.html" class="font-bold text-sm text-slate-900 flex-shrink-0">ReStock</a>
-      <div class="flex-1 max-w-md hidden sm:block">
-        <div class="relative">
-          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-          <input id="navSearch" type="text" placeholder="Buscar lotes…" class="w-full pl-9 pr-4 py-1.5 rounded-md border border-slate-200 text-sm bg-slate-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-        </div>
-      </div>
-      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
-        <a href="marketplace.html" class="px-3 py-1.5 rounded-md text-sm font-medium text-slate-600 hover:bg-slate-100 cursor-pointer">Explorar</a>
-        <a href="publicar.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md bg-slate-900 text-white text-sm font-medium cursor-pointer">
-          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
-          Publicar
-        </a>
-        <a href="mensajes.html" class="relative p-2 rounded-md text-slate-500 hover:bg-slate-100 cursor-pointer">
-          <svg class="w-[18px] h-[18px]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
-          <span id="msgBadge" class="absolute -top-0.5 -right-0.5 w-3.5 h-3.5 rounded-full bg-red-500 text-white text-[9px] font-bold items-center justify-center" style="display:none"></span>
-        </a>
-        <div class="relative">
-          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-md hover:bg-slate-100 cursor-pointer">
-            <span id="userAvatar" class="w-6 h-6 rounded-full bg-slate-900 text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">?</span>
-            <span id="userName" class="text-sm text-slate-700">Entrar</span>
-            <svg class="w-3 h-3 text-slate-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
-          </button>
-          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-48 bg-white rounded-lg border border-slate-200 shadow-lg py-1 z-50">
-            <a href="perfil.html"    class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Mi perfil</a>
-            <a href="mensajes.html"  class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer">Mensajes</a>
-            <a href="admin.html" id="adminLink" class="flex items-center gap-2.5 px-4 py-2 text-sm text-slate-700 hover:bg-slate-50 cursor-pointer" style="display:none">Panel admin</a>
-            <div class="border-t border-slate-100 my-1"></div>
-            <button onclick="logout()" class="w-full flex items-center gap-2.5 px-4 py-2 text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
-          </div>
-        </div>
-      </div>
-      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-md text-slate-500 hover:bg-slate-100 cursor-pointer">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
+  <header class="sticky top-0 z-50 bg-paper/95 backdrop-blur-sm border-b border-warm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-6">
+      <a href="index.html" class="font-serif italic text-xl font-semibold text-navy flex-shrink-0 hover:opacity-80 transition-opacity duration-150">ReStock</a>
+      <nav class="hidden md:flex items-center gap-1 flex-1">
+        <a href="marketplace.html" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Explorar lotes</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-4 ml-auto" id="navAuth"></div>
     </div>
-    <div id="mobileNavMenu" class="border-t border-slate-200 bg-white">
-      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
-        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Explorar</a>
-        <a href="mensajes.html"    class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Mensajes</a>
-        <a href="perfil.html"      class="block px-3 py-2 rounded-md text-sm text-slate-700 hover:bg-slate-50">Mi perfil</a>
-        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
-      </div>
+  </header>
+
+  <!-- PAGE HEADER -->
+  <div class="border-b border-warm bg-white">
+    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <h1 class="font-serif text-2xl font-semibold text-ink">Publicar un lote</h1>
+      <p class="text-sm text-muted mt-1">Completa el formulario y tu lote estará visible en el marketplace en minutos.</p>
     </div>
-  </nav>
+  </div>
 
-  <!-- PAGE -->
-  <div class="pt-14 min-h-screen">
-    <div class="max-w-2xl mx-auto px-4 sm:px-6 py-8">
-      <a href="marketplace.html" class="inline-flex items-center gap-1.5 text-sm text-slate-500 hover:text-slate-900 transition-colors duration-150 mb-6 cursor-pointer">
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
-        Volver al marketplace
-      </a>
-      <h1 class="text-xl font-bold text-slate-900 mb-1">Publicar nuevo lote</h1>
-      <p class="text-sm text-slate-500 mb-8">Cuanto más detallado, más rápido se vende.</p>
+  <!-- FORM -->
+  <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-8 lg:py-12">
+    <form id="publishForm" class="space-y-6">
 
-      <form id="publishForm" class="space-y-5">
-
-        <!-- INFO BÁSICA -->
-        <div class="bg-white rounded-lg border border-slate-200 p-5">
-          <h2 class="font-semibold text-slate-900 text-sm mb-5">Información básica</h2>
-          <div class="space-y-4">
+      <!-- Basic info -->
+      <section class="bg-white border border-warm rounded-xl p-6">
+        <h2 class="font-serif text-lg font-semibold text-ink mb-5">Información del lote</h2>
+        <div class="space-y-4">
+          <div>
+            <label for="fTitle" class="field-label">Título <span class="text-red-400 normal-case tracking-normal font-normal">*</span></label>
+            <input type="text" id="fTitle" required placeholder="Ej: Lote 200 camisetas polo hombre, tallas M/L/XL" class="field-input" />
+            <p class="text-xs text-muted mt-1">Sé descriptivo: tipo de producto, cantidad, características clave.</p>
+          </div>
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Título del lote <span class="text-red-400">*</span></label>
-              <input type="text" id="pTitle" placeholder="Ej: Lote 200 camisetas polo hombre talla L" maxlength="100" required
-                class="w-full px-3.5 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-              <p id="titleCount" class="text-xs text-slate-400 mt-1">0/100 caracteres</p>
-            </div>
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Categoría <span class="text-red-400">*</span></label>
-                <select id="pCategory" required class="w-full px-3 py-2.5 rounded-md border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150 cursor-pointer">
-                  <option value="" disabled selected>Selecciona…</option>
-                </select>
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Ciudad <span class="text-red-400">*</span></label>
-                <input type="text" id="pCity" placeholder="Barcelona, Madrid…" required
-                  class="w-full px-3 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-              </div>
+              <label for="fCategory" class="field-label">Categoría <span class="text-red-400 normal-case tracking-normal font-normal">*</span></label>
+              <select id="fCategory" required class="field-input cursor-pointer">
+                <option value="">Seleccionar…</option>
+              </select>
             </div>
             <div>
-              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Descripción <span class="text-red-400">*</span></label>
-              <textarea id="pDesc" rows="4" required minlength="50" placeholder="Describe el producto, el estado real, el motivo de venta y cualquier detalle relevante…"
-                class="w-full px-3.5 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150 resize-none"></textarea>
-              <p id="descCount" class="text-xs text-slate-400 mt-1">0/500 caracteres · mínimo 50</p>
+              <label for="fPrice" class="field-label">Precio total (€) <span class="text-red-400 normal-case tracking-normal font-normal">*</span></label>
+              <input type="number" id="fPrice" required min="1" placeholder="850" class="field-input" />
             </div>
           </div>
-        </div>
-
-        <!-- ESTADO Y CANTIDAD -->
-        <div class="bg-white rounded-lg border border-slate-200 p-5">
-          <h2 class="font-semibold text-slate-900 text-sm mb-5">Estado y cantidad</h2>
-          <div class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
             <div>
-              <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Estado del producto <span class="text-red-400">*</span></label>
-              <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
-                <label class="cond-opt" id="cond_A"><input type="radio" name="condition" value="A" required /><div class="font-bold text-lg cond-A-color mb-1">A</div><div class="text-xs text-slate-600">Nuevo con etiqueta</div></label>
-                <label class="cond-opt" id="cond_B"><input type="radio" name="condition" value="B" /><div class="font-bold text-lg cond-B-color mb-1">B</div><div class="text-xs text-slate-600">Nuevo sin etiqueta</div></label>
-                <label class="cond-opt" id="cond_C"><input type="radio" name="condition" value="C" /><div class="font-bold text-lg cond-C-color mb-1">C</div><div class="text-xs text-slate-600">Buen estado</div></label>
-                <label class="cond-opt" id="cond_D"><input type="radio" name="condition" value="D" /><div class="font-bold text-lg cond-D-color mb-1">D</div><div class="text-xs text-slate-600">Defecto visible</div></label>
-              </div>
+              <label for="fQuantity" class="field-label">Cantidad <span class="text-red-400 normal-case tracking-normal font-normal">*</span></label>
+              <input type="number" id="fQuantity" required min="1" placeholder="200" class="field-input" />
             </div>
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Cantidad <span class="text-red-400">*</span></label>
-                <input type="number" id="pQuantity" placeholder="Ej: 250" min="1" required
-                  class="w-full px-3 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Unidad</label>
-                <select id="pUnit" class="w-full px-3 py-2.5 rounded-md border border-slate-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150 cursor-pointer">
-                  <option value="unidades">Unidades</option>
-                  <option value="pares">Pares</option>
-                  <option value="kg">Kilogramos</option>
-                  <option value="cajas">Cajas</option>
-                  <option value="palés">Palés</option>
-                </select>
-              </div>
+            <div>
+              <label for="fUnit" class="field-label">Unidad</label>
+              <select id="fUnit" class="field-input cursor-pointer">
+                <option value="unidades">Unidades</option>
+                <option value="pares">Pares</option>
+                <option value="cajas">Cajas</option>
+                <option value="kg">Kg</option>
+                <option value="litros">Litros</option>
+              </select>
             </div>
           </div>
-        </div>
-
-        <!-- PRECIO -->
-        <div class="bg-white rounded-lg border border-slate-200 p-5">
-          <h2 class="font-semibold text-slate-900 text-sm mb-5">Precio</h2>
-          <div class="space-y-4">
-            <div class="grid grid-cols-2 gap-3">
-              <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Precio total (€) <span class="text-red-400">*</span></label>
-                <input type="number" id="pPrice" placeholder="Ej: 850" min="1" required
-                  class="w-full px-3 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-              </div>
-              <div>
-                <label class="block text-xs font-semibold text-slate-500 uppercase tracking-wider mb-1.5">Precio por unidad</label>
-                <input type="text" id="pPricePerUnit" disabled placeholder="—"
-                  class="w-full px-3 py-2.5 rounded-md border border-slate-200 text-sm bg-slate-50 text-slate-500" />
-              </div>
-            </div>
-            <div id="commissionPreview" class="hidden bg-slate-50 border border-slate-200 rounded-md p-4">
-              <div class="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Previsión de cobro</div>
-              <div id="commissionDetails" class="space-y-2"></div>
-            </div>
+          <div>
+            <label for="fDesc" class="field-label">Descripción <span class="text-red-400 normal-case tracking-normal font-normal">*</span></label>
+            <textarea id="fDesc" required rows="4" placeholder="Describe el producto: estado, tallas, origen del stock, motivo de venta, condiciones de entrega…" class="field-input resize-none"></textarea>
           </div>
         </div>
+      </section>
 
-        <!-- IMÁGENES -->
-        <div class="bg-white rounded-lg border border-slate-200 p-5">
-          <h2 class="font-semibold text-slate-900 text-sm mb-5">Imágenes</h2>
-          <div id="uploadArea" onclick="document.getElementById('imgInput').click()"
-            class="border-2 border-dashed border-slate-200 rounded-md p-8 text-center cursor-pointer hover:border-slate-400 hover:bg-slate-50 transition-colors duration-150">
-            <svg class="w-8 h-8 text-slate-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
-            <p class="text-sm font-medium text-slate-600 mb-1">Sube fotos del lote</p>
-            <p class="text-xs text-slate-400">Mínimo 3 fotos: lote completo, detalle y estado. JPG o PNG.</p>
+      <!-- Condition -->
+      <section class="bg-white border border-warm rounded-xl p-6">
+        <h2 class="font-serif text-lg font-semibold text-ink mb-5">Condición del producto</h2>
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div>
+            <input type="radio" name="condition" id="condA" value="A" class="cond-radio" checked />
+            <label for="condA">
+              <span class="text-xs font-semibold" style="color:#059669">Nuevo con etiqueta</span>
+              <span class="text-xs text-muted">Producto original intacto</span>
+            </label>
           </div>
-          <input type="file" id="imgInput" accept="image/*" multiple class="hidden" />
-          <div id="imgPreview" class="flex gap-2 flex-wrap mt-3"></div>
+          <div>
+            <input type="radio" name="condition" id="condB" value="B" class="cond-radio" />
+            <label for="condB">
+              <span class="text-xs font-semibold" style="color:#0284c7">Nuevo sin etiqueta</span>
+              <span class="text-xs text-muted">Sin caja, sin uso</span>
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="condition" id="condC" value="C" class="cond-radio" />
+            <label for="condC">
+              <span class="text-xs font-semibold" style="color:#d97706">Buen estado</span>
+              <span class="text-xs text-muted">Signos de almacén</span>
+            </label>
+          </div>
+          <div>
+            <input type="radio" name="condition" id="condD" value="D" class="cond-radio" />
+            <label for="condD">
+              <span class="text-xs font-semibold" style="color:#dc2626">Defecto visible</span>
+              <span class="text-xs text-muted">Con defectos menores</span>
+            </label>
+          </div>
         </div>
+      </section>
 
-        <!-- ACTIONS -->
-        <div class="flex items-center justify-end gap-3 pb-8">
-          <a href="marketplace.html" class="px-4 py-2.5 rounded-md border border-slate-200 text-sm font-medium text-slate-700 hover:bg-slate-50 transition-colors duration-150 cursor-pointer">Cancelar</a>
-          <button type="submit" class="px-5 py-2.5 rounded-md bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors duration-150 cursor-pointer">
-            Publicar lote →
-          </button>
+      <!-- Image -->
+      <section class="bg-white border border-warm rounded-xl p-6">
+        <h2 class="font-serif text-lg font-semibold text-ink mb-1">Imagen del lote</h2>
+        <p class="text-sm text-muted mb-4">Añade una URL de imagen representativa.</p>
+        <div>
+          <label for="fImage" class="field-label">URL de imagen</label>
+          <input type="url" id="fImage" placeholder="https://…" class="field-input" />
+          <p class="text-xs text-muted mt-1">Sube la imagen a Imgur, Cloudinary o similar y pega la URL aquí.</p>
         </div>
-      </form>
+        <div id="imagePreview" class="hidden mt-4 aspect-[16/7] rounded-lg overflow-hidden bg-warm border border-warm">
+          <img id="previewImg" src="" alt="Vista previa" class="w-full h-full object-cover" />
+        </div>
+      </section>
+
+      <!-- Commission preview -->
+      <div class="bg-gold-light border border-gold/30 rounded-xl p-5">
+        <p class="text-xs font-semibold text-muted uppercase tracking-wider mb-3">Estimación de comisión</p>
+        <div id="commLines" class="space-y-1 text-sm">
+          <p class="text-sm text-muted">Introduce el precio para ver la estimación.</p>
+        </div>
+      </div>
+
+      <div id="formError" class="hidden px-4 py-3 rounded-md bg-red-50 border border-red-200 text-sm text-red-700"></div>
+
+      <div class="flex items-center gap-4">
+        <button type="submit" class="px-6 py-2.5 rounded-md bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote →</button>
+        <a href="marketplace.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Cancelar</a>
+      </div>
+
+    </form>
+  </div>
+
+  <!-- SUCCESS MODAL -->
+  <div id="successModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-ink/40 backdrop-blur-sm px-4">
+    <div class="bg-white rounded-2xl border border-warm shadow-lg max-w-sm w-full p-8 text-center">
+      <div class="w-12 h-12 rounded-full bg-navy/10 flex items-center justify-center mx-auto mb-4">
+        <svg class="w-6 h-6 text-navy" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+      </div>
+      <h2 class="font-serif text-2xl font-semibold text-ink mb-2">Lote publicado</h2>
+      <p class="text-sm text-muted mb-6">Tu lote ya está visible en el marketplace.</p>
+      <div class="space-y-2">
+        <a id="viewLoteLink" href="marketplace.html" class="block w-full py-2.5 rounded-md bg-navy text-white text-sm font-semibold hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Ver mi lote →</a>
+        <a href="perfil.html" class="block w-full py-2.5 rounded-md border border-warm text-sm font-medium text-muted hover:bg-warm/40 transition-colors duration-150 cursor-pointer">Ir a mi perfil</a>
+      </div>
     </div>
   </div>
 
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    if (!requireAuth()) throw new Error('Unauthenticated');
+    requireAuth();
 
-    const catSel = document.getElementById('pCategory');
+    (function() {
+      const user = getUser();
+      if (!user) return;
+      document.getElementById('navAuth').innerHTML = `
+        <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Mensajes</a>
+        <a href="perfil.html" class="flex items-center gap-2 cursor-pointer">
+          <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.avatar}</div>
+        </a>
+      `;
+    })();
+
     CATEGORIES.forEach(c => {
       const o = document.createElement('option');
       o.value = c.id; o.textContent = c.name;
-      catSel.appendChild(o);
+      document.getElementById('fCategory').appendChild(o);
     });
 
-    document.querySelectorAll('.cond-opt input[type=radio]').forEach(radio => {
-      radio.addEventListener('change', () => {
-        document.querySelectorAll('.cond-opt').forEach(el => el.classList.remove('selected'));
-        radio.closest('.cond-opt').classList.add('selected');
-      });
-    });
-
-    document.getElementById('pTitle').addEventListener('input', function() {
-      document.getElementById('titleCount').textContent = this.value.length + '/100 caracteres';
-    });
-    document.getElementById('pDesc').addEventListener('input', function() {
-      document.getElementById('descCount').textContent = this.value.length + '/500 caracteres · mínimo 50';
-    });
-
-    function updatePrice() {
-      const price = parseFloat(document.getElementById('pPrice').value) || 0;
-      const qty   = parseFloat(document.getElementById('pQuantity').value) || 0;
-      if (price && qty) document.getElementById('pPricePerUnit').value = (price / qty).toFixed(2) + '€';
-      const preview = document.getElementById('commissionPreview');
-      if (price) {
-        const comm = getCommission(price);
-        const receives = (price * (1 - comm.seller / 100)).toFixed(2);
-        preview.classList.remove('hidden');
-        document.getElementById('commissionDetails').innerHTML = `
-          <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b"><span>Precio publicado</span><span>${formatPrice(price)}</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;color:#64748b"><span>Comisión ReStock (${comm.seller}%)</span><span style="color:#dc2626">−${(price * comm.seller / 100).toFixed(2)}€</span></div>
-          <div style="display:flex;justify-content:space-between;font-size:13px;font-weight:600;color:#0f172a;padding-top:8px;border-top:1px solid #e2e8f0;margin-top:8px"><span>Tú recibes</span><span>${parseFloat(receives).toLocaleString('es-ES')}€</span></div>`;
-      } else {
-        preview.classList.add('hidden');
+    document.getElementById('fPrice').addEventListener('input', function() {
+      const price = parseFloat(this.value) || 0;
+      if (!price) {
+        document.getElementById('commLines').innerHTML = '<p class="text-sm text-muted">Introduce el precio para ver la estimación.</p>';
+        return;
       }
-    }
-    document.getElementById('pPrice').addEventListener('input', updatePrice);
-    document.getElementById('pQuantity').addEventListener('input', updatePrice);
+      const rate = price >= 1000 ? 3 : price >= 500 ? 4 : 5;
+      const comm = Math.round(price * rate / 100);
+      document.getElementById('commLines').innerHTML = `
+        <div class="flex justify-between text-muted"><span>Precio publicado</span><span class="font-medium text-ink">${price.toLocaleString('es-ES')}€</span></div>
+        <div class="flex justify-between text-muted"><span>Comisión vendedor (${rate}%)</span><span>−${comm.toLocaleString('es-ES')}€</span></div>
+        <div class="flex justify-between font-medium text-ink border-t border-gold/20 pt-1.5 mt-1.5"><span>Recibirás</span><span class="text-navy">${(price - comm).toLocaleString('es-ES')}€</span></div>
+      `;
+    });
 
-    document.getElementById('imgInput').addEventListener('change', function() {
-      const preview = document.getElementById('imgPreview');
-      preview.innerHTML = '';
-      [...this.files].forEach(file => {
-        const reader = new FileReader();
-        reader.onload = e => {
-          const img = document.createElement('img');
-          img.src = e.target.result;
-          img.style.cssText = 'width:72px;height:54px;object-fit:cover;border-radius:6px;border:1px solid #e2e8f0';
-          preview.appendChild(img);
-        };
-        reader.readAsDataURL(file);
-      });
+    document.getElementById('fImage').addEventListener('input', function() {
+      const url = this.value.trim();
+      const wrap = document.getElementById('imagePreview');
+      const img = document.getElementById('previewImg');
+      if (url) {
+        img.src = url;
+        wrap.classList.remove('hidden');
+        img.onerror = () => wrap.classList.add('hidden');
+      } else {
+        wrap.classList.add('hidden');
+      }
     });
 
     document.getElementById('publishForm').addEventListener('submit', e => {
       e.preventDefault();
       const user = getUser();
-      const cond = document.querySelector('input[name=condition]:checked')?.value;
-      if (!cond) { showToast('Selecciona el estado del producto', 'error'); return; }
+      const err = document.getElementById('formError');
+      const category = document.getElementById('fCategory').value;
+      if (!category) { err.textContent = 'Selecciona una categoría.'; err.classList.remove('hidden'); return; }
+      err.classList.add('hidden');
 
-      const newProduct = {
-        id: Date.now(),
-        title: document.getElementById('pTitle').value,
-        category: document.getElementById('pCategory').value,
-        condition: cond,
-        price: parseFloat(document.getElementById('pPrice').value),
-        quantity: parseInt(document.getElementById('pQuantity').value),
-        unit: document.getElementById('pUnit').value,
-        seller: { id: user?.id || 0, name: user?.name || 'Tú', city: document.getElementById('pCity').value || user?.city || 'España', rating: 0, reviews: 0, avatar: user?.avatar || 'U', since: 'Abr 2026' },
-        description: document.getElementById('pDesc').value,
-        images: ['https://placehold.co/640x420/1e293b/FFFFFF?text=' + encodeURIComponent(document.getElementById('pTitle').value.substring(0,20))],
-        created: new Date().toISOString().split('T')[0],
+      const title = document.getElementById('fTitle').value.trim();
+      const imgUrl = document.getElementById('fImage').value.trim();
+      const newId = Math.max(...PRODUCTS.map(p => p.id)) + 1;
+      PRODUCTS.push({
+        id: newId, title, category,
+        condition: document.querySelector('input[name="condition"]:checked').value,
+        price: parseFloat(document.getElementById('fPrice').value),
+        quantity: parseInt(document.getElementById('fQuantity').value),
+        unit: document.getElementById('fUnit').value,
+        seller: { id: user.id, name: user.name, city: user.city, rating: 5.0, reviews: 0, avatar: user.avatar, since: 'Ahora' },
+        description: document.getElementById('fDesc').value.trim(),
+        images: [imgUrl || `https://placehold.co/640x420/1A3C6E/FFFFFF?text=${encodeURIComponent(title.slice(0,20))}`],
+        created: new Date().toISOString().slice(0,10),
         views: 0, active: true,
-      };
-
-      const saved = JSON.parse(localStorage.getItem('rs_products') || '[]');
-      saved.push(newProduct);
-      localStorage.setItem('rs_products', JSON.stringify(saved));
-      showToast('¡Lote publicado correctamente!', 'success');
-      setTimeout(() => window.location.href = 'producto.html?id=' + newProduct.id, 1000);
+      });
+      user.products = (user.products || 0) + 1;
+      setUser(user);
+      document.getElementById('viewLoteLink').href = `producto.html?id=${newId}`;
+      document.getElementById('successModal').classList.remove('hidden');
     });
   </script>
 </body>

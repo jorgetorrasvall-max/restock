@@ -1,529 +1,340 @@
 <!DOCTYPE html>
-<html lang="es" class="scroll-smooth">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ReStock — El marketplace B2B del stock sobrante</title>
-  <meta name="description" content="Convierte tu inventario parado en liquidez. El marketplace B2B pensado para negocios con NIF." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;0,6..72,600;0,6..72,700;1,6..72,400;1,6..72,500&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
-  <style>
-    * { font-family: 'Inter', sans-serif; }
-
-    .tab-panel { display: none; }
-    .tab-panel.active { display: block; }
-
-    @media (prefers-reduced-motion: reduce) {
-      * { transition: none !important; animation: none !important; }
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Newsreader', 'Georgia', 'serif'],
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+          },
+          colors: {
+            paper: '#FDFBF7',
+            navy: '#1A3C6E',
+            'navy-dark': '#142d54',
+            gold: '#E8A020',
+            'gold-light': '#FEF3DC',
+            ink: '#1A1A1A',
+            muted: '#5C5C5C',
+            warm: '#E8E4DC',
+          }
+        }
+      }
     }
+  </script>
+  <style>
+    * { font-family: 'Inter', system-ui, sans-serif; }
+    .font-serif, h1, h2, h3 { font-family: 'Newsreader', Georgia, serif; }
+    #mobileMenu { display: none; }
+    #mobileMenu.open { display: block; }
+    @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
   </style>
 </head>
-<body class="antialiased bg-white text-slate-900">
+<body class="bg-paper text-ink antialiased">
 
   <!-- NAV -->
-  <nav class="sticky top-0 z-50 bg-white border-b border-slate-100">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="flex items-center justify-between h-14">
-
-        <a href="#" class="font-bold text-base text-slate-900 tracking-tight">ReStock</a>
-
-        <ul class="hidden md:flex items-center gap-7 text-sm text-slate-500">
-          <li><a href="#como-funciona" class="hover:text-slate-900 transition-colors duration-150">Cómo funciona</a></li>
-          <li><a href="#precios"       class="hover:text-slate-900 transition-colors duration-150">Comisiones</a></li>
-          <li><a href="#founders"      class="hover:text-slate-900 transition-colors duration-150">Early Adopter</a></li>
-        </ul>
-
-        <div class="flex items-center gap-3">
-          <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2 rounded-md text-sm font-medium bg-slate-900 text-white hover:bg-slate-700 transition-colors duration-150 cursor-pointer">
-            Ir a la plataforma
-          </a>
-          <button id="navToggle" class="md:hidden p-2 text-slate-500 hover:text-slate-900" aria-label="Abrir menú">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
-            </svg>
-          </button>
-        </div>
+  <header class="sticky top-0 z-50 bg-paper/95 backdrop-blur-sm border-b border-warm">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-6">
+      <a href="index.html" class="font-serif italic text-xl font-semibold text-navy flex-shrink-0 hover:opacity-80 transition-opacity duration-150">ReStock</a>
+      <nav class="hidden md:flex items-center gap-1 flex-1">
+        <a href="marketplace.html" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Explorar lotes</a>
+        <a href="#como-funciona" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Cómo funciona</a>
+        <a href="#comisiones" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Comisiones</a>
+      </nav>
+      <div class="hidden md:flex items-center gap-4 ml-auto">
+        <a href="login.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Entrar</a>
+        <a href="login.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
+      </div>
+      <button id="mobileMenuBtn" class="md:hidden ml-auto p-2 text-muted hover:text-ink cursor-pointer" aria-label="Abrir menú">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobileMenu" class="border-t border-warm bg-paper">
+      <div class="px-4 py-3 space-y-1 max-w-7xl mx-auto">
+        <a href="marketplace.html" class="block px-3 py-2 text-sm text-ink hover:bg-warm rounded-md transition-colors duration-150">Explorar lotes</a>
+        <a href="#como-funciona" class="block px-3 py-2 text-sm text-ink hover:bg-warm rounded-md transition-colors duration-150">Cómo funciona</a>
+        <a href="#comisiones" class="block px-3 py-2 text-sm text-ink hover:bg-warm rounded-md transition-colors duration-150">Comisiones</a>
+        <div class="border-t border-warm my-2"></div>
+        <a href="login.html" class="block px-3 py-2 text-sm text-ink hover:bg-warm rounded-md transition-colors duration-150">Entrar</a>
+        <a href="login.html" class="block px-3 py-2 text-sm font-medium text-navy hover:bg-warm rounded-md transition-colors duration-150">Publicar lote →</a>
       </div>
     </div>
-
-    <div id="mobileMenu" class="hidden md:hidden border-t border-slate-100 bg-white">
-      <div class="max-w-6xl mx-auto px-4 py-3 space-y-1">
-        <a href="#como-funciona" class="block px-3 py-2 rounded-md text-sm text-slate-600 hover:bg-slate-50">Cómo funciona</a>
-        <a href="#precios"       class="block px-3 py-2 rounded-md text-sm text-slate-600 hover:bg-slate-50">Comisiones</a>
-        <a href="#founders"      class="block px-3 py-2 rounded-md text-sm text-slate-600 hover:bg-slate-50">Early Adopter</a>
-        <a href="login.html"     class="block mt-2 px-3 py-2 rounded-md text-sm font-medium bg-slate-900 text-white text-center cursor-pointer">Ir a la plataforma</a>
-      </div>
-    </div>
-  </nav>
+  </header>
 
   <!-- HERO -->
-  <section class="py-24 sm:py-32 bg-white">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+  <section class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-16 pb-20 lg:pt-20 lg:pb-28">
+    <div class="grid lg:grid-cols-2 gap-12 lg:gap-20 items-start">
 
-      <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-slate-200 text-xs text-slate-500 mb-8">
-        <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-        Beta — acceso por invitación
+      <!-- Left: headline -->
+      <div>
+        <div class="inline-flex items-center gap-2 text-xs font-medium text-gold bg-gold-light border border-gold/30 px-3 py-1.5 rounded-full mb-8">
+          <span class="w-1.5 h-1.5 rounded-full bg-gold flex-shrink-0"></span>
+          Beta abierta · 47 lotes disponibles
+        </div>
+        <h1 class="font-serif text-5xl lg:text-[60px] font-semibold text-ink leading-[1.1] tracking-tight mb-6">
+          El mercado del<br/>stock que ya<br/><em class="text-navy">no necesitas.</em>
+        </h1>
+        <p class="text-base text-muted leading-relaxed mb-10 max-w-md">
+          Conectamos empresas con inventario parado y compradores que buscan producto para revender. Sin intermediarios grises.
+        </p>
+        <div class="flex items-center gap-6 text-sm border-t border-warm pt-8">
+          <div>
+            <div class="font-serif font-semibold text-ink text-lg">47</div>
+            <div class="text-muted text-xs mt-0.5">lotes activos</div>
+          </div>
+          <div class="w-px h-8 bg-warm"></div>
+          <div>
+            <div class="font-serif font-semibold text-ink text-lg">23</div>
+            <div class="text-muted text-xs mt-0.5">empresas</div>
+          </div>
+          <div class="w-px h-8 bg-warm"></div>
+          <div>
+            <div class="font-serif font-semibold text-ink text-lg">desde 3%</div>
+            <div class="text-muted text-xs mt-0.5">de comisión</div>
+          </div>
+        </div>
       </div>
 
-      <h1 class="text-4xl sm:text-5xl lg:text-6xl font-bold text-slate-900 leading-[1.1] tracking-tight max-w-3xl">
-        El marketplace B2B<br/>del stock sobrante
-      </h1>
-
-      <p class="mt-6 text-lg text-slate-500 max-w-xl leading-relaxed">
-        Convierte tu inventario parado en liquidez. Compra producto barato para revender.
-        Una plataforma exclusiva para negocios con NIF.
-      </p>
-
-      <div class="mt-8 flex flex-wrap gap-3">
-        <a href="login.html" class="inline-flex items-center gap-2 px-5 py-2.5 rounded-md bg-blue-600 text-white text-sm font-semibold hover:bg-blue-700 transition-colors duration-150 cursor-pointer">
-          Entrar a la plataforma
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
-        </a>
-        <a href="#como-funciona" class="inline-flex items-center px-5 py-2.5 rounded-md border border-slate-200 text-slate-700 text-sm font-medium hover:bg-slate-50 transition-colors duration-150 cursor-pointer">
-          Ver cómo funciona
-        </a>
-      </div>
-
-      <div class="mt-16 pt-8 border-t border-slate-100 grid grid-cols-3 gap-8 max-w-lg">
-        <div>
-          <div class="text-2xl font-bold text-slate-900">Desde 3%</div>
-          <div class="text-xs text-slate-400 mt-1">comisión por transacción</div>
+      <!-- Right: search + listings preview -->
+      <div class="lg:pt-6">
+        <div class="flex items-center gap-2 bg-white border border-warm rounded-lg p-1 mb-4 focus-within:border-navy/40 focus-within:ring-2 focus-within:ring-navy/10 transition-all duration-150">
+          <svg class="w-4 h-4 text-muted ml-3 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          <input id="heroSearch" type="text" placeholder="Buscar moda, electrónica, hogar…" class="flex-1 text-sm py-2.5 focus:outline-none bg-transparent text-ink placeholder:text-muted" />
+          <button onclick="doSearch()" class="px-4 py-2.5 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer flex-shrink-0">Buscar</button>
+        </div>
+        <div class="flex flex-wrap gap-2 mb-8">
+          <button onclick="goTo('moda')" class="px-3 py-1.5 rounded-full text-xs font-medium border border-warm bg-white text-muted hover:border-navy/40 hover:text-navy transition-colors duration-150 cursor-pointer">Moda y textil</button>
+          <button onclick="goTo('electronica')" class="px-3 py-1.5 rounded-full text-xs font-medium border border-warm bg-white text-muted hover:border-navy/40 hover:text-navy transition-colors duration-150 cursor-pointer">Electrónica</button>
+          <button onclick="goTo('hogar')" class="px-3 py-1.5 rounded-full text-xs font-medium border border-warm bg-white text-muted hover:border-navy/40 hover:text-navy transition-colors duration-150 cursor-pointer">Hogar</button>
+          <button onclick="goTo('alimentacion')" class="px-3 py-1.5 rounded-full text-xs font-medium border border-warm bg-white text-muted hover:border-navy/40 hover:text-navy transition-colors duration-150 cursor-pointer">Alimentación</button>
+          <button onclick="goTo('deportes')" class="px-3 py-1.5 rounded-full text-xs font-medium border border-warm bg-white text-muted hover:border-navy/40 hover:text-navy transition-colors duration-150 cursor-pointer">Deportes</button>
+          <button onclick="goTo('')" class="px-3 py-1.5 text-xs font-medium text-navy hover:underline transition-colors duration-150 cursor-pointer">Ver todo →</button>
         </div>
         <div>
-          <div class="text-2xl font-bold text-slate-900">+1M</div>
-          <div class="text-xs text-slate-400 mt-1">eCommerce en Europa</div>
-        </div>
-        <div>
-          <div class="text-2xl font-bold text-slate-900">10.000M€</div>
-          <div class="text-xs text-slate-400 mt-1">stock sobrante/año</div>
+          <p class="text-xs font-medium text-muted uppercase tracking-widest mb-3">Publicados recientemente</p>
+          <div class="space-y-2">
+            <a href="marketplace.html" class="flex items-center gap-3 p-3 bg-white border border-warm rounded-lg hover:border-navy/30 hover:bg-paper transition-colors duration-150 cursor-pointer group">
+              <div class="w-10 h-10 rounded-md bg-warm flex-shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-medium text-ink truncate group-hover:text-navy transition-colors duration-150">Lote ropa infantil — 200 prendas</div>
+                <div class="text-xs text-muted mt-0.5">Moda · Barcelona · Condición A</div>
+              </div>
+              <div class="font-serif text-sm font-semibold text-navy flex-shrink-0">1.200€</div>
+            </a>
+            <a href="marketplace.html" class="flex items-center gap-3 p-3 bg-white border border-warm rounded-lg hover:border-navy/30 hover:bg-paper transition-colors duration-150 cursor-pointer group">
+              <div class="w-10 h-10 rounded-md bg-warm flex-shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-medium text-ink truncate group-hover:text-navy transition-colors duration-150">Auriculares Bluetooth — 50 unidades</div>
+                <div class="text-xs text-muted mt-0.5">Electrónica · Madrid · Condición B</div>
+              </div>
+              <div class="font-serif text-sm font-semibold text-navy flex-shrink-0">3.500€</div>
+            </a>
+            <a href="marketplace.html" class="flex items-center gap-3 p-3 bg-white border border-warm rounded-lg hover:border-navy/30 hover:bg-paper transition-colors duration-150 cursor-pointer group">
+              <div class="w-10 h-10 rounded-md bg-warm flex-shrink-0"></div>
+              <div class="flex-1 min-w-0">
+                <div class="text-sm font-medium text-ink truncate group-hover:text-navy transition-colors duration-150">Aceite de oliva virgen extra — 500L</div>
+                <div class="text-xs text-muted mt-0.5">Alimentación · Sevilla · Condición A</div>
+              </div>
+              <div class="font-serif text-sm font-semibold text-navy flex-shrink-0">2.800€</div>
+            </a>
+          </div>
+          <a href="marketplace.html" class="block text-center text-xs text-navy font-medium hover:underline py-3 cursor-pointer">Ver todos los lotes →</a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PROBLEMA -->
-  <section class="py-20 bg-slate-50" id="problema">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="max-w-xl mb-12">
-        <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">El problema</p>
-        <h2 class="text-3xl font-bold text-slate-900">
-          El stock no se vende porque el canal y el precio son incorrectos
-        </h2>
-      </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
-        <div class="bg-white rounded-lg p-6 border border-slate-200">
-          <div class="w-8 h-8 rounded-md bg-slate-100 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-slate-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-slate-900 mb-1.5 text-sm">Capital inmovilizado</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Producto que no rota ocupa espacio y congela liquidez que necesitas para operar.</p>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 border border-slate-200">
-          <div class="w-8 h-8 rounded-md bg-red-50 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 6L9 12.75l4.286-4.286a11.948 11.948 0 014.306 6.43l.776 2.898m0 0l3.182-5.511m-3.182 5.511l-5.511-3.182"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-slate-900 mb-1.5 text-sm">Liquidación a pérdidas</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Sin un canal específico, la única salida es malvender muy por debajo del coste.</p>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 border border-slate-200">
-          <div class="w-8 h-8 rounded-md bg-amber-50 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-slate-900 mb-1.5 text-sm">Sin canal B2B</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Wallapop y Vinted son para particulares. No hay nada hecho para negocios con NIF.</p>
-        </div>
-
-        <div class="bg-white rounded-lg p-6 border border-slate-200">
-          <div class="w-8 h-8 rounded-md bg-green-50 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
-            </svg>
-          </div>
-          <h3 class="font-semibold text-slate-900 mb-1.5 text-sm">Revendedores sin proveedor</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Pequeños revendedores y tiendas físicas no encuentran producto barato y ágil.</p>
-        </div>
-      </div>
-    </div>
-  </section>
+  <div class="border-t border-warm"></div>
 
   <!-- CÓMO FUNCIONA -->
-  <section class="py-20 bg-white" id="como-funciona">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="max-w-xl mb-12">
-        <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">La solución</p>
-        <h2 class="text-3xl font-bold text-slate-900">Así funciona ReStock</h2>
+  <section id="como-funciona" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+    <div class="max-w-lg mb-14">
+      <h2 class="font-serif text-4xl font-semibold text-ink mb-3">Cómo funciona</h2>
+      <p class="text-base text-muted leading-relaxed">Sin intermediarios, sin formularios complicados. Publicar un lote lleva menos de cinco minutos.</p>
+    </div>
+    <div class="grid md:grid-cols-3 gap-10 lg:gap-16">
+      <div>
+        <div class="font-serif text-6xl font-semibold text-warm leading-none mb-6 select-none">01</div>
+        <h3 class="font-serif text-xl font-semibold text-ink mb-3">Publica tu lote</h3>
+        <p class="text-sm text-muted leading-relaxed">Describe el producto, añade fotos, fija el precio. Tu lote aparece en el marketplace en minutos.</p>
       </div>
-
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
-        <div>
-          <div class="text-4xl font-bold text-slate-100 mb-4 select-none">01</div>
-          <h3 class="font-semibold text-slate-900 mb-2 text-sm">Publica tu lote</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Sube fotos, descripción, cantidad, estado y precio. Vende por unidad o lote completo.</p>
-        </div>
-
-        <div>
-          <div class="text-4xl font-bold text-slate-100 mb-4 select-none">02</div>
-          <h3 class="font-semibold text-slate-900 mb-2 text-sm">Comprador lo encuentra</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Filtros por categoría, país y cantidad. Descubrimiento según sus intereses.</p>
-        </div>
-
-        <div>
-          <div class="text-4xl font-bold text-slate-100 mb-4 select-none">03</div>
-          <h3 class="font-semibold text-slate-900 mb-2 text-sm">Negocian y pagan</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Mensajería en tiempo real. Pago seguro a través de Stripe.</p>
-        </div>
-
-        <div>
-          <div class="text-4xl font-bold text-slate-100 mb-4 select-none">04</div>
-          <h3 class="font-semibold text-slate-900 mb-2 text-sm">Comisión por tramos</h3>
-          <p class="text-sm text-slate-500 leading-relaxed">Cuanto mayor el lote, menor la comisión. Partida entre ambas partes.</p>
-        </div>
+      <div>
+        <div class="font-serif text-6xl font-semibold text-warm leading-none mb-6 select-none">02</div>
+        <h3 class="font-serif text-xl font-semibold text-ink mb-3">Recibe interesados</h3>
+        <p class="text-sm text-muted leading-relaxed">Los compradores te contactan directamente por mensajería interna. Negocia sin que nadie intermedie.</p>
+      </div>
+      <div>
+        <div class="font-serif text-6xl font-semibold text-warm leading-none mb-6 select-none">03</div>
+        <h3 class="font-serif text-xl font-semibold text-ink mb-3">Cobra seguro</h3>
+        <p class="text-sm text-muted leading-relaxed">Pago procesado por Stripe. El dinero llega a tu cuenta al cerrar el trato. Sin riesgos de impago.</p>
       </div>
     </div>
   </section>
 
-  <!-- POR QUÉ FUNCIONA -->
-  <section class="py-20 bg-slate-50" id="por-que">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-start">
-
-        <div>
-          <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">Por qué funciona</p>
-          <h2 class="text-3xl font-bold text-slate-900 mb-4">Ambos lados ganan dinero</h2>
-          <p class="text-slate-500 leading-relaxed mb-8">No es venta de producto, es circulación de capital. El vendedor convierte inventario en liquidez; el comprador consigue producto barato con el que ganar margen.</p>
-
-          <ul class="space-y-6">
-            <li class="flex gap-4">
-              <div class="flex-shrink-0 mt-0.5">
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              </div>
-              <div>
-                <strong class="block text-slate-900 font-semibold text-sm">Ya funciona fuera</strong>
-                <p class="text-sm text-slate-500 mt-1">B-Stock y Liquidation.com generan +3.000M$ en EEUU. Europa es el espacio vacío.</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <div class="flex-shrink-0 mt-0.5">
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              </div>
-              <div>
-                <strong class="block text-slate-900 font-semibold text-sm">El producto es bueno, el canal era malo</strong>
-                <p class="text-sm text-slate-500 mt-1">+90% de productos se venden en otro canal. ReStock da el canal correcto.</p>
-              </div>
-            </li>
-            <li class="flex gap-4">
-              <div class="flex-shrink-0 mt-0.5">
-                <svg class="w-4 h-4 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
-              </div>
-              <div>
-                <strong class="block text-slate-900 font-semibold text-sm">B2B desde el primer día</strong>
-                <p class="text-sm text-slate-500 mt-1">Ambas partes son negocios con NIF. Reputación, factura y seriedad garantizada.</p>
-              </div>
-            </li>
-          </ul>
-        </div>
-
-        <div class="flex flex-col gap-3 max-w-sm">
-          <div class="bg-white rounded-lg p-5 border border-slate-200">
-            <div class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">Vendedor</div>
-            <div class="text-sm font-medium text-slate-700 mb-1">eCommerce · Dropshipper · Almacén</div>
-            <div class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-slate-100 text-xs text-slate-600 font-medium">Stock parado → Liquidez</div>
-          </div>
-
-          <div class="flex items-center gap-3 px-4">
-            <div class="flex-1 h-px bg-slate-200"></div>
-            <div class="px-3 py-1.5 border border-slate-200 rounded-md bg-white text-xs font-semibold text-slate-900">ReStock</div>
-            <div class="flex-1 h-px bg-slate-200"></div>
-          </div>
-
-          <div class="bg-white rounded-lg p-5 border border-slate-200">
-            <div class="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">Comprador</div>
-            <div class="text-sm font-medium text-slate-700 mb-1">Revendedor · Tienda física · Importador</div>
-            <div class="mt-3 inline-flex items-center gap-1.5 px-2.5 py-1 rounded-md bg-green-50 text-xs text-green-700 font-medium">Producto barato → Margen</div>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </section>
+  <div class="border-t border-warm"></div>
 
   <!-- COMISIONES -->
-  <section class="py-20 bg-white" id="precios">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="max-w-xl mb-12">
-        <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">Modelo de comisiones</p>
-        <h2 class="text-3xl font-bold text-slate-900">Cuanto mayor el lote, menor la comisión</h2>
-        <p class="mt-3 text-slate-500">La comisión se reparte entre comprador y vendedor. Nadie paga solo.</p>
+  <section id="comisiones" class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+    <div class="grid lg:grid-cols-2 gap-14 lg:gap-20 items-start">
+      <div>
+        <h2 class="font-serif text-4xl font-semibold text-ink mb-3">Precios transparentes</h2>
+        <p class="text-base text-muted leading-relaxed mb-10">Sin letra pequeña. Comisión sobre transacción completada, dividida a partes iguales entre comprador y vendedor.</p>
+        <div class="space-y-3">
+          <div class="flex items-center justify-between p-5 border border-warm rounded-lg bg-white">
+            <div>
+              <div class="text-sm font-medium text-ink">Hasta 500€</div>
+              <div class="text-xs text-muted mt-0.5">Lotes pequeños</div>
+            </div>
+            <div class="text-right">
+              <div class="font-serif text-3xl font-semibold text-ink">5%</div>
+              <div class="text-xs text-muted">por parte</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-5 border-2 border-navy rounded-lg" style="background:rgba(26,60,110,0.03)">
+            <div>
+              <div class="text-sm font-medium text-ink flex items-center gap-2">
+                500€ – 1.000€
+                <span class="text-[10px] font-semibold text-gold bg-gold-light border border-gold/20 px-1.5 py-0.5 rounded-full">Más habitual</span>
+              </div>
+              <div class="text-xs text-muted mt-0.5">Lotes medianos</div>
+            </div>
+            <div class="text-right">
+              <div class="font-serif text-3xl font-semibold text-navy">4%</div>
+              <div class="text-xs text-muted">por parte</div>
+            </div>
+          </div>
+          <div class="flex items-center justify-between p-5 border border-warm rounded-lg bg-white">
+            <div>
+              <div class="text-sm font-medium text-ink">Más de 1.000€</div>
+              <div class="text-xs text-muted mt-0.5">Lotes grandes</div>
+            </div>
+            <div class="text-right">
+              <div class="font-serif text-3xl font-semibold text-ink">3%</div>
+              <div class="text-xs text-muted">por parte</div>
+            </div>
+          </div>
+        </div>
+        <p class="text-xs text-muted mt-4">Solo se cobra si la transacción se completa.</p>
       </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 max-w-2xl mb-10">
-        <div class="rounded-lg p-6 border border-slate-200 text-center">
-          <div class="text-xs text-slate-400 mb-3">Lotes &lt; 500€</div>
-          <div class="text-4xl font-bold text-slate-900 mb-1">5%</div>
-          <div class="text-xs text-slate-400">por transacción</div>
-        </div>
-
-        <div class="rounded-lg p-6 border-2 border-blue-600 text-center relative">
-          <div class="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 rounded-full bg-blue-600 text-white text-xs font-medium whitespace-nowrap">Más habitual</div>
-          <div class="text-xs text-slate-400 mb-3">Lotes ≥ 500€</div>
-          <div class="text-4xl font-bold text-slate-900 mb-1">4%</div>
-          <div class="text-xs text-slate-400">por transacción</div>
-        </div>
-
-        <div class="rounded-lg p-6 border border-slate-200 text-center">
-          <div class="text-xs text-slate-400 mb-3">Lotes ≥ 1.000€</div>
-          <div class="text-4xl font-bold text-slate-900 mb-1">3%</div>
-          <div class="text-xs text-slate-400">por transacción</div>
-        </div>
-      </div>
-
-      <div class="flex flex-wrap gap-x-8 gap-y-3">
-        <div class="flex items-center gap-2 text-sm text-slate-600">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          Sin cuota mensual
-        </div>
-        <div class="flex items-center gap-2 text-sm text-slate-600">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          Sin costes de publicación
-        </div>
-        <div class="flex items-center gap-2 text-sm text-slate-600">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          Pago automático vía Stripe
-        </div>
-        <div class="flex items-center gap-2 text-sm text-slate-600">
-          <svg class="w-4 h-4 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.5 12.75l6 6 9-13.5"/></svg>
-          Primeros 10 miembros: 0% durante 2 meses
+      <div class="lg:pt-2">
+        <div class="bg-navy rounded-xl p-8 lg:p-10">
+          <h3 class="font-serif text-2xl font-semibold text-white mb-3">¿Por qué ReStock?</h3>
+          <p class="text-white/50 text-sm leading-relaxed mb-8">No somos B-Stock ni Liquidation.com. Somos un mercado con carácter para empresas que saben lo que tienen y lo que necesitan.</p>
+          <ul class="space-y-4">
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span class="text-sm text-white/70 leading-relaxed">Compradores y vendedores verificados antes de operar</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span class="text-sm text-white/70 leading-relaxed">Mensajería directa, sin formularios de contacto intermedios</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span class="text-sm text-white/70 leading-relaxed">Pago 100% seguro a través de Stripe</span>
+            </li>
+            <li class="flex items-start gap-3">
+              <svg class="w-4 h-4 text-gold mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              <span class="text-sm text-white/70 leading-relaxed">Equipo en Barcelona, soporte en español</span>
+            </li>
+          </ul>
+          <div class="border-t border-white/10 mt-8 pt-8">
+            <a href="marketplace.html" class="text-sm font-medium text-white hover:text-gold transition-colors duration-150 cursor-pointer">Explorar el marketplace →</a>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- EARLY ADOPTER -->
-  <section class="py-20 bg-slate-900" id="founders">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-
-      <div class="max-w-xl mb-12">
-        <p class="text-xs font-semibold text-blue-400 uppercase tracking-wider mb-3">Programa Early Adopter</p>
-        <h2 class="text-3xl font-bold text-white">Sé uno de los 10 primeros miembros</h2>
-        <p class="mt-3 text-slate-400">Los 10 primeros en completar una compra o venta obtienen condiciones exclusivas que no se repetirán.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 mb-10">
-        <div class="rounded-lg p-6 border border-slate-700 bg-slate-800">
-          <div class="w-8 h-8 rounded-md bg-slate-700 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3zM6 6h.008v.008H6V6z"/>
-            </svg>
+  <!-- CTA OSCURO -->
+  <section class="bg-navy">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20 lg:py-28">
+      <div class="grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div class="inline-flex items-center gap-2 text-xs font-medium text-gold/80 border border-gold/20 px-3 py-1.5 rounded-full mb-8">
+            Acceso beta · plazas limitadas
           </div>
-          <h3 class="font-semibold text-white mb-1.5 text-sm">0% comisión</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">Durante los próximos 2 meses tras tu primera transacción. Sin letra pequeña.</p>
-        </div>
-
-        <div class="rounded-lg p-6 border border-slate-700 bg-slate-800">
-          <div class="w-8 h-8 rounded-md bg-blue-600/20 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-blue-400" fill="currentColor" viewBox="0 0 24 24">
-              <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
-            </svg>
+          <h2 class="font-serif text-4xl lg:text-5xl font-semibold text-white mb-5 leading-tight">
+            ¿Tienes stock<br/>que no se mueve?
+          </h2>
+          <p class="text-white/50 text-base leading-relaxed mb-8 max-w-sm">
+            Durante la beta, operamos solo con empresas invitadas. Si tienes un código, puedes publicar tu primer lote hoy.
+          </p>
+          <div class="flex flex-col sm:flex-row gap-3">
+            <a href="login.html" class="px-6 py-3 rounded-md bg-gold text-ink text-sm font-semibold hover:bg-yellow-400 transition-colors duration-150 cursor-pointer text-center">Publicar mi primer lote</a>
+            <a href="marketplace.html" class="px-6 py-3 rounded-md border border-white/20 text-white text-sm font-medium hover:bg-white/5 transition-colors duration-150 cursor-pointer text-center">Ver el marketplace</a>
           </div>
-          <h3 class="font-semibold text-white mb-1.5 text-sm">Insignia Fundador</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">Badge "Fundador ReStock" visible en tu perfil para siempre.</p>
         </div>
-
-        <div class="rounded-lg p-6 border border-slate-700 bg-slate-800">
-          <div class="w-8 h-8 rounded-md bg-slate-700 flex items-center justify-center mb-4">
-            <svg class="w-4 h-4 text-slate-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
-            </svg>
+        <div class="hidden lg:block">
+          <div class="border border-white/10 rounded-xl p-6 space-y-2">
+            <p class="text-xs font-medium text-white/30 uppercase tracking-widest mb-4">Lotes activos ahora</p>
+            <div class="flex items-center justify-between py-3 border-b border-white/10">
+              <div>
+                <div class="text-sm font-medium text-white">Moda mujer — temporada pasada</div>
+                <div class="text-xs text-white/40 mt-0.5">300 prendas · Barcelona</div>
+              </div>
+              <div class="font-serif text-base font-semibold text-gold">4.200€</div>
+            </div>
+            <div class="flex items-center justify-between py-3 border-b border-white/10">
+              <div>
+                <div class="text-sm font-medium text-white">Tablets reacondicionadas</div>
+                <div class="text-xs text-white/40 mt-0.5">25 unidades · Madrid</div>
+              </div>
+              <div class="font-serif text-base font-semibold text-gold">8.750€</div>
+            </div>
+            <div class="flex items-center justify-between py-3">
+              <div>
+                <div class="text-sm font-medium text-white">Cosmética — stock temporada</div>
+                <div class="text-xs text-white/40 mt-0.5">600 unidades · Valencia</div>
+              </div>
+              <div class="font-serif text-base font-semibold text-gold">1.900€</div>
+            </div>
+            <a href="marketplace.html" class="block text-center text-xs text-white/30 hover:text-white/60 transition-colors duration-150 pt-3 cursor-pointer">Ver todos →</a>
           </div>
-          <h3 class="font-semibold text-white mb-1.5 text-sm">Acceso prioritario</h3>
-          <p class="text-sm text-slate-400 leading-relaxed">Antes que nadie a nuevas funcionalidades y mejoras de la plataforma.</p>
         </div>
-      </div>
-
-      <div class="max-w-sm">
-        <div class="flex justify-between text-xs text-slate-400 mb-2">
-          <span>Plazas ocupadas</span>
-          <span id="spotsLeft">—</span> / 10
-        </div>
-        <div class="h-1.5 rounded-full bg-slate-700 overflow-hidden">
-          <div id="spotsBar" class="h-full rounded-full bg-blue-500" style="width:0%;transition:width 1s ease"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- ACCESO -->
-  <section class="py-20 bg-white" id="acceso">
-    <div class="max-w-lg mx-auto px-4 sm:px-6">
-
-      <div class="mb-10">
-        <p class="text-xs font-semibold text-blue-600 uppercase tracking-wider mb-3">Acceso beta</p>
-        <h2 class="text-3xl font-bold text-slate-900">Entra antes que nadie</h2>
-        <p class="mt-3 text-slate-500 text-sm leading-relaxed">ReStock está en fase beta por invitación. Solicita tu código alpha o introdúcelo si ya lo tienes.</p>
-      </div>
-
-      <div class="flex rounded-lg border border-slate-200 overflow-hidden mb-6">
-        <button class="tab-btn flex-1 py-2.5 text-sm font-medium bg-slate-900 text-white transition-colors duration-150 cursor-pointer" data-tab="solicitar">Solicitar acceso</button>
-        <button class="tab-btn flex-1 py-2.5 text-sm font-medium text-slate-500 hover:bg-slate-50 transition-colors duration-150 cursor-pointer" data-tab="codigo">Tengo código</button>
-      </div>
-
-      <div class="tab-panel active" id="tab-solicitar">
-        <form id="requestForm" class="space-y-3">
-          <div class="grid grid-cols-2 gap-3">
-            <input type="text" placeholder="Nombre" required
-              class="px-3.5 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-            <input type="email" placeholder="Email del negocio" required
-              class="px-3.5 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-          </div>
-          <input type="text" placeholder="Nombre de tu empresa o tienda" required
-            class="w-full px-3.5 py-2.5 rounded-md border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-          <select required
-            class="w-full px-3.5 py-2.5 rounded-md border border-slate-200 text-sm text-slate-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150 bg-white cursor-pointer">
-            <option value="" disabled selected>¿Cómo usarás ReStock?</option>
-            <option>Quiero vender mi stock sobrante</option>
-            <option>Quiero comprar producto para revender</option>
-            <option>Las dos cosas</option>
-          </select>
-          <button type="submit"
-            class="w-full py-2.5 rounded-md bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors duration-150 cursor-pointer">
-            Solicitar plaza early adopter →
-          </button>
-          <p class="text-xs text-slate-400 text-center">Te contactamos en menos de 24h. Sin spam.</p>
-        </form>
-      </div>
-
-      <div class="tab-panel" id="tab-codigo">
-        <form id="codeForm" class="space-y-3">
-          <input type="text" id="codeInput" placeholder="RESTOCK-ALPHA-001"
-            class="w-full px-3.5 py-2.5 rounded-md border border-slate-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-colors duration-150" />
-          <button type="submit"
-            class="w-full py-2.5 rounded-md bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors duration-150 cursor-pointer">
-            Activar código →
-          </button>
-        </form>
-        <div id="codeResult" class="mt-4 p-3 rounded-md text-sm hidden"></div>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="bg-slate-950 border-t border-slate-800">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <div class="flex flex-col md:flex-row justify-between gap-10">
+  <footer class="bg-[#0f2447] border-t border-white/5">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
         <div>
-          <a href="#" class="font-bold text-base text-white">ReStock</a>
-          <p class="mt-3 text-sm text-slate-500 leading-relaxed max-w-xs">El marketplace B2B del stock sobrante.<br/>Barcelona · España · 2026</p>
+          <a href="index.html" class="font-serif italic text-lg font-semibold text-white hover:opacity-80 transition-opacity duration-150">ReStock</a>
+          <p class="text-white/30 text-xs mt-1.5 leading-relaxed">El marketplace B2B del stock sobrante.<br/>Barcelona, 2026.</p>
         </div>
-        <div class="flex gap-16">
-          <div class="flex flex-col gap-3">
-            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Producto</span>
-            <a href="#como-funciona" class="text-sm text-slate-400 hover:text-white transition-colors duration-150">Cómo funciona</a>
-            <a href="#precios"       class="text-sm text-slate-400 hover:text-white transition-colors duration-150">Comisiones</a>
-            <a href="#founders"      class="text-sm text-slate-400 hover:text-white transition-colors duration-150">Early Adopter</a>
-          </div>
-          <div class="flex flex-col gap-3">
-            <span class="text-xs font-semibold text-slate-600 uppercase tracking-wider">Contacto</span>
-            <a href="mailto:jorgetorrasvall@gmail.com" class="text-sm text-slate-400 hover:text-white transition-colors duration-150">jorgetorrasvall@gmail.com</a>
-            <a href="https://linkedin.com" target="_blank" rel="noopener" class="text-sm text-slate-400 hover:text-white transition-colors duration-150">LinkedIn</a>
-          </div>
+        <div class="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-white/30">
+          <a href="marketplace.html" class="hover:text-white/60 transition-colors duration-150">Marketplace</a>
+          <a href="login.html" class="hover:text-white/60 transition-colors duration-150">Entrar</a>
+          <a href="login.html" class="hover:text-white/60 transition-colors duration-150">Publicar lote</a>
+          <span class="text-white/20">© 2026 ReStock</span>
         </div>
-      </div>
-    </div>
-    <div class="border-t border-slate-800">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row justify-between items-center gap-2">
-        <p class="text-xs text-slate-600">© 2026 ReStock. Todos los derechos reservados.</p>
-        <p class="text-xs text-slate-600">restock.es — próximamente</p>
       </div>
     </div>
   </footer>
 
   <script>
-    // Mobile menu
-    document.getElementById('navToggle').addEventListener('click', () => {
-      document.getElementById('mobileMenu').classList.toggle('hidden');
+    document.getElementById('mobileMenuBtn').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('open');
     });
-    document.querySelectorAll('#mobileMenu a').forEach(a => {
-      a.addEventListener('click', () => document.getElementById('mobileMenu').classList.add('hidden'));
-    });
-
-    // Tabs
-    document.querySelectorAll('.tab-btn').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => {
-          b.classList.remove('bg-slate-900', 'text-white');
-          b.classList.add('text-slate-500');
-        });
-        btn.classList.add('bg-slate-900', 'text-white');
-        btn.classList.remove('text-slate-500');
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      });
-    });
-
-    // Spots bar
-    const spotsBar  = document.getElementById('spotsBar');
-    const spotsLeft = document.getElementById('spotsLeft');
-    const used = 3, total = 10;
-    const spotsObs = new IntersectionObserver(entries => {
-      entries.forEach(e => {
-        if (e.isIntersecting) {
-          setTimeout(() => {
-            spotsBar.style.width = (used / total * 100) + '%';
-            spotsLeft.textContent = total - used;
-          }, 300);
-          spotsObs.disconnect();
-        }
-      });
-    }, { threshold: 0.5 });
-    if (spotsBar) spotsObs.observe(spotsBar);
-
-    // Alpha code validation
-    const validCodes = Array.from({length: 20}, (_, i) => 'RESTOCK-ALPHA-' + String(i+1).padStart(3,'0'));
-    const codeForm   = document.getElementById('codeForm');
-    const codeResult = document.getElementById('codeResult');
-    if (codeForm) {
-      codeForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const val = document.getElementById('codeInput').value.trim().toUpperCase();
-        codeResult.className = 'mt-4 p-3 rounded-md text-sm';
-        codeResult.classList.remove('hidden');
-        if (validCodes.includes(val)) {
-          codeResult.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
-          codeResult.textContent = 'Código válido. Redirigiendo a la plataforma…';
-          setTimeout(() => { window.location.href = 'login.html'; }, 2000);
-        } else {
-          codeResult.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
-          codeResult.textContent = 'Código no reconocido. Comprueba que está escrito correctamente (ej: RESTOCK-ALPHA-001).';
-        }
-      });
+    function doSearch() {
+      const q = document.getElementById('heroSearch').value.trim();
+      window.location.href = 'marketplace.html' + (q ? '?q=' + encodeURIComponent(q) : '');
     }
-
-    // Request form
-    const requestForm = document.getElementById('requestForm');
-    if (requestForm) {
-      requestForm.addEventListener('submit', e => {
-        e.preventDefault();
-        const btn = requestForm.querySelector('button[type=submit]');
-        btn.textContent = 'Solicitud enviada — te contactamos en 24h';
-        btn.disabled = true;
-        btn.classList.remove('bg-blue-600', 'hover:bg-blue-700');
-        btn.classList.add('bg-green-700');
-        requestForm.querySelectorAll('input,select').forEach(el => el.disabled = true);
-      });
+    document.getElementById('heroSearch').addEventListener('keydown', e => {
+      if (e.key === 'Enter') doSearch();
+    });
+    function goTo(cat) {
+      window.location.href = 'marketplace.html' + (cat ? '?cat=' + cat : '');
     }
   </script>
 </body>
