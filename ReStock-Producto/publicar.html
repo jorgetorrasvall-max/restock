@@ -5,287 +5,313 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Publicar lote — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Lexend', sans-serif; }
+    #dropdownMenu { display: none; } #dropdownMenu.open { display: block; }
+    #mobileNavMenu { display: none; } #mobileNavMenu.open { display: block; }
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast--success { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+    .toast--error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+    .cond-opt input { display: none; }
+    .cond-opt { cursor: pointer; border: 2px solid #e5e7eb; border-radius: 12px; padding: 14px; text-align: center; transition: border-color 0.2s, background 0.2s; }
+    .cond-opt:hover { border-color: #1A3C6E; }
+    .cond-opt.selected { border-color: #1A3C6E; background: #EEF3FA; }
+    .cond-A-color { color: #059669; } .cond-B-color { color: #0284c7; } .cond-C-color { color: #d97706; } .cond-D-color { color: #dc2626; }
+  </style>
 </head>
-<body>
-<nav class="app-nav">
-  <div class="app-nav-inner">
-    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
-    <div class="nav-search">
-      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
-    </div>
-    <div class="nav-links-app">
-      <a href="marketplace.html">Explorar</a>
-      <a href="publicar.html" class="btn-publish active">+ Publicar lote</a>
-      <a href="mensajes.html" class="nav-msg">💬 <span class="msg-badge" id="msgBadge"></span></a>
-    </div>
-    <div class="user-dropdown">
-      <button class="user-btn" id="userBtn">
-        <span class="user-avatar" id="userAvatar">?</span>
-        <span id="userName">Entrar</span> ▾
+<body class="bg-[#F8FAFC] text-gray-900 antialiased">
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
+      <a href="marketplace.html" class="font-heading font-bold text-xl text-[#1A3C6E] flex-shrink-0">Re<span class="text-[#E8A020]">Stock</span></a>
+      <div class="flex-1 max-w-xl hidden sm:block">
+        <div class="relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          <input id="navSearch" type="text" placeholder="Buscar lotes…" class="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
+        <a href="marketplace.html" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">Explorar</a>
+        <a href="publicar.html" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#1A3C6E] text-white text-sm font-semibold cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Publicar lote
+        </a>
+        <a href="mensajes.html" class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
+          <span id="msgBadge" class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] font-bold items-center justify-center" style="display:none"></span>
+        </a>
+        <div class="relative">
+          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+            <span id="userAvatar" class="w-7 h-7 rounded-full bg-[#1A3C6E] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">?</span>
+            <span id="userName" class="text-sm font-medium text-gray-700">Entrar</span>
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl py-1 z-50">
+            <a href="perfil.html"   class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mi perfil</a>
+            <a href="mensajes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mensajes</a>
+            <a href="admin.html" id="adminLink" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer" style="display:none">Panel admin</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-lg text-gray-500 hover:bg-gray-100 cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="perfil.html">👤 Mi perfil</a>
-        <a href="mensajes.html">💬 Mensajes</a>
-        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
-        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
+    </div>
+    <div id="mobileNavMenu" class="border-t border-gray-200 bg-white">
+      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
+        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Explorar</a>
+        <a href="mensajes.html"    class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Mensajes</a>
+        <a href="perfil.html"      class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Mi perfil</a>
+        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
       </div>
     </div>
-  </div>
-</nav>
+  </nav>
 
-<div class="page-wrap">
-  <div class="publish-layout">
-    <div style="margin-bottom:24px">
-      <a href="marketplace.html" class="back-link">← Volver al marketplace</a>
-      <h1 style="font-size:1.5rem;font-weight:800;color:var(--navy);margin-top:8px">Publicar nuevo lote</h1>
-      <p style="font-size:14px;color:var(--gray-500);margin-top:4px">Completa los datos del lote. Cuanto más detallado, más rápido se vende.</p>
+  <!-- PAGE -->
+  <div class="pt-16 min-h-screen">
+    <div class="max-w-2xl mx-auto px-4 sm:px-6 py-8">
+      <a href="marketplace.html" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#1A3C6E] transition-colors duration-200 mb-6 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Volver al marketplace
+      </a>
+      <h1 class="font-heading text-2xl font-bold text-gray-900 mb-1">Publicar nuevo lote</h1>
+      <p class="text-sm text-gray-500 mb-8">Cuanto más detallado, más rápido se vende.</p>
+
+      <form id="publishForm" class="space-y-6">
+
+        <!-- INFO BÁSICA -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-8 h-8 rounded-lg bg-[#1A3C6E]/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-[#1A3C6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/></svg>
+            </div>
+            <span class="font-heading font-semibold text-gray-900">Información básica</span>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Título del lote <span class="text-red-400">*</span></label>
+              <input type="text" id="pTitle" placeholder="Ej: Lote 200 camisetas polo hombre talla L" maxlength="100" required
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
+              <p id="titleCount" class="text-xs text-gray-400 mt-1">0/100 caracteres</p>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Categoría <span class="text-red-400">*</span></label>
+                <select id="pCategory" required class="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200 cursor-pointer">
+                  <option value="" disabled selected>Selecciona…</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Ciudad <span class="text-red-400">*</span></label>
+                <input type="text" id="pCity" placeholder="Barcelona, Madrid…" required
+                  class="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
+              </div>
+            </div>
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Descripción <span class="text-red-400">*</span></label>
+              <textarea id="pDesc" rows="4" required minlength="50" placeholder="Describe el producto, el estado real, el motivo de venta y cualquier detalle relevante…"
+                class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200 resize-none"></textarea>
+              <p id="descCount" class="text-xs text-gray-400 mt-1">0/500 caracteres · mínimo 50</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ESTADO Y CANTIDAD -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-8 h-8 rounded-lg bg-[#1A3C6E]/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-[#1A3C6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span class="font-heading font-semibold text-gray-900">Estado y cantidad</span>
+          </div>
+          <div class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">Estado del producto <span class="text-red-400">*</span></label>
+              <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                <label class="cond-opt" id="cond_A"><input type="radio" name="condition" value="A" required /><div class="font-heading font-bold text-xl cond-A-color mb-1">A</div><div class="text-xs text-gray-600 font-medium">Nuevo con etiqueta</div></label>
+                <label class="cond-opt" id="cond_B"><input type="radio" name="condition" value="B" /><div class="font-heading font-bold text-xl cond-B-color mb-1">B</div><div class="text-xs text-gray-600 font-medium">Nuevo sin etiqueta</div></label>
+                <label class="cond-opt" id="cond_C"><input type="radio" name="condition" value="C" /><div class="font-heading font-bold text-xl cond-C-color mb-1">C</div><div class="text-xs text-gray-600 font-medium">Buen estado</div></label>
+                <label class="cond-opt" id="cond_D"><input type="radio" name="condition" value="D" /><div class="font-heading font-bold text-xl cond-D-color mb-1">D</div><div class="text-xs text-gray-600 font-medium">Defecto visible</div></label>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Cantidad <span class="text-red-400">*</span></label>
+                <input type="number" id="pQuantity" placeholder="Ej: 250" min="1" required
+                  class="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Unidad</label>
+                <select id="pUnit" class="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm bg-white focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200 cursor-pointer">
+                  <option value="unidades">Unidades</option>
+                  <option value="pares">Pares</option>
+                  <option value="kg">Kilogramos</option>
+                  <option value="cajas">Cajas</option>
+                  <option value="palés">Palés</option>
+                </select>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- PRECIO -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-8 h-8 rounded-lg bg-[#1A3C6E]/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-[#1A3C6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M14.25 7.756a4.5 4.5 0 100 8.488M7.5 10.5h5.25m-5.25 3h5.25M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            </div>
+            <span class="font-heading font-semibold text-gray-900">Precio</span>
+          </div>
+          <div class="space-y-4">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Precio total del lote (€) <span class="text-red-400">*</span></label>
+                <input type="number" id="pPrice" placeholder="Ej: 850" min="1" required
+                  class="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
+              </div>
+              <div>
+                <label class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Precio por unidad</label>
+                <input type="text" id="pPricePerUnit" disabled placeholder="—"
+                  class="w-full px-3 py-3 rounded-xl border border-gray-200 text-sm bg-gray-50 text-gray-500" />
+              </div>
+            </div>
+            <div id="commissionPreview" class="hidden bg-[#F8FAFC] border border-gray-200 rounded-xl p-4">
+              <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Previsión de cobro</div>
+              <div id="commissionDetails" class="space-y-2"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- IMÁGENES -->
+        <div class="bg-white rounded-2xl border border-gray-200 p-6">
+          <div class="flex items-center gap-2 mb-5">
+            <div class="w-8 h-8 rounded-lg bg-[#1A3C6E]/10 flex items-center justify-center">
+              <svg class="w-4 h-4 text-[#1A3C6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 15.75l5.159-5.159a2.25 2.25 0 013.182 0l5.159 5.159m-1.5-1.5l1.409-1.409a2.25 2.25 0 013.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 001.5-1.5V6a1.5 1.5 0 00-1.5-1.5H3.75A1.5 1.5 0 002.25 6v12a1.5 1.5 0 001.5 1.5zm10.5-11.25h.008v.008h-.008V8.25zm.375 0a.375.375 0 11-.75 0 .375.375 0 01.75 0z"/></svg>
+            </div>
+            <span class="font-heading font-semibold text-gray-900">Imágenes</span>
+          </div>
+          <div id="uploadArea" onclick="document.getElementById('imgInput').click()"
+            class="border-2 border-dashed border-gray-200 rounded-xl p-8 text-center cursor-pointer hover:border-[#1A3C6E] hover:bg-[#1A3C6E]/[0.02] transition-all duration-200">
+            <svg class="w-10 h-10 text-gray-300 mx-auto mb-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5m-13.5-9L12 3m0 0l4.5 4.5M12 3v13.5"/></svg>
+            <p class="text-sm font-medium text-gray-600 mb-1">Sube fotos del lote</p>
+            <p class="text-xs text-gray-400">Mínimo 3 fotos: lote completo, detalle y estado. JPG o PNG.</p>
+          </div>
+          <input type="file" id="imgInput" accept="image/*" multiple class="hidden" />
+          <div id="imgPreview" class="flex gap-2 flex-wrap mt-3"></div>
+        </div>
+
+        <!-- ACTIONS -->
+        <div class="flex items-center justify-end gap-3 pb-8">
+          <a href="marketplace.html" class="px-5 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer">Cancelar</a>
+          <button type="submit" class="px-6 py-2.5 rounded-xl bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+            Publicar lote →
+          </button>
+        </div>
+      </form>
     </div>
-
-    <form id="publishForm">
-
-      <!-- INFO BÁSICA -->
-      <div class="publish-card">
-        <div class="publish-card-title"><span>📦</span> Información básica</div>
-        <div style="display:flex;flex-direction:column;gap:18px">
-          <div class="form-group">
-            <label class="form-label">Título del lote <span>*</span></label>
-            <input class="form-input" type="text" id="pTitle" placeholder="Ej: Lote 200 camisetas polo hombre talla L" maxlength="100" required />
-            <span class="form-hint" id="titleCount">0/100 caracteres</span>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Categoría <span>*</span></label>
-              <select class="form-select" id="pCategory" required>
-                <option value="" disabled selected>Selecciona…</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label class="form-label">Ciudad / Origen <span>*</span></label>
-              <input class="form-input" type="text" id="pCity" placeholder="Barcelona, Madrid…" required />
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Descripción <span>*</span></label>
-            <textarea class="form-textarea" id="pDesc" rows="4" placeholder="Describe el producto, el estado real, el motivo de venta y cualquier detalle relevante para el comprador…" required minlength="50"></textarea>
-            <span class="form-hint" id="descCount">0/500 caracteres. Mínimo 50.</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- ESTADO Y CANTIDAD -->
-      <div class="publish-card">
-        <div class="publish-card-title"><span>🔍</span> Estado y cantidad</div>
-        <div style="display:flex;flex-direction:column;gap:18px">
-          <div class="form-group">
-            <label class="form-label">Estado del producto <span>*</span></label>
-            <div class="condition-grid" id="conditionGrid">
-              <label class="condition-option" id="cond_A">
-                <input type="radio" name="condition" value="A" required />
-                <div class="condition-grade" style="color:#059669">A</div>
-                <div class="condition-label">Nuevo con etiqueta</div>
-              </label>
-              <label class="condition-option" id="cond_B">
-                <input type="radio" name="condition" value="B" />
-                <div class="condition-grade" style="color:#0284c7">B</div>
-                <div class="condition-label">Nuevo sin etiqueta</div>
-              </label>
-              <label class="condition-option" id="cond_C">
-                <input type="radio" name="condition" value="C" />
-                <div class="condition-grade" style="color:#d97706">C</div>
-                <div class="condition-label">Buen estado</div>
-              </label>
-              <label class="condition-option" id="cond_D">
-                <input type="radio" name="condition" value="D" />
-                <div class="condition-grade" style="color:#dc2626">D</div>
-                <div class="condition-label">Defecto visible</div>
-              </label>
-            </div>
-          </div>
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Cantidad <span>*</span></label>
-              <input class="form-input" type="number" id="pQuantity" placeholder="Ej: 250" min="1" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Unidad</label>
-              <select class="form-select" id="pUnit">
-                <option value="unidades">Unidades</option>
-                <option value="pares">Pares</option>
-                <option value="kg">Kilogramos</option>
-                <option value="cajas">Cajas</option>
-                <option value="palés">Palés</option>
-              </select>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PRECIO -->
-      <div class="publish-card">
-        <div class="publish-card-title"><span>💶</span> Precio</div>
-        <div style="display:flex;flex-direction:column;gap:18px">
-          <div class="form-row">
-            <div class="form-group">
-              <label class="form-label">Precio total del lote (€) <span>*</span></label>
-              <input class="form-input" type="number" id="pPrice" placeholder="Ej: 850" min="1" required />
-            </div>
-            <div class="form-group">
-              <label class="form-label">Precio por unidad (calculado)</label>
-              <input class="form-input" type="text" id="pPricePerUnit" disabled placeholder="—" style="background:var(--gray-50);color:var(--gray-500)" />
-            </div>
-          </div>
-          <div class="commission-box" id="commissionPreview" style="display:none">
-            <div class="commission-box-title">Previsión de cobro</div>
-            <div id="commissionDetails"></div>
-          </div>
-        </div>
-      </div>
-
-      <!-- IMÁGENES -->
-      <div class="publish-card">
-        <div class="publish-card-title"><span>📷</span> Imágenes</div>
-        <div class="image-upload-area" id="uploadArea" onclick="document.getElementById('imgInput').click()">
-          <div class="image-upload-icon">📷</div>
-          <div class="image-upload-text">Sube fotos del lote</div>
-          <div class="image-upload-hint">Mínimo 3 fotos: lote completo, detalle de unidad y etiqueta/estado. JPG o PNG.</div>
-        </div>
-        <input type="file" id="imgInput" accept="image/*" multiple style="display:none" />
-        <div id="imgPreview" style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px"></div>
-      </div>
-
-      <!-- PREVIEW -->
-      <div class="publish-card" id="previewCard" style="display:none">
-        <div class="publish-card-title"><span>👁</span> Vista previa</div>
-        <div class="publish-preview">
-          <div class="publish-preview-title">Así verán tu lote los compradores</div>
-          <div id="previewContent"></div>
-        </div>
-      </div>
-
-      <div style="display:flex;gap:12px;justify-content:flex-end">
-        <button type="button" class="btn btn-outline" onclick="window.location.href='marketplace.html'">Cancelar</button>
-        <button type="button" class="btn btn-outline" id="previewBtn">Vista previa</button>
-        <button type="submit" class="btn btn-primary btn-lg">Publicar lote →</button>
-      </div>
-    </form>
   </div>
-</div>
 
-<script src="data.js"></script>
-<script src="shared.js"></script>
-<script>
-requireAuth();
+  <script src="data.js"></script>
+  <script src="shared.js"></script>
+  <script>
+    if (!requireAuth()) throw new Error('Unauthenticated');
 
-// Fill categories
-const catSel = document.getElementById('pCategory');
-CATEGORIES.forEach(c => { const o = document.createElement('option'); o.value = c.id; o.textContent = c.icon + ' ' + c.name; catSel.appendChild(o); });
+    // Fill categories
+    const catSel = document.getElementById('pCategory');
+    CATEGORIES.forEach(c => {
+      const o = document.createElement('option');
+      o.value = c.id; o.textContent = c.icon + ' ' + c.name;
+      catSel.appendChild(o);
+    });
 
-// Condition selector
-document.querySelectorAll('.condition-option input[type=radio]').forEach(radio => {
-  radio.addEventListener('change', () => {
-    document.querySelectorAll('.condition-option').forEach(el => el.classList.remove('selected'));
-    radio.closest('.condition-option').classList.add('selected');
-  });
-});
+    // Condition selector
+    document.querySelectorAll('.cond-opt input[type=radio]').forEach(radio => {
+      radio.addEventListener('change', () => {
+        document.querySelectorAll('.cond-opt').forEach(el => el.classList.remove('selected'));
+        radio.closest('.cond-opt').classList.add('selected');
+      });
+    });
 
-// Title counter
-document.getElementById('pTitle').addEventListener('input', function() {
-  document.getElementById('titleCount').textContent = this.value.length + '/100 caracteres';
-});
+    // Counters
+    document.getElementById('pTitle').addEventListener('input', function() {
+      document.getElementById('titleCount').textContent = this.value.length + '/100 caracteres';
+    });
+    document.getElementById('pDesc').addEventListener('input', function() {
+      document.getElementById('descCount').textContent = this.value.length + '/500 caracteres · mínimo 50';
+    });
 
-// Desc counter
-document.getElementById('pDesc').addEventListener('input', function() {
-  document.getElementById('descCount').textContent = this.value.length + '/500 caracteres. Mínimo 50.';
-});
+    // Price calculator
+    function updatePrice() {
+      const price = parseFloat(document.getElementById('pPrice').value) || 0;
+      const qty   = parseFloat(document.getElementById('pQuantity').value) || 0;
+      if (price && qty) document.getElementById('pPricePerUnit').value = (price / qty).toFixed(2) + '€';
+      const preview = document.getElementById('commissionPreview');
+      if (price) {
+        const comm = getCommission(price);
+        const receives = (price * (1 - comm.seller / 100)).toFixed(2);
+        preview.classList.remove('hidden');
+        document.getElementById('commissionDetails').innerHTML = `
+          <div class="flex justify-between text-sm text-gray-600"><span>Precio publicado</span><span>${formatPrice(price)}</span></div>
+          <div class="flex justify-between text-sm text-gray-600"><span>Comisión ReStock (${comm.seller}%)</span><span class="text-red-500">−${(price * comm.seller / 100).toFixed(2)}€</span></div>
+          <div class="flex justify-between text-sm font-semibold text-gray-900 pt-2 border-t border-gray-200 mt-2"><span>Tú recibes</span><span class="text-[#1A3C6E]">${parseFloat(receives).toLocaleString('es-ES')}€</span></div>`;
+      } else {
+        preview.classList.add('hidden');
+      }
+    }
+    document.getElementById('pPrice').addEventListener('input', updatePrice);
+    document.getElementById('pQuantity').addEventListener('input', updatePrice);
 
-// Price calc
-function updatePrice() {
-  const price = parseFloat(document.getElementById('pPrice').value) || 0;
-  const qty = parseFloat(document.getElementById('pQuantity').value) || 0;
-  if (price && qty) document.getElementById('pPricePerUnit').value = (price / qty).toFixed(2) + '€';
-  if (price) {
-    const comm = getCommission(price);
-    const receives = (price * (1 - comm.seller / 100)).toFixed(2);
-    document.getElementById('commissionPreview').style.display = 'block';
-    document.getElementById('commissionDetails').innerHTML = `
-      <div class="commission-row"><span>Precio publicado</span><span>${formatPrice(price)}</span></div>
-      <div class="commission-row"><span>Comisión ReStock (${comm.seller}%)</span><span>−${(price * comm.seller / 100).toFixed(2)}€</span></div>
-      <div class="commission-row commission-total"><span>Tú recibes</span><span>${parseFloat(receives).toLocaleString('es-ES')}€</span></div>`;
-  }
-}
-document.getElementById('pPrice').addEventListener('input', updatePrice);
-document.getElementById('pQuantity').addEventListener('input', updatePrice);
+    // Image upload preview
+    document.getElementById('imgInput').addEventListener('change', function() {
+      const preview = document.getElementById('imgPreview');
+      preview.innerHTML = '';
+      [...this.files].forEach(file => {
+        const reader = new FileReader();
+        reader.onload = e => {
+          const img = document.createElement('img');
+          img.src = e.target.result;
+          img.style.cssText = 'width:80px;height:60px;object-fit:cover;border-radius:8px;border:1.5px solid #e5e7eb';
+          preview.appendChild(img);
+        };
+        reader.readAsDataURL(file);
+      });
+    });
 
-// Image upload
-document.getElementById('imgInput').addEventListener('change', function() {
-  const preview = document.getElementById('imgPreview');
-  preview.innerHTML = '';
-  [...this.files].forEach(file => {
-    const reader = new FileReader();
-    reader.onload = e => {
-      const img = document.createElement('img');
-      img.src = e.target.result;
-      img.style.cssText = 'width:80px;height:60px;object-fit:cover;border-radius:6px;border:1.5px solid var(--gray-200)';
-      preview.appendChild(img);
-    };
-    reader.readAsDataURL(file);
-  });
-});
+    // Submit
+    document.getElementById('publishForm').addEventListener('submit', e => {
+      e.preventDefault();
+      const user = getUser();
+      const cond = document.querySelector('input[name=condition]:checked')?.value;
+      if (!cond) { showToast('Selecciona el estado del producto', 'error'); return; }
 
-// Preview
-document.getElementById('previewBtn').onclick = () => {
-  const title = document.getElementById('pTitle').value;
-  const price = parseFloat(document.getElementById('pPrice').value) || 0;
-  const qty = document.getElementById('pQuantity').value;
-  const unit = document.getElementById('pUnit').value;
-  const cond = document.querySelector('input[name=condition]:checked')?.value || '?';
-  const cat = document.getElementById('pCategory').value;
-  if (!title || !price) { showToast('Rellena al menos título y precio para la vista previa', 'error'); return; }
-  const card = document.getElementById('previewCard');
-  card.style.display = 'block';
-  document.getElementById('previewContent').innerHTML = `
-    <div style="display:flex;gap:12px;align-items:flex-start;margin-top:8px">
-      <div style="width:80px;height:60px;background:var(--gray-200);border-radius:8px;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.5rem">${getCategoryIcon(cat)}</div>
-      <div>
-        <div style="font-weight:700;color:var(--navy)">${title}</div>
-        <div style="font-size:13px;color:var(--gray-500);margin-top:2px">${qty} ${unit} · <span class="badge badge-${cond}">${cond}</span></div>
-        <div style="font-size:1.1rem;font-weight:900;color:var(--navy);margin-top:6px">${formatPrice(price)}</div>
-      </div>
-    </div>`;
-  card.scrollIntoView({ behavior: 'smooth' });
-};
+      const newProduct = {
+        id: Date.now(),
+        title: document.getElementById('pTitle').value,
+        category: document.getElementById('pCategory').value,
+        condition: cond,
+        price: parseFloat(document.getElementById('pPrice').value),
+        quantity: parseInt(document.getElementById('pQuantity').value),
+        unit: document.getElementById('pUnit').value,
+        seller: { id: user?.id || 0, name: user?.name || 'Tú', city: document.getElementById('pCity').value || user?.city || 'España', rating: 0, reviews: 0, avatar: user?.avatar || 'U', since: 'Abr 2026' },
+        description: document.getElementById('pDesc').value,
+        images: ['https://placehold.co/640x420/1A3C6E/FFFFFF?text=' + encodeURIComponent(document.getElementById('pTitle').value.substring(0,20))],
+        created: new Date().toISOString().split('T')[0],
+        views: 0, active: true,
+      };
 
-// Submit
-document.getElementById('publishForm').addEventListener('submit', e => {
-  e.preventDefault();
-  const user = JSON.parse(localStorage.getItem('rs_user') || 'null');
-  const cond = document.querySelector('input[name=condition]:checked')?.value;
-  if (!cond) { showToast('Selecciona el estado del producto', 'error'); return; }
-
-  const newProduct = {
-    id: Date.now(),
-    title: document.getElementById('pTitle').value,
-    category: document.getElementById('pCategory').value,
-    condition: cond,
-    price: parseFloat(document.getElementById('pPrice').value),
-    quantity: parseInt(document.getElementById('pQuantity').value),
-    unit: document.getElementById('pUnit').value,
-    seller: { id: user?.id || 0, name: user?.name || 'Tú', city: document.getElementById('pCity').value || user?.city || 'España', rating: 0, reviews: 0, avatar: user?.avatar || 'U', since: 'Abr 2026' },
-    description: document.getElementById('pDesc').value,
-    images: ['https://placehold.co/640x420/1A3C6E/FFFFFF?text=' + encodeURIComponent(document.getElementById('pTitle').value.substring(0,20))],
-    created: new Date().toISOString().split('T')[0],
-    views: 0, active: true,
-  };
-
-  const saved = JSON.parse(localStorage.getItem('rs_products') || '[]');
-  saved.push(newProduct);
-  localStorage.setItem('rs_products', JSON.stringify(saved));
-
-  showToast('¡Lote publicado correctamente!', 'success');
-  setTimeout(() => window.location.href = 'producto.html?id=' + newProduct.id, 1000);
-});
-</script>
+      const saved = JSON.parse(localStorage.getItem('rs_products') || '[]');
+      saved.push(newProduct);
+      localStorage.setItem('rs_products', JSON.stringify(saved));
+      showToast('¡Lote publicado correctamente!', 'success');
+      setTimeout(() => window.location.href = 'producto.html?id=' + newProduct.id, 1000);
+    });
+  </script>
 </body>
 </html>

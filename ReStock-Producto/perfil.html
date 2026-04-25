@@ -5,177 +5,260 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Perfil — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Lexend', sans-serif; }
+    #dropdownMenu { display: none; } #dropdownMenu.open { display: block; }
+    #mobileNavMenu { display: none; } #mobileNavMenu.open { display: block; }
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast--success { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+    .toast--error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+    /* Product cards (dynamically generated) */
+    .p-card { background:#fff; border-radius:14px; border:1px solid #e5e7eb; overflow:hidden; cursor:pointer; transition:box-shadow 0.2s,transform 0.2s; }
+    .p-card:hover { box-shadow:0 8px 24px rgba(0,0,0,0.1); transform:translateY(-2px); }
+    .p-card-img { width:100%; aspect-ratio:4/3; object-fit:cover; display:block; background:#f3f4f6; }
+    .p-card-body { padding:14px 16px 16px; }
+    .p-card-title { font-family:'Lexend',sans-serif; font-weight:600; font-size:14px; line-height:1.4; color:#111827; margin-bottom:8px; display:-webkit-box; -webkit-line-clamp:2; -webkit-box-orient:vertical; overflow:hidden; }
+    .p-card-price { font-family:'Lexend',sans-serif; font-weight:700; font-size:18px; color:#1A3C6E; margin-bottom:8px; }
+    .p-card-meta { display:flex; flex-wrap:wrap; align-items:center; gap:4px 8px; font-size:12px; color:#6b7280; }
+    .p-cond-badge { position:absolute; top:10px; right:10px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:600; }
+    .cond-A { color:#059669; background:#ecfdf5; }
+    .cond-B { color:#0284c7; background:#eff6ff; }
+    .cond-C { color:#d97706; background:#fffbeb; }
+    .cond-D { color:#dc2626; background:#fef2f2; }
+  </style>
 </head>
-<body>
-<nav class="app-nav">
-  <div class="app-nav-inner">
-    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
-    <div class="nav-search">
-      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
-    </div>
-    <div class="nav-links-app">
-      <a href="marketplace.html">Explorar</a>
-      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
-      <a href="mensajes.html" class="nav-msg">💬 <span class="msg-badge" id="msgBadge"></span></a>
-    </div>
-    <div class="user-dropdown">
-      <button class="user-btn" id="userBtn">
-        <span class="user-avatar" id="userAvatar">?</span>
-        <span id="userName">Entrar</span> ▾
-      </button>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="perfil.html">👤 Mi perfil</a>
-        <a href="mensajes.html">💬 Mensajes</a>
-        <a href="publicar.html">📦 Publicar lote</a>
-        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
-        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
-      </div>
-    </div>
-  </div>
-</nav>
+<body class="bg-[#F8FAFC] text-gray-900 antialiased">
 
-<div class="page-wrap">
-  <div class="profile-layout" id="profileContent"></div>
-</div>
-
-<script src="data.js"></script>
-<script src="shared.js"></script>
-<script>
-const viewId = parseInt(new URLSearchParams(location.search).get('id'));
-const currentUser = JSON.parse(localStorage.getItem('rs_user') || 'null');
-const isOwnProfile = !viewId || (currentUser && viewId === currentUser.id);
-
-const user = isOwnProfile
-  ? (currentUser || { name: 'Usuario', avatar: 'U', city: 'España', type: 'Ambos', isFounder: false, isAdmin: false })
-  : (MOCK_USERS.find(u => u.id === viewId) || null);
-
-const allProducts = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
-const userProducts = allProducts.filter(p =>
-  isOwnProfile
-    ? (p.seller?.id === (currentUser?.id || 0) || currentUser?.id === 0)
-    : p.seller?.id === viewId
-);
-
-const container = document.getElementById('profileContent');
-
-if (!user) {
-  container.innerHTML = `<div class="empty-state"><div class="empty-icon">😕</div><div class="empty-title">Usuario no encontrado</div><a href="marketplace.html" class="btn btn-navy" style="margin-top:16px">Volver</a></div>`;
-} else {
-  const sellerProducts = isOwnProfile ? userProducts.slice(0, 6) : allProducts.filter(p => p.seller.id === viewId);
-  const avgRating = sellerProducts.length ? (sellerProducts.reduce((s, p) => s + p.seller.rating, 0) / sellerProducts.length).toFixed(1) : '—';
-
-  container.innerHTML = `
-    <!-- HEADER -->
-    <div class="profile-header">
-      <div class="profile-avatar">${user.avatar || user.name[0]}</div>
-      <div class="profile-info">
-        <div class="profile-name">
-          ${user.name}
-          ${user.isFounder ? '<span class="badge badge-founder">⭐ Fundador</span>' : ''}
-          ${user.isAdmin ? '<span class="badge badge-admin">Admin</span>' : ''}
-        </div>
-        <div class="profile-meta">
-          ${user.city ? '📍 ' + user.city + ' · ' : ''}
-          ${user.type ? user.type + ' · ' : ''}
-          Miembro desde 2025
-        </div>
-        <div class="profile-stats">
-          <div class="profile-stat"><div class="profile-stat-num">${sellerProducts.length}</div><div class="profile-stat-label">Lotes activos</div></div>
-          <div class="profile-stat"><div class="profile-stat-num">${avgRating}</div><div class="profile-stat-label">Valoración</div></div>
-          <div class="profile-stat"><div class="profile-stat-num">${sellerProducts.reduce((s,p)=>s+p.views,0)}</div><div class="profile-stat-label">Visitas totales</div></div>
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
+      <a href="marketplace.html" class="font-heading font-bold text-xl text-[#1A3C6E] flex-shrink-0">Re<span class="text-[#E8A020]">Stock</span></a>
+      <div class="flex-1 max-w-xl hidden sm:block">
+        <div class="relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          <input id="navSearch" type="text" placeholder="Buscar lotes…" class="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
         </div>
       </div>
-      ${isOwnProfile ? `
-        <div style="margin-left:auto">
-          <button class="btn btn-outline" onclick="showEditModal()">✏️ Editar perfil</button>
-        </div>` : `
-        <div style="margin-left:auto">
-          <a href="mensajes.html" class="btn btn-navy">💬 Enviar mensaje</a>
-        </div>`}
-    </div>
-
-    ${isOwnProfile ? `
-    <!-- MIS ESTADÍSTICAS -->
-    <div class="profile-card">
-      <div class="profile-card-title">Resumen de actividad</div>
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px">
-        <div style="text-align:center;padding:16px;background:var(--gray-50);border-radius:var(--radius)">
-          <div style="font-size:1.8rem;font-weight:900;color:var(--navy)">${sellerProducts.length}</div>
-          <div style="font-size:12px;color:var(--gray-500)">Lotes publicados</div>
-        </div>
-        <div style="text-align:center;padding:16px;background:var(--gray-50);border-radius:var(--radius)">
-          <div style="font-size:1.8rem;font-weight:900;color:var(--gold)">0€</div>
-          <div style="font-size:12px;color:var(--gray-500)">Ventas totales</div>
-        </div>
-        <div style="text-align:center;padding:16px;background:var(--gray-50);border-radius:var(--radius)">
-          <div style="font-size:1.8rem;font-weight:900;color:var(--green)">
-            ${user.isFounder ? '⭐ Activo' : 'Normal'}
+      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
+        <a href="marketplace.html" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">Explorar</a>
+        <a href="publicar.html" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Publicar lote
+        </a>
+        <a href="mensajes.html" class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
+          <span id="msgBadge" class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] font-bold items-center justify-center" style="display:none"></span>
+        </a>
+        <div class="relative">
+          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+            <span id="userAvatar" class="w-7 h-7 rounded-full bg-[#1A3C6E] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">?</span>
+            <span id="userName" class="text-sm font-medium text-gray-700">Entrar</span>
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl py-1 z-50">
+            <a href="perfil.html"   class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mi perfil</a>
+            <a href="mensajes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mensajes</a>
+            <a href="publicar.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Publicar lote</a>
+            <a href="admin.html" id="adminLink" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer" style="display:none">Panel admin</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
           </div>
-          <div style="font-size:12px;color:var(--gray-500)">Plan actual</div>
         </div>
       </div>
-      ${user.isFounder ? `
-        <div style="margin-top:16px;padding:14px;background:rgba(232,160,32,0.08);border:1px solid rgba(232,160,32,0.3);border-radius:var(--radius);font-size:13px;color:var(--gray-600)">
-          ⭐ <strong>Eres Fundador ReStock</strong> — Comisión 0% durante los primeros 2 meses en tus transacciones.
-        </div>` : ''}
-    </div>` : ''}
-
-    <!-- LOTES ACTIVOS -->
-    <div class="profile-card">
-      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <div class="profile-card-title" style="margin:0">Lotes activos (${sellerProducts.length})</div>
-        ${isOwnProfile ? `<a href="publicar.html" class="btn btn-primary" style="font-size:13px">+ Publicar nuevo</a>` : ''}
-      </div>
-      ${sellerProducts.length ? `
-        <div class="product-grid">
-          ${sellerProducts.map(p => `
-            <div class="product-card" onclick="window.location='producto.html?id=${p.id}'">
-              <img class="product-card-img" src="${p.images[0]}" alt="${p.title}" />
-              <div class="product-card-body">
-                <div class="product-card-top">
-                  <div class="product-card-title">${p.title}</div>
-                  <span class="badge badge-${p.condition}">${p.condition}</span>
-                </div>
-                <div class="product-card-price">${formatPrice(p.price)}</div>
-                <div class="product-card-meta">
-                  <span class="product-card-qty">${p.quantity} ${p.unit}</span>
-                  <span style="font-size:11px;color:var(--gray-400)">👁 ${p.views}</span>
-                  <span style="font-size:11px;color:var(--gray-400);margin-left:auto">${daysAgo(p.created)}</span>
-                </div>
-              </div>
-            </div>`).join('')}
-        </div>` : `
-        <div class="empty-state" style="padding:40px">
-          <div class="empty-icon">📦</div>
-          <div class="empty-title">Sin lotes publicados</div>
-          ${isOwnProfile ? `<a href="publicar.html" class="btn btn-primary" style="margin-top:12px">Publicar primer lote</a>` : ''}
-        </div>`}
+      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-lg text-gray-500 hover:bg-gray-100 cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
     </div>
+    <div id="mobileNavMenu" class="border-t border-gray-200 bg-white">
+      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
+        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Explorar</a>
+        <a href="publicar.html"    class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Publicar lote</a>
+        <a href="mensajes.html"    class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Mensajes</a>
+        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
 
-    <!-- VALORACIONES -->
-    <div class="profile-card">
-      <div class="profile-card-title">Valoraciones (${sellerProducts.length > 0 ? sellerProducts[0].seller.reviews || 0 : 0})</div>
-      ${sellerProducts.length && sellerProducts[0].seller.reviews > 0 ? `
-        <div style="display:flex;flex-direction:column;gap:12px">
-          ${['Trato excelente y producto tal como se describe. Muy recomendable.', 'Envío rápido y lote en perfectas condiciones. Repetiremos.', 'El lote llegó completo y sin problemas. Buena comunicación.'].slice(0, sellerProducts[0].seller.reviews || 2).map((text, i) => `
-            <div style="padding:14px;background:var(--gray-50);border-radius:var(--radius);font-size:14px;color:var(--gray-600)">
-              <div style="display:flex;justify-content:space-between;margin-bottom:6px">
-                <strong style="color:var(--text)">Comprador verificado</strong>
-                <span style="color:var(--gold)">${'★'.repeat(5)}</span>
-              </div>
-              ${text}
-            </div>`).join('')}
-        </div>` : `
-        <div style="text-align:center;padding:24px;color:var(--gray-400);font-size:14px">Sin valoraciones aún.</div>`}
-    </div>`;
+  <!-- PAGE -->
+  <div class="pt-16 min-h-screen">
+    <div id="profileContent" class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></div>
+  </div>
 
-  // Edit modal (own profile)
-  if (isOwnProfile) {
-    window.showEditModal = () => showToast('Edición de perfil disponible próximamente con Supabase', 'success');
-  }
-}
-</script>
+  <script src="data.js"></script>
+  <script src="shared.js"></script>
+  <script>
+    if (!requireAuth()) throw new Error('Unauthenticated');
+
+    const viewId      = parseInt(new URLSearchParams(location.search).get('id'));
+    const currentUser = getUser();
+    const isOwn       = !viewId || (currentUser && viewId === currentUser.id);
+    const user        = isOwn
+      ? (currentUser || { name: 'Usuario', avatar: 'U', city: 'España', type: 'Ambos', isFounder: false, isAdmin: false })
+      : (MOCK_USERS.find(u => u.id === viewId) || null);
+
+    const allProducts  = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
+    const userProducts = allProducts.filter(p =>
+      isOwn ? (p.seller?.id === (currentUser?.id || 0) || currentUser?.id === 0) : p.seller?.id === viewId
+    );
+
+    const container = document.getElementById('profileContent');
+
+    if (!user) {
+      container.innerHTML = `
+        <div class="flex flex-col items-center justify-center py-24 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15.75 6a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0zM4.501 20.118a7.5 7.5 0 0114.998 0A17.933 17.933 0 0112 21.75c-2.676 0-5.216-.584-7.499-1.632z"/></svg>
+          </div>
+          <div class="font-heading font-semibold text-gray-900 mb-4">Usuario no encontrado</div>
+          <a href="marketplace.html" class="px-5 py-2.5 rounded-xl bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">Volver al marketplace</a>
+        </div>`;
+    } else {
+      const totalViews = userProducts.reduce((s, p) => s + (p.views || 0), 0);
+      const avgRating  = userProducts.length
+        ? (userProducts.reduce((s, p) => s + (p.seller.rating || 0), 0) / userProducts.length).toFixed(1)
+        : '—';
+
+      // HEADER
+      const header = document.createElement('div');
+      header.className = 'bg-white rounded-2xl border border-gray-200 p-6 mb-6';
+      header.innerHTML = `
+        <div class="flex flex-col sm:flex-row items-start sm:items-center gap-5">
+          <div class="w-16 h-16 rounded-2xl bg-[#1A3C6E] text-white font-heading font-bold text-2xl flex items-center justify-center flex-shrink-0">
+            ${user.avatar || user.name[0]}
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex flex-wrap items-center gap-2 mb-1">
+              <h1 class="font-heading font-bold text-xl text-gray-900">${user.name}</h1>
+              ${user.isFounder ? `<span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-[#E8A020]/15 text-[#b87d10] text-xs font-semibold">
+                <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                Fundador ReStock
+              </span>` : ''}
+              ${user.isAdmin ? `<span class="px-2.5 py-0.5 rounded-full bg-[#1A3C6E]/10 text-[#1A3C6E] text-xs font-semibold">Admin</span>` : ''}
+            </div>
+            <div class="flex flex-wrap items-center gap-x-3 gap-y-1 text-sm text-gray-500 mb-4">
+              ${user.city ? `<span>${user.city}</span><span class="text-gray-300">·</span>` : ''}
+              ${user.type ? `<span>${user.type}</span><span class="text-gray-300">·</span>` : ''}
+              <span>Miembro desde 2025</span>
+            </div>
+            <div class="flex gap-6">
+              <div><div class="font-heading font-bold text-lg text-gray-900">${userProducts.length}</div><div class="text-xs text-gray-500">Lotes activos</div></div>
+              <div><div class="font-heading font-bold text-lg text-gray-900">${avgRating}</div><div class="text-xs text-gray-500">Valoración</div></div>
+              <div><div class="font-heading font-bold text-lg text-gray-900">${totalViews}</div><div class="text-xs text-gray-500">Visitas totales</div></div>
+            </div>
+          </div>
+          <div class="flex-shrink-0">
+            ${isOwn
+              ? `<button onclick="showToast('Edición de perfil disponible próximamente','success')" class="px-4 py-2 rounded-xl border border-gray-200 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors duration-200 cursor-pointer">Editar perfil</button>`
+              : `<a href="mensajes.html" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg>
+                  Enviar mensaje
+                </a>`}
+          </div>
+        </div>`;
+      container.appendChild(header);
+
+      // FOUNDER BANNER
+      if (isOwn && user.isFounder) {
+        const banner = document.createElement('div');
+        banner.className = 'flex items-center gap-3 bg-[#E8A020]/10 border border-[#E8A020]/30 rounded-2xl px-5 py-4 mb-6';
+        banner.innerHTML = `
+          <svg class="w-5 h-5 text-[#E8A020] flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+          <p class="text-sm text-[#b87d10]"><strong>Eres Fundador ReStock</strong> — Comisión 0% durante los primeros 2 meses en todas tus transacciones.</p>`;
+        container.appendChild(banner);
+      }
+
+      // STATS (own only)
+      if (isOwn) {
+        const stats = document.createElement('div');
+        stats.className = 'bg-white rounded-2xl border border-gray-200 p-6 mb-6';
+        stats.innerHTML = `
+          <h2 class="font-heading font-semibold text-gray-900 mb-4">Resumen de actividad</h2>
+          <div class="grid grid-cols-3 gap-4">
+            <div class="text-center p-4 bg-[#F8FAFC] rounded-xl">
+              <div class="font-heading font-bold text-2xl text-[#1A3C6E]">${userProducts.length}</div>
+              <div class="text-xs text-gray-500 mt-1">Lotes publicados</div>
+            </div>
+            <div class="text-center p-4 bg-[#F8FAFC] rounded-xl">
+              <div class="font-heading font-bold text-2xl text-[#E8A020]">0€</div>
+              <div class="text-xs text-gray-500 mt-1">Ventas totales</div>
+            </div>
+            <div class="text-center p-4 bg-[#F8FAFC] rounded-xl">
+              <div class="font-heading font-bold text-lg text-gray-900">${user.isFounder ? 'Fundador' : 'Estándar'}</div>
+              <div class="text-xs text-gray-500 mt-1">Plan actual</div>
+            </div>
+          </div>`;
+        container.appendChild(stats);
+      }
+
+      // LISTINGS
+      const listings = document.createElement('div');
+      listings.className = 'bg-white rounded-2xl border border-gray-200 p-6 mb-6';
+      if (userProducts.length) {
+        listings.innerHTML = `
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="font-heading font-semibold text-gray-900">Lotes activos (${userProducts.length})</h2>
+            ${isOwn ? `<a href="publicar.html" class="inline-flex items-center gap-1 px-3 py-1.5 rounded-lg bg-[#1A3C6E] text-white text-xs font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+              <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+              Publicar nuevo
+            </a>` : ''}
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px">
+            ${userProducts.slice(0, 6).map(p => `
+              <div class="p-card" onclick="window.location='producto.html?id=${p.id}'" role="link" tabindex="0">
+                <div style="position:relative">
+                  <img class="p-card-img" src="${p.images[0]}" alt="${p.title}" loading="lazy" />
+                  <span class="p-cond-badge cond-${p.condition}">${CONDITIONS[p.condition].label}</span>
+                </div>
+                <div class="p-card-body">
+                  <div class="p-card-title">${p.title}</div>
+                  <div class="p-card-price">${formatPrice(p.price)}</div>
+                  <div class="p-card-meta">
+                    <span>${p.quantity} ${p.unit}</span>
+                    <span style="margin-left:auto;font-size:11px;color:#9ca3af">${p.views} vistas</span>
+                  </div>
+                </div>
+              </div>`).join('')}
+          </div>`;
+      } else {
+        listings.innerHTML = `
+          <div class="flex items-center justify-between mb-5">
+            <h2 class="font-heading font-semibold text-gray-900">Lotes activos (0)</h2>
+          </div>
+          <div class="flex flex-col items-center justify-center py-12 text-center">
+            <div class="w-12 h-12 rounded-xl bg-gray-100 flex items-center justify-center mb-3">
+              <svg class="w-6 h-6 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5M10 11.25h4M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/></svg>
+            </div>
+            <div class="text-sm font-medium text-gray-600 mb-3">Sin lotes publicados aún</div>
+            ${isOwn ? `<a href="publicar.html" class="px-4 py-2 rounded-xl bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">Publicar primer lote</a>` : ''}
+          </div>`;
+      }
+      container.appendChild(listings);
+
+      // REVIEWS
+      const reviews = document.createElement('div');
+      reviews.className = 'bg-white rounded-2xl border border-gray-200 p-6';
+      const reviewCount = userProducts.length ? (userProducts[0].seller.reviews || 0) : 0;
+      const sampleReviews = ['Trato excelente y producto tal como se describe. Muy recomendable.', 'Envío rápido y lote en perfectas condiciones. Repetiremos.', 'El lote llegó completo y sin problemas. Buena comunicación.'];
+      reviews.innerHTML = `
+        <h2 class="font-heading font-semibold text-gray-900 mb-4">Valoraciones (${reviewCount})</h2>
+        ${reviewCount > 0
+          ? `<div class="space-y-3">
+              ${sampleReviews.slice(0, reviewCount).map(text => `
+                <div class="bg-[#F8FAFC] rounded-xl p-4">
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-sm font-semibold text-gray-900">Comprador verificado</span>
+                    <div class="flex gap-0.5">${Array.from({length:5}, () => `<svg class="w-3.5 h-3.5 text-[#E8A020]" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`).join('')}</div>
+                  </div>
+                  <p class="text-sm text-gray-600">${text}</p>
+                </div>`).join('')}
+            </div>`
+          : `<div class="text-center py-8 text-sm text-gray-400">Sin valoraciones aún.</div>`}`;
+      container.appendChild(reviews);
+    }
+  </script>
 </body>
 </html>

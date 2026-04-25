@@ -5,285 +5,241 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Panel Admin — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Lexend', sans-serif; }
+    #dropdownMenu { display: none; } #dropdownMenu.open { display: block; }
+    #mobileNavMenu { display: none; } #mobileNavMenu.open { display: block; }
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast--success { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+    .toast--error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+    .cond-A { color:#059669; background:#ecfdf5; }
+    .cond-B { color:#0284c7; background:#eff6ff; }
+    .cond-C { color:#d97706; background:#fffbeb; }
+    .cond-D { color:#dc2626; background:#fef2f2; }
+  </style>
 </head>
-<body>
-<nav class="app-nav">
-  <div class="app-nav-inner">
-    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
-    <div class="nav-search">
-      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
-    </div>
-    <div class="nav-links-app">
-      <a href="marketplace.html">Explorar</a>
-      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
-    </div>
-    <div class="user-dropdown">
-      <button class="user-btn" id="userBtn">
-        <span class="user-avatar" id="userAvatar">?</span>
-        <span id="userName">Entrar</span> ▾
-      </button>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="perfil.html">👤 Mi perfil</a>
-        <a href="mensajes.html">💬 Mensajes</a>
-        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
-        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
-      </div>
-    </div>
-  </div>
-</nav>
+<body class="bg-[#F8FAFC] text-gray-900 antialiased">
 
-<div class="page-wrap">
-  <div class="admin-layout" id="adminContent">
-    <div class="empty-state"><div class="empty-icon">🔒</div><div class="empty-title">Verificando acceso…</div></div>
-  </div>
-</div>
-
-<script src="data.js"></script>
-<script src="shared.js"></script>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-  const user = getUser();
-  if (!user) { window.location.href = 'login.html'; return; }
-  if (!user.isAdmin) {
-    document.getElementById('adminContent').innerHTML = `
-      <div class="empty-state"><div class="empty-icon">🔒</div>
-      <div class="empty-title">Acceso restringido</div>
-      <div class="empty-text">Solo jorgetorrasvall@gmail.com puede acceder al panel de administración.</div>
-      <a href="marketplace.html" class="btn btn-navy" style="margin-top:16px">Volver al marketplace</a></div>`;
-    return;
-  }
-  renderAdmin();
-});
-
-function renderAdmin() {
-  const allProducts = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
-  const totalGMV = allProducts.reduce((s, p) => s + p.price, 0);
-  const totalViews = allProducts.reduce((s, p) => s + p.views, 0);
-
-  document.getElementById('adminContent').innerHTML = `
-    <!-- HEADER -->
-    <div style="display:flex;justify-content:space-between;align-items:center">
-      <div>
-        <h1 style="font-size:1.4rem;font-weight:800;color:var(--navy)">⚙️ Panel de administración</h1>
-        <p style="font-size:13px;color:var(--gray-500);margin-top:2px">Restringido a jorgetorrasvall@gmail.com</p>
-      </div>
-      <div style="font-size:13px;color:var(--gray-400)">ReStock Beta · Abr 2026</div>
-    </div>
-
-    <!-- STATS -->
-    <div class="admin-stats">
-      <div class="admin-stat-card">
-        <div class="admin-stat-label">Lotes publicados</div>
-        <div class="admin-stat-num">${allProducts.length}</div>
-        <div class="admin-stat-sub">+${JSON.parse(localStorage.getItem('rs_products')||'[]').length} nuevos tuyos</div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-label">Usuarios registrados</div>
-        <div class="admin-stat-num">${MOCK_USERS.length}</div>
-        <div class="admin-stat-sub">3 con acceso alpha</div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-label">GMV potencial</div>
-        <div class="admin-stat-num">${Math.round(totalGMV/1000)}K€</div>
-        <div class="admin-stat-sub">Valor de todos los lotes</div>
-      </div>
-      <div class="admin-stat-card">
-        <div class="admin-stat-label">Visitas totales</div>
-        <div class="admin-stat-num">${totalViews.toLocaleString('es-ES')}</div>
-        <div class="admin-stat-sub">En todos los lotes</div>
-      </div>
-    </div>
-
-    <!-- TABS -->
-    <div>
-      <div class="admin-tabs" style="margin-bottom:16px">
-        <button class="admin-tab active" onclick="showTab('products',this)">📦 Lotes</button>
-        <button class="admin-tab" onclick="showTab('users',this)">👥 Usuarios</button>
-        <button class="admin-tab" onclick="showTab('codes',this)">🔑 Códigos alpha</button>
-        <button class="admin-tab" onclick="showTab('stripe',this)">💳 Stripe</button>
-        <button class="admin-tab" onclick="showTab('supabase',this)">🗄️ Supabase</button>
-      </div>
-
-      <!-- PRODUCTOS -->
-      <div id="tab-products" class="admin-card">
-        <div class="admin-card-header">
-          <div class="admin-card-title">Todos los lotes (${allProducts.length})</div>
-          <a href="publicar.html" class="btn btn-primary" style="font-size:13px">+ Nuevo lote</a>
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
+      <a href="marketplace.html" class="font-heading font-bold text-xl text-[#1A3C6E] flex-shrink-0">Re<span class="text-[#E8A020]">Stock</span></a>
+      <div class="flex-1 max-w-xl hidden sm:block">
+        <div class="relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          <input id="navSearch" type="text" placeholder="Buscar lotes…" class="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
         </div>
-        <div style="overflow-x:auto">
-          <table class="data-table">
-            <thead><tr>
-              <th>Título</th><th>Categoría</th><th>Estado</th><th>Precio</th><th>Cantidad</th><th>Vendedor</th><th>Ciudad</th><th>Vistas</th><th>Fecha</th><th>Acciones</th>
-            </tr></thead>
+      </div>
+      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
+        <a href="marketplace.html" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">Explorar</a>
+        <a href="publicar.html" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Publicar lote
+        </a>
+        <div class="relative">
+          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+            <span id="userAvatar" class="w-7 h-7 rounded-full bg-[#1A3C6E] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">?</span>
+            <span id="userName" class="text-sm font-medium text-gray-700">Entrar</span>
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl py-1 z-50">
+            <a href="perfil.html"   class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mi perfil</a>
+            <a href="mensajes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mensajes</a>
+            <a href="admin.html" id="adminLink" class="flex items-center gap-3 px-4 py-2.5 text-sm text-[#1A3C6E] font-semibold hover:bg-gray-50 cursor-pointer" style="display:none">Panel admin</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-lg text-gray-500 hover:bg-gray-100 cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+    </div>
+    <div id="mobileNavMenu" class="border-t border-gray-200 bg-white">
+      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
+        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Explorar</a>
+        <a href="perfil.html"      class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Mi perfil</a>
+        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="pt-16 min-h-screen">
+    <div id="adminContent" class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-8 py-8"></div>
+  </div>
+
+  <script src="data.js"></script>
+  <script src="shared.js"></script>
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const user = getUser();
+      if (!user) { window.location.href = 'login.html'; return; }
+      if (!user.isAdmin) {
+        document.getElementById('adminContent').innerHTML = `
+          <div class="flex flex-col items-center justify-center py-24 text-center">
+            <div class="w-16 h-16 rounded-2xl bg-red-50 flex items-center justify-center mb-4">
+              <svg class="w-8 h-8 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M16.5 10.5V6.75a4.5 4.5 0 10-9 0v3.75m-.75 11.25h10.5a2.25 2.25 0 002.25-2.25v-6.75a2.25 2.25 0 00-2.25-2.25H6.75a2.25 2.25 0 00-2.25 2.25v6.75a2.25 2.25 0 002.25 2.25z"/></svg>
+            </div>
+            <div class="font-heading font-semibold text-gray-900 mb-2">Acceso restringido</div>
+            <div class="text-sm text-gray-500 mb-5">Solo jorgetorrasvall@gmail.com puede acceder al panel de administración.</div>
+            <a href="marketplace.html" class="px-5 py-2.5 rounded-xl bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">Volver al marketplace</a>
+          </div>`;
+        return;
+      }
+      renderAdmin();
+    });
+
+    function renderAdmin() {
+      const allProducts  = [...PRODUCTS, ...JSON.parse(localStorage.getItem('rs_products') || '[]')];
+      const localCount   = JSON.parse(localStorage.getItem('rs_products') || '[]').length;
+      const totalGMV     = allProducts.reduce((s, p) => s + p.price, 0);
+      const totalViews   = allProducts.reduce((s, p) => s + (p.views || 0), 0);
+      const totalRevenue = allProducts.reduce((s, p) => { const c = getCommission(p.price); return s + (p.price * c.total / 100); }, 0);
+      const usedCodes    = ALPHA_CODES.filter(c => c.used).length;
+
+      const container = document.getElementById('adminContent');
+
+      // Header
+      const header = document.createElement('div');
+      header.className = 'flex items-center justify-between mb-8';
+      header.innerHTML = `
+        <div>
+          <h1 class="font-heading font-bold text-2xl text-gray-900">Panel de administración</h1>
+          <p class="text-sm text-gray-500 mt-0.5">ReStock Beta · Abril 2026 · <span class="text-[#1A3C6E] font-medium">jorgetorrasvall@gmail.com</span></p>
+        </div>
+        <button onclick="clearLocalData()" class="px-4 py-2 rounded-xl border border-red-200 text-red-600 text-sm font-medium hover:bg-red-50 transition-colors duration-200 cursor-pointer">
+          Limpiar datos locales
+        </button>`;
+      container.appendChild(header);
+
+      // Stats
+      const stats = document.createElement('div');
+      stats.className = 'grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8';
+      stats.innerHTML = [
+        { label: 'Lotes publicados', value: allProducts.length, sub: `+${localCount} nuevos`, color: '#1A3C6E' },
+        { label: 'GMV potencial', value: totalGMV.toLocaleString('es-ES') + '€', sub: 'suma de todos los lotes', color: '#E8A020' },
+        { label: 'Visitas totales', value: totalViews.toLocaleString('es-ES'), sub: 'en todos los lotes', color: '#059669' },
+        { label: 'Ingresos estimados', value: totalRevenue.toFixed(0) + '€', sub: 'comisiones si todo vendido', color: '#7c3aed' },
+      ].map(s => `
+        <div class="bg-white rounded-2xl border border-gray-200 p-5">
+          <div class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">${s.label}</div>
+          <div class="font-heading font-bold text-2xl" style="color:${s.color}">${s.value}</div>
+          <div class="text-xs text-gray-400 mt-1">${s.sub}</div>
+        </div>`).join('');
+      container.appendChild(stats);
+
+      // Products table
+      const productsSection = document.createElement('div');
+      productsSection.className = 'bg-white rounded-2xl border border-gray-200 mb-6 overflow-hidden';
+      productsSection.innerHTML = `
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+          <h2 class="font-heading font-semibold text-gray-900">Todos los lotes (${allProducts.length})</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-gray-100 bg-[#F8FAFC]">
+                <th class="text-left px-5 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Lote</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden md:table-cell">Categoría</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Estado</th>
+                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider">Precio</th>
+                <th class="text-right px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden sm:table-cell">Vistas</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-gray-400 uppercase tracking-wider hidden lg:table-cell">Vendedor</th>
+                <th class="px-4 py-3"></th>
+              </tr>
+            </thead>
             <tbody>
               ${allProducts.map(p => `
-              <tr>
-                <td><a href="producto.html?id=${p.id}" style="color:var(--navy);font-weight:600;font-size:13px">${p.title}</a></td>
-                <td style="font-size:13px">${getCategoryIcon(p.category)} ${getCategoryName(p.category)}</td>
-                <td><span class="badge badge-${p.condition}">${p.condition}</span></td>
-                <td style="font-weight:700;color:var(--navy)">${formatPrice(p.price)}</td>
-                <td style="font-size:13px">${p.quantity} ${p.unit}</td>
-                <td style="font-size:13px">${p.seller.name}</td>
-                <td style="font-size:13px">📍 ${p.seller.city}</td>
-                <td style="font-size:13px">👁 ${p.views}</td>
-                <td style="font-size:12px;color:var(--gray-400)">${p.created}</td>
-                <td>
-                  <div style="display:flex;gap:6px">
-                    <a href="producto.html?id=${p.id}" class="btn btn-outline" style="padding:4px 10px;font-size:12px">Ver</a>
-                    <button class="btn btn-outline" style="padding:4px 10px;font-size:12px;color:var(--red);border-color:var(--red)" onclick="deleteProduct(${p.id})">Eliminar</button>
+                <tr class="border-b border-gray-50 hover:bg-[#F8FAFC] transition-colors duration-150">
+                  <td class="px-5 py-3.5">
+                    <div class="font-medium text-gray-900 text-sm truncate max-w-[200px]">${p.title}</div>
+                    <div class="text-xs text-gray-400 mt-0.5">${p.quantity} ${p.unit} · ${daysAgo(p.created)}</div>
+                  </td>
+                  <td class="px-4 py-3.5 hidden md:table-cell">
+                    <span class="text-xs text-gray-600">${getCategoryName(p.category)}</span>
+                  </td>
+                  <td class="px-4 py-3.5">
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold cond-${p.condition}">${p.condition}</span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right">
+                    <span class="font-heading font-semibold text-[#1A3C6E]">${formatPrice(p.price)}</span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right hidden sm:table-cell">
+                    <span class="text-gray-600">${p.views || 0}</span>
+                  </td>
+                  <td class="px-4 py-3.5 hidden lg:table-cell">
+                    <span class="text-gray-600 text-xs">${p.seller.name}</span>
+                  </td>
+                  <td class="px-4 py-3.5 text-right">
+                    <a href="producto.html?id=${p.id}" class="text-xs text-[#1A3C6E] font-medium hover:underline cursor-pointer">Ver →</a>
+                  </td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>`;
+      container.appendChild(productsSection);
+
+      // Users + Alpha codes: 2-col
+      const bottom = document.createElement('div');
+      bottom.className = 'grid grid-cols-1 lg:grid-cols-2 gap-6 mb-8';
+      bottom.innerHTML = `
+        <!-- Users -->
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100">
+            <h2 class="font-heading font-semibold text-gray-900">Usuarios registrados (${MOCK_USERS.length})</h2>
+          </div>
+          <div class="divide-y divide-gray-50">
+            ${MOCK_USERS.map(u => `
+              <div class="flex items-center gap-3 px-5 py-3.5">
+                <div class="w-8 h-8 rounded-full bg-[#1A3C6E] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">${u.avatar}</div>
+                <div class="flex-1 min-w-0">
+                  <div class="text-sm font-medium text-gray-900 flex items-center gap-1.5">
+                    ${u.name}
+                    ${u.isFounder ? `<span class="text-[10px] font-semibold text-[#b87d10] bg-[#E8A020]/15 px-1.5 py-0.5 rounded-full">Fundador</span>` : ''}
+                    ${u.isAdmin   ? `<span class="text-[10px] font-semibold text-[#1A3C6E] bg-[#1A3C6E]/10 px-1.5 py-0.5 rounded-full">Admin</span>` : ''}
                   </div>
-                </td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
+                  <div class="text-xs text-gray-400">${u.email} · ${u.city}</div>
+                </div>
+                <span class="text-xs text-gray-400">${u.type}</span>
+              </div>`).join('')}
+          </div>
         </div>
-      </div>
 
-      <!-- USUARIOS -->
-      <div id="tab-users" class="admin-card" style="display:none">
-        <div class="admin-card-header">
-          <div class="admin-card-title">Usuarios registrados (${MOCK_USERS.length})</div>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="data-table">
-            <thead><tr>
-              <th>Nombre</th><th>Email</th><th>Ciudad</th><th>Tipo</th><th>Lotes</th><th>Estado</th><th>Acciones</th>
-            </tr></thead>
-            <tbody>
-              ${MOCK_USERS.map(u => `
-              <tr>
-                <td><strong>${u.name}</strong></td>
-                <td style="font-size:13px;color:var(--gray-500)">${u.email}</td>
-                <td style="font-size:13px">📍 ${u.city}</td>
-                <td style="font-size:13px">${u.type}</td>
-                <td style="font-size:13px">${allProducts.filter(p=>p.seller.id===u.id).length}</td>
-                <td>
-                  ${u.isFounder ? '<span class="badge badge-founder">⭐ Fundador</span>' : ''}
-                  ${u.isAdmin ? '<span class="badge badge-admin">Admin</span>' : '<span class="badge" style="background:var(--gray-100);color:var(--gray-500)">Normal</span>'}
-                </td>
-                <td><a href="perfil.html?id=${u.id}" class="btn btn-outline" style="padding:4px 10px;font-size:12px">Ver perfil</a></td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- CÓDIGOS ALPHA -->
-      <div id="tab-codes" class="admin-card" style="display:none">
-        <div class="admin-card-header">
-          <div class="admin-card-title">Códigos alpha (${ALPHA_CODES.filter(c=>!c.used).length} disponibles de ${ALPHA_CODES.length})</div>
-        </div>
-        <div style="overflow-x:auto">
-          <table class="data-table">
-            <thead><tr><th>Código</th><th>Estado</th><th>Usado por</th></tr></thead>
-            <tbody>
+        <!-- Alpha codes -->
+        <div class="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="font-heading font-semibold text-gray-900">Códigos alpha</h2>
+            <span class="text-xs text-gray-500">${usedCodes}/20 usados</span>
+          </div>
+          <div class="px-5 py-4">
+            <div class="h-2 rounded-full bg-gray-100 overflow-hidden mb-3">
+              <div class="h-full rounded-full bg-[#1A3C6E] transition-all duration-700" style="width:${usedCodes / 20 * 100}%"></div>
+            </div>
+            <div class="grid grid-cols-2 gap-1.5 max-h-64 overflow-y-auto">
               ${ALPHA_CODES.map(c => `
-              <tr>
-                <td><span class="code-pill">${c.code}</span></td>
-                <td>
-                  <span class="status-dot status-dot--${c.used ? 'gray' : 'green'}"></span>
-                  ${c.used ? 'Usado' : 'Disponible'}
-                </td>
-                <td style="font-size:13px;color:var(--gray-400)">${c.usedBy || '—'}</td>
-              </tr>`).join('')}
-            </tbody>
-          </table>
-        </div>
-      </div>
-
-      <!-- STRIPE -->
-      <div id="tab-stripe" class="admin-card" style="display:none">
-        <div class="admin-card-header">
-          <div class="admin-card-title">💳 Integración Stripe</div>
-          <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:100px;font-weight:600">⚠️ Pendiente de configurar</span>
-        </div>
-        <div style="padding:32px;max-width:600px">
-          <div style="display:flex;flex-direction:column;gap:20px">
-            <div style="padding:20px;background:var(--gray-50);border-radius:var(--radius);border:1.5px solid var(--gray-200)">
-              <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:12px">Estado actual</div>
-              <div style="font-size:14px;color:var(--gray-600);line-height:1.7">
-                Stripe Connect no está activo. Las transacciones son simuladas.<br/>
-                Tarjeta de prueba: <code style="background:var(--gray-100);padding:2px 6px;border-radius:4px;font-size:13px">4242 4242 4242 4242</code>
-              </div>
-            </div>
-            <div style="padding:20px;background:var(--gray-50);border-radius:var(--radius);border:1.5px solid var(--gray-200)">
-              <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:12px">Modelo de comisión</div>
-              <div style="font-size:14px;color:var(--gray-600);line-height:1.9">
-                Lotes ≥ 1.000€ → 3% comprador + 3% vendedor<br/>
-                Lotes ≥ 500€ → 4% comprador + 4% vendedor<br/>
-                Lotes &lt; 500€ → 5% comprador + 5% vendedor
-              </div>
-            </div>
-            <div style="padding:20px;background:#fef3c7;border-radius:var(--radius);border:1.5px solid #fcd34d">
-              <div style="font-size:14px;color:#92400e;font-weight:600;margin-bottom:8px">Pasos pendientes</div>
-              <ul style="font-size:13px;color:#92400e;list-style:none;display:flex;flex-direction:column;gap:6px">
-                <li>□ Añadir clave secreta de Stripe (STRIPE_SECRET_KEY)</li>
-                <li>□ Configurar Stripe Connect para pagos a vendedores</li>
-                <li>□ Activar modo live antes del lanzamiento público</li>
-                <li>□ Webhook de confirmación de pago</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- SUPABASE -->
-      <div id="tab-supabase" class="admin-card" style="display:none">
-        <div class="admin-card-header">
-          <div class="admin-card-title">🗄️ Integración Supabase</div>
-          <span style="font-size:12px;background:#fef3c7;color:#92400e;padding:4px 12px;border-radius:100px;font-weight:600">⚠️ Pendiente de conectar</span>
-        </div>
-        <div style="padding:32px;max-width:600px">
-          <div style="display:flex;flex-direction:column;gap:20px">
-            <div style="padding:20px;background:var(--gray-50);border-radius:var(--radius);border:1.5px solid var(--gray-200)">
-              <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:12px">Estado actual</div>
-              <div style="font-size:14px;color:var(--gray-600);line-height:1.7">
-                Los datos se almacenan en <strong>localStorage</strong> (navegador). Cuando se conecte Supabase, migrarán a la base de datos.
-              </div>
-            </div>
-            <div style="padding:20px;background:var(--gray-50);border-radius:var(--radius);border:1.5px solid var(--gray-200)">
-              <div style="font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--gray-400);margin-bottom:12px">Tablas a crear</div>
-              <div style="display:flex;flex-direction:column;gap:6px">
-                ${[['profiles','Perfiles de usuario, tipo de negocio y categorías'],['products','Productos y lotes publicados'],['categories','Árbol de categorías'],['conversations','Hilos de mensajería'],['messages','Mensajes en tiempo real'],['reviews','Reseñas y reputación'],['feedback','Respuestas post-transacción']].map(([t,d])=>`
-                <div style="display:flex;gap:10px;font-size:13px;padding:8px;background:white;border-radius:6px;border:1px solid var(--gray-200)">
-                  <code style="color:var(--navy);font-weight:700;min-width:120px">${t}</code>
-                  <span style="color:var(--gray-500)">${d}</span>
+                <div class="flex items-center justify-between px-3 py-2 rounded-lg ${c.used ? 'bg-green-50' : 'bg-gray-50'}">
+                  <span class="font-mono text-xs ${c.used ? 'text-green-700' : 'text-gray-600'}">${c.code.replace('RESTOCK-ALPHA-','')}</span>
+                  ${c.used
+                    ? `<svg class="w-3.5 h-3.5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>`
+                    : `<svg class="w-3.5 h-3.5 text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>`}
                 </div>`).join('')}
-              </div>
-            </div>
-            <div style="padding:20px;background:#fef3c7;border-radius:var(--radius);border:1.5px solid #fcd34d">
-              <div style="font-size:14px;color:#92400e;font-weight:600;margin-bottom:8px">Pasos pendientes</div>
-              <ul style="font-size:13px;color:#92400e;list-style:none;display:flex;flex-direction:column;gap:6px">
-                <li>□ Crear proyecto en supabase.com</li>
-                <li>□ Añadir SUPABASE_URL y SUPABASE_ANON_KEY</li>
-                <li>□ Crear las 7 tablas con sus relaciones</li>
-                <li>□ Activar autenticación por email</li>
-                <li>□ Activar Realtime para mensajería</li>
-              </ul>
             </div>
           </div>
-        </div>
-      </div>
-    </div>`;
-}
+        </div>`;
+      container.appendChild(bottom);
+    }
 
-function showTab(tab, btn) {
-  document.querySelectorAll('[id^="tab-"]').forEach(el => el.style.display = 'none');
-  document.querySelectorAll('.admin-tab').forEach(b => b.classList.remove('active'));
-  document.getElementById('tab-' + tab).style.display = 'block';
-  btn.classList.add('active');
-}
-
-function deleteProduct(id) {
-  if (!confirm('¿Eliminar este lote?')) return;
-  let saved = JSON.parse(localStorage.getItem('rs_products') || '[]');
-  saved = saved.filter(p => p.id !== id);
-  localStorage.setItem('rs_products', JSON.stringify(saved));
-  showToast('Lote eliminado', 'success');
-  renderAdmin();
-}
-</script>
+    function clearLocalData() {
+      if (!confirm('¿Seguro? Esto elimina lotes y conversaciones guardados localmente.')) return;
+      localStorage.removeItem('rs_products');
+      localStorage.removeItem('rs_conversations');
+      showToast('Datos locales eliminados', 'success');
+      setTimeout(() => location.reload(), 800);
+    }
+  </script>
 </body>
 </html>

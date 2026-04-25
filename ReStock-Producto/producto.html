@@ -5,165 +5,265 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Producto — ReStock</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="app.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Lexend', sans-serif; }
+
+    #dropdownMenu { display: none; }
+    #dropdownMenu.open { display: block; }
+    #mobileNavMenu { display: none; }
+    #mobileNavMenu.open { display: block; }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 9999; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 500; box-shadow: 0 4px 16px rgba(0,0,0,0.15); opacity: 0; transform: translateY(8px); transition: opacity 0.25s, transform 0.25s; pointer-events: none; }
+    .toast.show { opacity: 1; transform: translateY(0); }
+    .toast--success { background: #ecfdf5; color: #065f46; border: 1px solid #6ee7b7; }
+    .toast--error { background: #fef2f2; color: #991b1b; border: 1px solid #fca5a5; }
+
+    /* Product detail (dynamically generated) */
+    .cond-A { color: #059669; background: #ecfdf5; }
+    .cond-B { color: #0284c7; background: #eff6ff; }
+    .cond-C { color: #d97706; background: #fffbeb; }
+    .cond-D { color: #dc2626; background: #fef2f2; }
+
+    /* Related product cards */
+    .p-card { background: #fff; border-radius: 14px; border: 1px solid #e5e7eb; overflow: hidden; cursor: pointer; transition: box-shadow 0.2s ease, transform 0.2s ease; }
+    .p-card:hover { box-shadow: 0 8px 24px rgba(0,0,0,0.1); transform: translateY(-2px); }
+    .p-card-img { width: 100%; aspect-ratio: 4/3; object-fit: cover; display: block; background: #f3f4f6; }
+    .p-card-body { padding: 14px 16px 16px; }
+    .p-card-cat { font-size: 11px; color: #9ca3af; font-weight: 500; text-transform: uppercase; letter-spacing: 0.04em; margin-bottom: 4px; }
+    .p-card-title { font-family: 'Lexend', sans-serif; font-weight: 600; font-size: 14px; line-height: 1.4; color: #111827; margin-bottom: 10px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    .p-card-price { font-family: 'Lexend', sans-serif; font-weight: 700; font-size: 20px; color: #1A3C6E; margin-bottom: 8px; }
+    .p-card-meta { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; font-size: 12px; color: #6b7280; }
+    .p-cond-badge { position: absolute; top: 10px; right: 10px; padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+  </style>
 </head>
-<body>
-<nav class="app-nav">
-  <div class="app-nav-inner">
-    <a href="marketplace.html" class="logo">Re<span>Stock</span></a>
-    <div class="nav-search">
-      <input type="text" id="navSearch" placeholder="Buscar lotes…" />
-    </div>
-    <div class="nav-links-app">
-      <a href="marketplace.html">Explorar</a>
-      <a href="publicar.html" class="btn-publish">+ Publicar lote</a>
-      <a href="mensajes.html" class="nav-msg">💬 <span class="msg-badge" id="msgBadge"></span></a>
-    </div>
-    <div class="user-dropdown">
-      <button class="user-btn" id="userBtn">
-        <span class="user-avatar" id="userAvatar">?</span>
-        <span id="userName">Entrar</span> ▾
+<body class="bg-[#F8FAFC] text-gray-900 antialiased">
+
+  <!-- NAV -->
+  <nav class="fixed top-0 left-0 right-0 z-50 bg-white border-b border-gray-200 h-16">
+    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 h-full flex items-center gap-4">
+      <a href="marketplace.html" class="font-heading font-bold text-xl text-[#1A3C6E] flex-shrink-0">Re<span class="text-[#E8A020]">Stock</span></a>
+      <div class="flex-1 max-w-xl hidden sm:block">
+        <div class="relative">
+          <svg class="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+          <input id="navSearch" type="text" placeholder="Buscar lotes, categorías, ciudades…" class="w-full pl-9 pr-4 py-2 rounded-lg border border-gray-200 text-sm bg-gray-50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/20 focus:border-[#1A3C6E] transition-all duration-200" />
+        </div>
+      </div>
+      <div class="hidden md:flex items-center gap-2 ml-auto flex-shrink-0">
+        <a href="marketplace.html" class="px-3 py-1.5 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">Explorar</a>
+        <a href="publicar.html" class="inline-flex items-center gap-1 px-4 py-2 rounded-lg bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"/></svg>
+          Publicar lote
+        </a>
+        <a href="mensajes.html" class="relative p-2 rounded-lg text-gray-500 hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 8.511c.884.284 1.5 1.128 1.5 2.097v4.286c0 1.136-.847 2.1-1.98 2.193-.34.027-.68.052-1.02.072v3.091l-3-3c-1.354 0-2.694-.055-4.02-.163a2.115 2.115 0 01-.825-.242m9.345-8.334a2.126 2.126 0 00-.476-.095 48.64 48.64 0 00-8.048 0c-1.131.094-1.976 1.057-1.976 2.192v4.286c0 .837.46 1.58 1.155 1.951m9.345-8.334V6.637c0-1.621-1.152-3.026-2.76-3.235A48.455 48.455 0 0011.25 3c-2.115 0-4.198.137-6.24.402-1.608.209-2.76 1.614-2.76 3.235v6.226c0 1.621 1.152 3.026 2.76 3.235.577.075 1.157.14 1.74.194V21l4.155-4.155"/></svg>
+          <span id="msgBadge" class="absolute -top-0.5 -right-0.5 w-4 h-4 rounded-full bg-red-500 text-white text-[10px] font-bold items-center justify-center" style="display:none"></span>
+        </a>
+        <div class="relative">
+          <button id="userBtn" class="flex items-center gap-2 pl-2 pr-3 py-1.5 rounded-lg hover:bg-gray-100 transition-colors duration-200 cursor-pointer">
+            <span id="userAvatar" class="w-7 h-7 rounded-full bg-[#1A3C6E] text-white text-xs font-bold flex items-center justify-center flex-shrink-0">?</span>
+            <span id="userName" class="text-sm font-medium text-gray-700">Entrar</span>
+            <svg class="w-3.5 h-3.5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/></svg>
+          </button>
+          <div id="dropdownMenu" class="absolute right-0 top-full mt-1 w-52 bg-white rounded-xl border border-gray-200 shadow-xl py-1 z-50">
+            <a href="perfil.html"   class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mi perfil</a>
+            <a href="mensajes.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Mensajes</a>
+            <a href="publicar.html" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer">Publicar lote</a>
+            <a href="admin.html" id="adminLink" class="flex items-center gap-3 px-4 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer" style="display:none">Panel admin</a>
+            <div class="border-t border-gray-100 my-1"></div>
+            <button onclick="logout()" class="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
+          </div>
+        </div>
+      </div>
+      <button id="mobileNavToggle" class="md:hidden ml-auto p-2 rounded-lg text-gray-500 hover:bg-gray-100 cursor-pointer">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
       </button>
-      <div class="dropdown-menu" id="dropdownMenu">
-        <a href="perfil.html">👤 Mi perfil</a>
-        <a href="mensajes.html">💬 Mensajes</a>
-        <a href="publicar.html">📦 Publicar lote</a>
-        <a href="admin.html" id="adminLink" style="display:none">⚙️ Panel admin</a>
-        <hr /><button class="danger" onclick="logout()">Cerrar sesión</button>
+    </div>
+    <div id="mobileNavMenu" class="border-t border-gray-200 bg-white">
+      <div class="px-4 py-3 space-y-1 max-w-screen-xl mx-auto">
+        <a href="marketplace.html" class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Explorar</a>
+        <a href="publicar.html"    class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Publicar lote</a>
+        <a href="mensajes.html"    class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Mensajes</a>
+        <a href="perfil.html"      class="block px-3 py-2 rounded-md text-sm text-gray-700 hover:bg-gray-50">Mi perfil</a>
+        <button onclick="logout()" class="block w-full text-left px-3 py-2 rounded-md text-sm text-red-600 hover:bg-red-50 cursor-pointer">Cerrar sesión</button>
       </div>
     </div>
+  </nav>
+
+  <!-- PAGE -->
+  <div class="pt-16 min-h-screen">
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <a href="javascript:history.back()" class="inline-flex items-center gap-1.5 text-sm text-gray-500 hover:text-[#1A3C6E] transition-colors duration-200 mb-6 cursor-pointer">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+        Volver al marketplace
+      </a>
+      <div id="productContent"></div>
+      <div id="relatedSection"></div>
+    </div>
   </div>
-</nav>
 
-<div class="page-wrap">
-  <div class="container" style="padding-top:24px;padding-bottom:48px">
-    <a href="javascript:history.back()" class="back-link">← Volver al marketplace</a>
-    <div id="productContent"></div>
-    <div id="relatedSection" style="margin-top:48px"></div>
-  </div>
-</div>
+  <script src="data.js"></script>
+  <script src="shared.js"></script>
+  <script>
+    if (!requireAuth()) throw new Error('Unauthenticated');
 
-<script src="data.js"></script>
-<script src="shared.js"></script>
-<script>
-const id = parseInt(new URLSearchParams(location.search).get('id'));
-const localProducts = JSON.parse(localStorage.getItem('rs_products') || '[]');
-const all = [...PRODUCTS, ...localProducts];
-const p = all.find(x => x.id === id);
+    const id = parseInt(new URLSearchParams(location.search).get('id'));
+    const localProducts = JSON.parse(localStorage.getItem('rs_products') || '[]');
+    const all = [...PRODUCTS, ...localProducts];
+    const p = all.find(x => x.id === id);
 
-if (!p) {
-  document.getElementById('productContent').innerHTML = `
-    <div class="empty-state"><div class="empty-icon">😕</div>
-    <div class="empty-title">Producto no encontrado</div>
-    <a href="marketplace.html" class="btn btn-navy" style="margin-top:16px">Volver al marketplace</a></div>`;
-} else {
-  document.title = p.title + ' — ReStock';
-  const comm = getCommission(p.price);
-  const priceAfterComm = (p.price * (1 - comm.seller / 100)).toFixed(2);
-  const buyerPays = (p.price * (1 + comm.buyer / 100)).toFixed(2);
-
-  document.getElementById('productContent').innerHTML = `
-    <div class="product-detail-layout">
-      <div>
-        <img class="product-img-main" src="${p.images[0]}" alt="${p.title}" />
-        <div style="margin-top:28px">
-          <h1 style="font-size:1.6rem;font-weight:800;color:var(--navy);margin-bottom:12px">${p.title}</h1>
-          <div style="display:flex;gap:10px;align-items:center;margin-bottom:20px;flex-wrap:wrap">
-            <span class="badge badge-${p.condition}">${p.condition} — ${CONDITIONS[p.condition].label}</span>
-            <span style="font-size:13px;color:var(--gray-400)">${getCategoryIcon(p.category)} ${getCategoryName(p.category)}</span>
-            <span style="font-size:13px;color:var(--gray-400)">👁 ${p.views} vistas</span>
-            <span style="font-size:13px;color:var(--gray-400)">📅 Publicado ${daysAgo(p.created)}</span>
+    if (!p) {
+      document.getElementById('productContent').innerHTML = `
+        <div class="flex flex-col items-center justify-center py-24 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-gray-100 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.879 7.519c1.171-1.025 3.071-1.025 4.242 0 1.172 1.025 1.172 2.687 0 3.712-.203.179-.43.326-.67.442-.745.361-1.45.999-1.45 1.827v.75M21 12a9 9 0 11-18 0 9 9 0 0118 0zm-9 5.25h.008v.008H12v-.008z"/></svg>
           </div>
-          <div class="product-info-grid">
-            <div class="product-info-item">
-              <div class="product-info-label">Precio del lote</div>
-              <div class="product-info-value" style="color:var(--navy);font-size:1.2rem">${formatPrice(p.price)}</div>
-            </div>
-            <div class="product-info-item">
-              <div class="product-info-label">Cantidad</div>
-              <div class="product-info-value">${p.quantity} ${p.unit}</div>
-            </div>
-            <div class="product-info-item">
-              <div class="product-info-label">Precio por unidad</div>
-              <div class="product-info-value">${(p.price / p.quantity).toFixed(2)}€/${p.unit.replace('unidades','ud').replace('pares','par')}</div>
-            </div>
-            <div class="product-info-item">
-              <div class="product-info-label">Ubicación</div>
-              <div class="product-info-value">📍 ${p.seller.city}</div>
-            </div>
-          </div>
-          <div style="margin-top:24px">
-            <h3 style="font-size:15px;font-weight:700;color:var(--navy);margin-bottom:12px">Descripción</h3>
-            <p class="product-desc">${p.description}</p>
-          </div>
-        </div>
-      </div>
+          <div class="font-heading font-semibold text-gray-900 mb-2">Producto no encontrado</div>
+          <a href="marketplace.html" class="mt-4 px-5 py-2.5 rounded-lg bg-[#1A3C6E] text-white text-sm font-semibold hover:bg-[#163260] transition-colors duration-200 cursor-pointer">Volver al marketplace</a>
+        </div>`;
+    } else {
+      document.title = p.title + ' — ReStock';
+      const comm = getCommission(p.price);
+      const buyerPays = (p.price * (1 + comm.buyer / 100)).toFixed(2);
+      const pricePerUnit = (p.price / p.quantity).toFixed(2);
+      const unitShort = p.unit.replace('unidades','ud').replace('pares','par');
+      const cond = CONDITIONS[p.condition];
 
-      <div>
-        <div class="product-detail-card">
-          <div class="product-detail-price">${formatPrice(p.price)}</div>
-          <div class="product-detail-qty">${p.quantity} ${p.unit} · ${(p.price/p.quantity).toFixed(2)}€/ud</div>
+      document.getElementById('productContent').innerHTML = `
+        <div style="display:grid;grid-template-columns:1fr 360px;gap:40px;align-items:start" class="detail-grid">
 
-          <div class="commission-box">
-            <div class="commission-box-title">Desglose de comisión</div>
-            <div class="commission-row"><span>Precio del lote</span><span>${formatPrice(p.price)}</span></div>
-            <div class="commission-row"><span>Comisión comprador (${comm.buyer}%)</span><span>+${(p.price*comm.buyer/100).toFixed(2)}€</span></div>
-            <div class="commission-row commission-total"><span>Tú pagas</span><span>${parseFloat(buyerPays).toLocaleString('es-ES')}€</span></div>
+          <!-- LEFT -->
+          <div>
+            <div style="position:relative;border-radius:16px;overflow:hidden;background:#f3f4f6">
+              <img src="${p.images[0]}" alt="${p.title}" style="width:100%;aspect-ratio:4/3;object-fit:cover;display:block" />
+              <span style="position:absolute;top:12px;right:12px;padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600" class="cond-${p.condition}">${cond.label}</span>
+            </div>
+
+            <div style="margin-top:28px">
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap">
+                <span style="font-size:12px;color:#6b7280;background:#f3f4f6;padding:3px 10px;border-radius:20px;font-weight:500">${getCategoryName(p.category)}</span>
+                <span style="font-size:12px;color:#9ca3af">·</span>
+                <span style="font-size:12px;color:#9ca3af">${p.views} vistas</span>
+                <span style="font-size:12px;color:#9ca3af">·</span>
+                <span style="font-size:12px;color:#9ca3af">Publicado ${daysAgo(p.created)}</span>
+              </div>
+              <h1 style="font-family:'Lexend',sans-serif;font-size:1.6rem;font-weight:700;color:#111827;line-height:1.25;margin-bottom:24px">${p.title}</h1>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;border:1px solid #e5e7eb;border-radius:12px;overflow:hidden;background:#e5e7eb;gap:1px;margin-bottom:28px">
+                <div style="background:white;padding:16px">
+                  <div style="font-size:11px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Precio del lote</div>
+                  <div style="font-family:'Lexend',sans-serif;font-size:1.25rem;font-weight:700;color:#1A3C6E">${formatPrice(p.price)}</div>
+                </div>
+                <div style="background:white;padding:16px">
+                  <div style="font-size:11px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Cantidad</div>
+                  <div style="font-family:'Lexend',sans-serif;font-size:1.25rem;font-weight:700;color:#111827">${p.quantity} ${p.unit}</div>
+                </div>
+                <div style="background:white;padding:16px">
+                  <div style="font-size:11px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Precio por unidad</div>
+                  <div style="font-family:'Lexend',sans-serif;font-size:1.25rem;font-weight:700;color:#111827">${pricePerUnit}€/${unitShort}</div>
+                </div>
+                <div style="background:white;padding:16px">
+                  <div style="font-size:11px;color:#9ca3af;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:4px">Ubicación</div>
+                  <div style="font-family:'Lexend',sans-serif;font-size:1.25rem;font-weight:700;color:#111827">${p.seller.city}</div>
+                </div>
+              </div>
+
+              <h3 style="font-family:'Lexend',sans-serif;font-size:15px;font-weight:600;color:#111827;margin-bottom:10px">Descripción</h3>
+              <p style="font-size:14px;color:#4b5563;line-height:1.75">${p.description}</p>
+            </div>
           </div>
 
-          <button class="btn btn-primary btn-full btn-lg" id="contactBtn">💬 Contactar al vendedor</button>
-          <button class="btn btn-outline btn-full" style="margin-top:10px" onclick="showToast('Lote guardado en favoritos','success')">🔖 Guardar lote</button>
+          <!-- RIGHT: sticky card -->
+          <div style="position:sticky;top:88px">
+            <div style="background:white;border-radius:16px;border:1px solid #e5e7eb;padding:24px;box-shadow:0 4px 20px rgba(0,0,0,0.06)">
+              <div style="font-family:'Lexend',sans-serif;font-size:2rem;font-weight:700;color:#1A3C6E;margin-bottom:2px">${formatPrice(p.price)}</div>
+              <div style="font-size:13px;color:#9ca3af;margin-bottom:20px">${p.quantity} ${p.unit} · ${pricePerUnit}€/${unitShort}</div>
 
-          <div class="seller-card">
-            <div class="seller-card-header">
-              <div class="seller-avatar-lg">${p.seller.avatar}</div>
-              <div>
-                <div class="seller-name">${p.seller.name}</div>
-                <div class="seller-city">📍 ${p.seller.city} · Desde ${p.seller.since}</div>
+              <div style="background:#F8FAFC;border:1px solid #e5e7eb;border-radius:12px;padding:16px;margin-bottom:20px">
+                <div style="font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;color:#9ca3af;margin-bottom:12px">Lo que pagarás</div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;color:#6b7280;margin-bottom:8px">
+                  <span>Precio del lote</span><span>${formatPrice(p.price)}</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-size:13px;color:#6b7280;margin-bottom:12px;padding-bottom:12px;border-bottom:1px solid #e5e7eb">
+                  <span>Comisión comprador (${comm.buyer}%)</span><span>+${(p.price * comm.buyer / 100).toFixed(2)}€</span>
+                </div>
+                <div style="display:flex;justify-content:space-between;font-family:'Lexend',sans-serif;font-weight:700;font-size:15px;color:#111827">
+                  <span>Total</span><span>${parseFloat(buyerPays).toLocaleString('es-ES')}€</span>
+                </div>
+              </div>
+
+              <button id="contactBtn" style="width:100%;padding:14px;border-radius:10px;background:#1A3C6E;color:white;font-family:'Lexend',sans-serif;font-weight:600;font-size:15px;border:none;cursor:pointer;margin-bottom:10px;transition:background 0.2s" onmouseover="this.style.background='#163260'" onmouseout="this.style.background='#1A3C6E'">
+                Contactar al vendedor
+              </button>
+              <button onclick="showToast('Lote guardado en favoritos','success')" style="width:100%;padding:11px;border-radius:10px;background:white;color:#1A3C6E;font-size:14px;font-weight:600;border:1.5px solid #e5e7eb;cursor:pointer;transition:border-color 0.2s,background 0.2s" onmouseover="this.style.borderColor='#1A3C6E'" onmouseout="this.style.borderColor='#e5e7eb'">
+                Guardar lote
+              </button>
+
+              <div style="margin-top:20px;padding-top:20px;border-top:1px solid #f3f4f6">
+                <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px">
+                  <div style="width:42px;height:42px;border-radius:50%;background:#1A3C6E;color:white;font-family:'Lexend',sans-serif;font-weight:700;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0">${p.seller.avatar}</div>
+                  <div>
+                    <div style="font-family:'Lexend',sans-serif;font-weight:600;font-size:14px;color:#111827">${p.seller.name}</div>
+                    <div style="font-size:12px;color:#9ca3af">${p.seller.city} · Desde ${p.seller.since}</div>
+                  </div>
+                </div>
+                <div style="display:flex;align-items:center;gap:6px;margin-bottom:14px">
+                  <div style="display:flex;gap:2px">
+                    ${Array.from({length:5},(_,i)=>`<svg style="width:14px;height:14px;color:${i<Math.floor(p.seller.rating)?'#E8A020':'#e5e7eb'}" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>`).join('')}
+                  </div>
+                  <span style="font-size:13px;font-weight:600;color:#111827">${p.seller.rating}</span>
+                  <span style="font-size:12px;color:#9ca3af">(${p.seller.reviews} valoraciones)</span>
+                </div>
+                <a href="perfil.html?id=${p.seller.id}" style="display:block;width:100%;padding:9px;border-radius:10px;text-align:center;background:white;color:#1A3C6E;font-size:13px;font-weight:600;border:1.5px solid #e5e7eb;cursor:pointer;text-decoration:none;transition:border-color 0.2s" onmouseover="this.style.borderColor='#1A3C6E'" onmouseout="this.style.borderColor='#e5e7eb'">
+                  Ver perfil del vendedor
+                </a>
               </div>
             </div>
-            <div class="seller-stats">
-              <span>⭐ ${p.seller.rating}</span>
-              <span>${p.seller.reviews} valoraciones</span>
-            </div>
-            <a href="perfil.html?id=${p.seller.id}" class="btn btn-outline btn-full" style="font-size:13px">Ver perfil del vendedor</a>
           </div>
-        </div>
-      </div>
-    </div>`;
+        </div>`;
 
-  document.getElementById('contactBtn').onclick = () => {
-    const user = JSON.parse(localStorage.getItem('rs_user') || 'null');
-    if (!user) { window.location.href = 'login.html'; return; }
-    localStorage.setItem('rs_active_conv_product', JSON.stringify(p));
-    window.location.href = 'mensajes.html?new=' + p.id;
-  };
+      document.getElementById('contactBtn').onclick = () => {
+        const user = getUser();
+        if (!user) { window.location.href = 'login.html'; return; }
+        localStorage.setItem('rs_active_conv_product', JSON.stringify(p));
+        window.location.href = 'mensajes.html?new=' + p.id;
+      };
 
-  // Related products
-  const related = all.filter(x => x.id !== p.id && x.category === p.category).slice(0, 3);
-  if (related.length) {
-    document.getElementById('relatedSection').innerHTML = `
-      <h3 style="font-size:1rem;font-weight:700;color:var(--navy);margin-bottom:16px">Lotes similares</h3>
-      <div class="product-grid">
-        ${related.map(r => `
-          <div class="product-card" onclick="window.location='producto.html?id=${r.id}'">
-            <img class="product-card-img" src="${r.images[0]}" alt="${r.title}" />
-            <div class="product-card-body">
-              <div class="product-card-top">
-                <div class="product-card-title">${r.title}</div>
-                <span class="badge badge-${r.condition}">${r.condition}</span>
-              </div>
-              <div class="product-card-price">${formatPrice(r.price)}</div>
-              <div class="product-card-meta">
-                <span class="product-card-qty">${r.quantity} ${r.unit}</span>
-                <span class="product-card-city">📍 ${r.seller.city}</span>
-              </div>
+      // Related products
+      const related = all.filter(x => x.id !== p.id && x.category === p.category).slice(0, 3);
+      if (related.length) {
+        document.getElementById('relatedSection').innerHTML = `
+          <div style="margin-top:48px;padding-top:40px;border-top:1px solid #e5e7eb">
+            <h3 style="font-family:'Lexend',sans-serif;font-weight:600;font-size:1.1rem;color:#111827;margin-bottom:20px">Lotes similares</h3>
+            <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:20px">
+              ${related.map(r => `
+                <div class="p-card" onclick="window.location='producto.html?id=${r.id}'" role="link" tabindex="0">
+                  <div style="position:relative">
+                    <img class="p-card-img" src="${r.images[0]}" alt="${r.title}" loading="lazy" />
+                    <span class="p-cond-badge cond-${r.condition}">${CONDITIONS[r.condition].label}</span>
+                  </div>
+                  <div class="p-card-body">
+                    <div class="p-card-cat">${getCategoryName(r.category)}</div>
+                    <div class="p-card-title">${r.title}</div>
+                    <div class="p-card-price">${formatPrice(r.price)}</div>
+                    <div class="p-card-meta">
+                      <span>${r.quantity} ${r.unit}</span>
+                      <span>·</span>
+                      <span>${r.seller.city}</span>
+                    </div>
+                  </div>
+                </div>`).join('')}
             </div>
-          </div>`).join('')}
-      </div>`;
-  }
-}
-</script>
+          </div>`;
+      }
+    }
+  </script>
+  <style>
+    @media (max-width: 1024px) {
+      .detail-grid { grid-template-columns: 1fr !important; }
+    }
+  </style>
 </body>
 </html>

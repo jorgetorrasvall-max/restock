@@ -1,179 +1,301 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="es" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ReStock — El marketplace B2B del stock sobrante</title>
+  <meta name="description" content="Convierte tu inventario parado en liquidez. El marketplace B2B pensado para negocios con NIF." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Lexend:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { font-family: 'Inter', sans-serif; }
+    h1, h2, h3, .font-heading { font-family: 'Lexend', sans-serif; }
+
+    #nav { transition: background-color 0.3s ease, box-shadow 0.3s ease; }
+    #nav.scrolled { background-color: rgba(255,255,255,0.97) !important; box-shadow: 0 1px 16px rgba(0,0,0,0.08); }
+    #nav.scrolled .nav-link { color: #1e293b; }
+    #nav.scrolled .nav-logo { color: #1A3C6E; }
+    #nav.scrolled .nav-logo span { color: #E8A020; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    .fade-up { opacity: 0; transform: translateY(20px); transition: opacity 0.5s ease, transform 0.5s ease; }
+    .fade-up.visible { opacity: 1; transform: translateY(0); }
+
+    #spotsBar { width: 0%; transition: width 1.2s cubic-bezier(0.4,0,0.2,1); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .fade-up { transition: none; opacity: 1; transform: none; }
+      #spotsBar { transition: none; }
+    }
+  </style>
 </head>
-<body>
+<body class="antialiased bg-white text-gray-900">
 
   <!-- NAV -->
-  <nav class="nav" id="nav">
-    <div class="container nav-inner">
-      <a href="#" class="logo">Re<span>Stock</span></a>
-      <ul class="nav-links">
-        <li><a href="#como-funciona">Cómo funciona</a></li>
-        <li><a href="#founders">Early Adopter</a></li>
-        <li><a href="#precios">Comisiones</a></li>
-        <li><a href="login.html" class="btn-nav">Ir a la plataforma</a></li>
-      </ul>
-      <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">
-        <span></span><span></span><span></span>
-      </button>
+  <nav id="nav" class="fixed top-0 left-0 right-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex items-center justify-between h-16">
+
+        <a href="#" class="nav-logo font-heading font-bold text-xl text-white tracking-tight">
+          Re<span class="text-[#E8A020]">Stock</span>
+        </a>
+
+        <ul class="hidden md:flex items-center gap-8 text-sm font-medium">
+          <li><a href="#como-funciona" class="nav-link text-white/80 hover:text-white transition-colors duration-200">Cómo funciona</a></li>
+          <li><a href="#founders"      class="nav-link text-white/80 hover:text-white transition-colors duration-200">Early Adopter</a></li>
+          <li><a href="#precios"       class="nav-link text-white/80 hover:text-white transition-colors duration-200">Comisiones</a></li>
+        </ul>
+
+        <div class="flex items-center gap-3">
+          <a href="login.html" class="hidden sm:inline-flex items-center px-4 py-2 rounded-lg text-sm font-semibold bg-[#E8A020] text-[#0d2240] hover:bg-[#f5b840] transition-colors duration-200 cursor-pointer">
+            Ir a la plataforma
+          </a>
+          <button id="navToggle" class="md:hidden p-2 text-white" aria-label="Abrir menú">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="mobileMenu" class="hidden md:hidden bg-[#1A3C6E] border-t border-white/10">
+      <div class="px-4 py-3 space-y-1">
+        <a href="#como-funciona" class="block px-3 py-2 rounded-md text-sm text-white/90 hover:bg-white/10">Cómo funciona</a>
+        <a href="#founders"      class="block px-3 py-2 rounded-md text-sm text-white/90 hover:bg-white/10">Early Adopter</a>
+        <a href="#precios"       class="block px-3 py-2 rounded-md text-sm text-white/90 hover:bg-white/10">Comisiones</a>
+        <a href="login.html"     class="block mt-2 px-3 py-2 rounded-md text-sm font-semibold bg-[#E8A020] text-[#0d2240] text-center cursor-pointer">Ir a la plataforma</a>
+      </div>
     </div>
   </nav>
 
   <!-- HERO -->
-  <section class="hero">
-    <div class="container hero-inner">
-      <div class="badge-pill">
-        <span class="badge-dot"></span>
+  <section class="relative flex flex-col justify-center min-h-screen overflow-hidden" style="background: linear-gradient(135deg,#0d2240 0%,#1A3C6E 55%,#1e4d8c 100%);">
+    <div class="absolute inset-0 opacity-[0.06]" style="background-image:radial-gradient(circle,#fff 1px,transparent 1px);background-size:32px 32px;"></div>
+
+    <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-28 pb-20">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 border border-white/20 text-white/90 text-sm font-medium mb-8">
+        <span class="w-2 h-2 rounded-full bg-[#E8A020] animate-pulse"></span>
         Fase beta — acceso por invitación
       </div>
-      <h1>El marketplace B2B<br />del <em>stock sobrante</em></h1>
-      <p class="hero-sub">
+
+      <h1 class="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-[72px] font-bold text-white leading-[1.08] tracking-tight max-w-4xl">
+        El marketplace B2B<br/>del <span class="text-[#E8A020]">stock sobrante</span>
+      </h1>
+
+      <p class="mt-6 text-lg sm:text-xl text-white/70 max-w-2xl leading-relaxed">
         Convierte tu inventario parado en liquidez. Compra producto barato para revender.
-        Todo dentro de una plataforma pensada para negocios, no para particulares.
+        Una plataforma pensada para negocios, no para particulares.
       </p>
-      <div class="hero-ctas">
-        <a href="login.html" class="btn-primary">Entrar a la plataforma →</a>
-        <a href="#como-funciona" class="btn-ghost">Ver cómo funciona</a>
+
+      <div class="mt-8 flex flex-wrap gap-4">
+        <a href="login.html" class="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-[#E8A020] text-[#0d2240] font-semibold hover:bg-[#f5b840] transition-colors duration-200 shadow-lg cursor-pointer">
+          Entrar a la plataforma
+          <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6"/></svg>
+        </a>
+        <a href="#como-funciona" class="inline-flex items-center px-6 py-3 rounded-xl bg-white/10 border border-white/20 text-white font-semibold hover:bg-white/20 transition-colors duration-200 cursor-pointer">
+          Ver cómo funciona
+        </a>
       </div>
-      <div class="hero-stats">
-        <div class="stat">
-          <span class="stat-num">Desde 3%</span>
-          <span class="stat-label">Comisión por transacción</span>
+
+      <div class="mt-14 pt-8 border-t border-white/15 flex flex-wrap gap-8">
+        <div>
+          <div class="font-heading text-2xl font-bold text-white">Desde 3%</div>
+          <div class="text-sm text-white/55 mt-0.5">Comisión por transacción</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-num">+1M</span>
-          <span class="stat-label">eCommerce en Europa</span>
+        <div class="hidden sm:block w-px bg-white/20"></div>
+        <div>
+          <div class="font-heading text-2xl font-bold text-white">+1M</div>
+          <div class="text-sm text-white/55 mt-0.5">eCommerce en Europa</div>
         </div>
-        <div class="stat-divider"></div>
-        <div class="stat">
-          <span class="stat-num">10.000M€</span>
-          <span class="stat-label">Stock sobrante en Europa/año</span>
+        <div class="hidden sm:block w-px bg-white/20"></div>
+        <div>
+          <div class="font-heading text-2xl font-bold text-white">10.000M€</div>
+          <div class="text-sm text-white/55 mt-0.5">Stock sobrante en Europa/año</div>
         </div>
       </div>
     </div>
-    <div class="hero-bg"></div>
+
+    <div class="absolute bottom-0 left-0 right-0 h-20 bg-gradient-to-t from-white to-transparent"></div>
   </section>
 
   <!-- PROBLEMA -->
-  <section class="section problem" id="problema">
-    <div class="container">
-      <div class="section-label">El problema</div>
-      <h2>El stock no se vende porque<br />el canal y el precio son incorrectos</h2>
-      <div class="problem-grid">
-        <div class="problem-card">
-          <div class="problem-icon">📦</div>
-          <h3>Capital inmovilizado</h3>
-          <p>Producto que no rota ocupa espacio y congela liquidez que necesitas para operar.</p>
+  <section class="py-20 bg-[#F8FAFC]" id="problema">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="inline-block px-3 py-1 rounded-full bg-[#1A3C6E]/10 text-[#1A3C6E] text-xs font-semibold uppercase tracking-wider mb-4">El problema</div>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-gray-900">
+          El stock no se vende porque<br class="hidden sm:block"/>el canal y el precio son incorrectos
+        </h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="problem-card fade-up bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="w-11 h-11 rounded-xl bg-[#1A3C6E]/10 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-[#1A3C6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M20.25 7.5l-.625 10.632a2.25 2.25 0 01-2.247 2.118H6.622a2.25 2.25 0 01-2.247-2.118L3.75 7.5m8.25 3v6.75m0 0l-3-3m3 3l3-3M3.375 7.5h17.25c.621 0 1.125-.504 1.125-1.125v-1.5c0-.621-.504-1.125-1.125-1.125H3.375c-.621 0-1.125.504-1.125 1.125v1.5c0 .621.504 1.125 1.125 1.125z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Capital inmovilizado</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Producto que no rota ocupa espacio y congela liquidez que necesitas para operar.</p>
         </div>
-        <div class="problem-card">
-          <div class="problem-icon">📉</div>
-          <h3>Liquidación a pérdidas</h3>
-          <p>Sin un canal específico, la única salida es malvender muy por debajo del coste.</p>
+
+        <div class="problem-card fade-up bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="w-11 h-11 rounded-xl bg-red-50 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 6L9 12.75l4.286-4.286a11.948 11.948 0 014.306 6.43l.776 2.898m0 0l3.182-5.511m-3.182 5.511l-5.511-3.182"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Liquidación a pérdidas</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Sin un canal específico, la única salida es malvender muy por debajo del coste.</p>
         </div>
-        <div class="problem-card">
-          <div class="problem-icon">🔍</div>
-          <h3>Sin canal B2B</h3>
-          <p>Wallapop y Vinted son para particulares. No hay nada hecho para negocios con NIF.</p>
+
+        <div class="problem-card fade-up bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="w-11 h-11 rounded-xl bg-amber-50 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-amber-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Sin canal B2B</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Wallapop y Vinted son para particulares. No hay nada hecho para negocios con NIF.</p>
         </div>
-        <div class="problem-card">
-          <div class="problem-icon">🤝</div>
-          <h3>Revendedores sin proveedor</h3>
-          <p>Pequeños revendedores y tiendas físicas no encuentran producto barato y ágil.</p>
+
+        <div class="problem-card fade-up bg-white rounded-2xl p-6 border border-gray-100 shadow-sm hover:shadow-md transition-shadow duration-200">
+          <div class="w-11 h-11 rounded-xl bg-green-50 flex items-center justify-center mb-4">
+            <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M15 19.128a9.38 9.38 0 002.625.372 9.337 9.337 0 004.121-.952 4.125 4.125 0 00-7.533-2.493M15 19.128v-.003c0-1.113-.285-2.16-.786-3.07M15 19.128v.106A12.318 12.318 0 018.624 21c-2.331 0-4.512-.645-6.374-1.766l-.001-.109a6.375 6.375 0 0111.964-3.07M12 6.375a3.375 3.375 0 11-6.75 0 3.375 3.375 0 016.75 0zm8.25 2.25a2.625 2.625 0 11-5.25 0 2.625 2.625 0 015.25 0z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Revendedores sin proveedor</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Pequeños revendedores y tiendas físicas no encuentran producto barato y ágil.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- CÓMO FUNCIONA -->
-  <section class="section how" id="como-funciona">
-    <div class="container">
-      <div class="section-label">La solución</div>
-      <h2>Así funciona ReStock</h2>
-      <div class="how-grid">
-        <div class="how-step">
-          <div class="step-num">01</div>
-          <h3>Publica tu lote</h3>
-          <p>Sube fotos, descripción, cantidad, estado y precio. Vende por unidad o por lote completo.</p>
+  <section class="py-20 bg-white" id="como-funciona">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="inline-block px-3 py-1 rounded-full bg-[#E8A020]/15 text-[#b87d10] text-xs font-semibold uppercase tracking-wider mb-4">La solución</div>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-gray-900">Así funciona ReStock</h2>
+      </div>
+
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 relative">
+        <div class="hidden lg:block absolute top-7 left-[14%] right-[14%] h-px bg-gray-200 z-0"></div>
+
+        <div class="how-step fade-up relative z-10 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-[#1A3C6E] text-white font-heading font-bold text-lg flex items-center justify-center mx-auto mb-5 shadow-md">01</div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Publica tu lote</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Sube fotos, descripción, cantidad, estado y precio. Vende por unidad o lote completo.</p>
         </div>
-        <div class="how-arrow">→</div>
-        <div class="how-step">
-          <div class="step-num">02</div>
-          <h3>Comprador lo encuentra</h3>
-          <p>Filtros por categoría, país y cantidad. Descubrimiento personalizado según intereses.</p>
+
+        <div class="how-step fade-up relative z-10 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-[#1A3C6E] text-white font-heading font-bold text-lg flex items-center justify-center mx-auto mb-5 shadow-md">02</div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Comprador lo encuentra</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Filtros por categoría, país y cantidad. Descubrimiento según sus intereses.</p>
         </div>
-        <div class="how-arrow">→</div>
-        <div class="how-step">
-          <div class="step-num">03</div>
-          <h3>Negocian y pagan</h3>
-          <p>Mensajería en tiempo real dentro de la plataforma. Pago seguro a través de Stripe.</p>
+
+        <div class="how-step fade-up relative z-10 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-[#1A3C6E] text-white font-heading font-bold text-lg flex items-center justify-center mx-auto mb-5 shadow-md">03</div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Negocian y pagan</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Mensajería en tiempo real. Pago seguro a través de Stripe.</p>
         </div>
-        <div class="how-arrow">→</div>
-        <div class="how-step">
-          <div class="step-num">04</div>
-          <h3>Comisión por tramos</h3>
-          <p>Cuanto mayor el lote, menor la comisión. Partida entre comprador y vendedor.</p>
+
+        <div class="how-step fade-up relative z-10 text-center">
+          <div class="w-14 h-14 rounded-2xl bg-[#E8A020] text-[#0d2240] font-heading font-bold text-lg flex items-center justify-center mx-auto mb-5 shadow-md">04</div>
+          <h3 class="font-heading font-semibold text-gray-900 mb-2">Comisión por tramos</h3>
+          <p class="text-sm text-gray-500 leading-relaxed">Cuanto mayor el lote, menor la comisión. Partida entre ambas partes.</p>
         </div>
       </div>
     </div>
   </section>
 
   <!-- POR QUÉ FUNCIONA -->
-  <section class="section why" id="por-que">
-    <div class="container">
-      <div class="why-inner">
-        <div class="why-text">
-          <div class="section-label">Por qué funciona</div>
-          <h2>Ambos lados<br />ganan dinero</h2>
-          <p>No es venta de producto, es circulación de capital. El vendedor convierte inventario en liquidez; el comprador consigue producto barato con el que ganar margen.</p>
-          <ul class="why-list">
-            <li>
-              <span class="why-check">✓</span>
+  <section class="py-20 bg-[#F8FAFC]" id="por-que">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+
+        <div>
+          <div class="inline-block px-3 py-1 rounded-full bg-[#1A3C6E]/10 text-[#1A3C6E] text-xs font-semibold uppercase tracking-wider mb-6">Por qué funciona</div>
+          <h2 class="font-heading text-3xl sm:text-4xl font-bold text-gray-900 mb-4">
+            Ambos lados<br/>ganan dinero
+          </h2>
+          <p class="text-gray-500 leading-relaxed mb-8">No es venta de producto, es circulación de capital. El vendedor convierte inventario en liquidez; el comprador consigue producto barato con el que ganar margen.</p>
+
+          <ul class="why-list space-y-5">
+            <li class="fade-up flex gap-4">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-[#E8A020]/20 flex items-center justify-center mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#b87d10]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </div>
               <div>
-                <strong>Ya funciona fuera</strong>
-                <p>B-Stock y Liquidation.com generan +3.000M$ en EEUU. Europa es el espacio vacío.</p>
+                <strong class="block text-gray-900 font-semibold">Ya funciona fuera</strong>
+                <p class="text-sm text-gray-500 mt-0.5">B-Stock y Liquidation.com generan +3.000M$ en EEUU. Europa es el espacio vacío.</p>
               </div>
             </li>
-            <li>
-              <span class="why-check">✓</span>
+            <li class="fade-up flex gap-4">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-[#E8A020]/20 flex items-center justify-center mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#b87d10]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </div>
               <div>
-                <strong>El producto es bueno, el canal era malo</strong>
-                <p>+90% de productos se venden en otro canal. ReStock da el canal correcto.</p>
+                <strong class="block text-gray-900 font-semibold">El producto es bueno, el canal era malo</strong>
+                <p class="text-sm text-gray-500 mt-0.5">+90% de productos se venden en otro canal. ReStock da el canal correcto.</p>
               </div>
             </li>
-            <li>
-              <span class="why-check">✓</span>
+            <li class="fade-up flex gap-4">
+              <div class="flex-shrink-0 w-6 h-6 rounded-full bg-[#E8A020]/20 flex items-center justify-center mt-0.5">
+                <svg class="w-3.5 h-3.5 text-[#b87d10]" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4.5 12.75l6 6 9-13.5"/></svg>
+              </div>
               <div>
-                <strong>B2B desde el primer día</strong>
-                <p>Ambas partes son negocios con NIF. Reputación, factura y seriedad garantizada.</p>
+                <strong class="block text-gray-900 font-semibold">B2B desde el primer día</strong>
+                <p class="text-sm text-gray-500 mt-0.5">Ambas partes son negocios con NIF. Reputación, factura y seriedad garantizada.</p>
               </div>
             </li>
           </ul>
         </div>
-        <div class="why-visual">
-          <div class="flow-card seller">
-            <div class="flow-icon">🏪</div>
-            <strong>Vendedor</strong>
-            <p>eCommerce · Dropshipper · Almacén</p>
-            <div class="flow-tag">Stock parado → Liquidez</div>
+
+        <div class="flex flex-col items-center gap-3">
+          <div class="w-full max-w-sm bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-[#1A3C6E]/10 flex items-center justify-center">
+                <svg class="w-5 h-5 text-[#1A3C6E]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-4.5 0H2.36m11.14 0H18m0 0h3.64m-1.39 0V9.349m-16.5 11.65V9.35m0 0a3.001 3.001 0 003.75-.615A2.993 2.993 0 009.75 9.75c.896 0 1.7-.393 2.25-1.016a2.993 2.993 0 002.25 1.016c.896 0 1.7-.393 2.25-1.016a3.001 3.001 0 003.75.614m-16.5 0a3.004 3.004 0 01-.621-4.72L4.318 3.44A1.5 1.5 0 015.378 3h13.243a1.5 1.5 0 011.06.44l1.19 1.189a3 3 0 01-.621 4.72m-13.5 8.65h3.75a.75.75 0 00.75-.75V13.5a.75.75 0 00-.75-.75H6.75a.75.75 0 00-.75.75v3.75c0 .414.336.75.75.75z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-heading font-semibold text-gray-900">Vendedor</div>
+                <div class="text-xs text-gray-400">eCommerce · Dropshipper · Almacén</div>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-[#1A3C6E]/10 text-[#1A3C6E] text-xs font-medium">Stock parado → Liquidez</span>
           </div>
-          <div class="flow-center">
-            <div class="flow-logo">Re<span>Stock</span></div>
-            <div class="flow-commission">Comisión por tramos</div>
+
+          <div class="flex flex-col items-center gap-1">
+            <div class="w-px h-5 bg-gray-200"></div>
+            <div class="px-5 py-2.5 bg-[#1A3C6E] rounded-xl shadow-lg text-center">
+              <div class="font-heading font-bold text-white text-sm">Re<span class="text-[#E8A020]">Stock</span></div>
+              <div class="text-[10px] text-white/55 mt-0.5">Comisión por tramos</div>
+            </div>
+            <div class="w-px h-5 bg-gray-200"></div>
           </div>
-          <div class="flow-card buyer">
-            <div class="flow-icon">🛒</div>
-            <strong>Comprador</strong>
-            <p>Revendedor · Tienda física · Importador</p>
-            <div class="flow-tag">Producto barato → Margen</div>
+
+          <div class="w-full max-w-sm bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center gap-3 mb-3">
+              <div class="w-10 h-10 rounded-xl bg-green-50 flex items-center justify-center">
+                <svg class="w-5 h-5 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M2.25 3h1.386c.51 0 .955.343 1.087.835l.383 1.437M7.5 14.25a3 3 0 00-3 3h15.75m-12.75-3h11.218c1.121-2.3 2.1-4.684 2.924-7.138a60.114 60.114 0 00-16.536-1.84M7.5 14.25L5.106 5.272M6 20.25a.75.75 0 11-1.5 0 .75.75 0 011.5 0zm12.75 0a.75.75 0 11-1.5 0 .75.75 0 011.5 0z"/>
+                </svg>
+              </div>
+              <div>
+                <div class="font-heading font-semibold text-gray-900">Comprador</div>
+                <div class="text-xs text-gray-400">Revendedor · Tienda física · Importador</div>
+              </div>
+            </div>
+            <span class="inline-flex items-center px-3 py-1 rounded-full bg-green-50 text-green-700 text-xs font-medium">Producto barato → Margen</span>
           </div>
         </div>
       </div>
@@ -181,154 +303,292 @@
   </section>
 
   <!-- COMISIONES -->
-  <section class="section pricing" id="precios">
-    <div class="container">
-      <div class="section-label">Modelo de comisiones</div>
-      <h2>Cuanto mayor el lote,<br /><em>menor la comisión</em></h2>
-      <p class="pricing-intro">La comisión se reparte entre comprador y vendedor. Nadie paga solo.</p>
+  <section class="py-20 bg-white" id="precios">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-14">
+        <div class="inline-block px-3 py-1 rounded-full bg-[#1A3C6E]/10 text-[#1A3C6E] text-xs font-semibold uppercase tracking-wider mb-4">Modelo de comisiones</div>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-gray-900">
+          Cuanto mayor el lote,<br/><span class="text-[#1A3C6E]">menor la comisión</span>
+        </h2>
+        <p class="mt-4 text-gray-500 max-w-md mx-auto">La comisión se reparte entre comprador y vendedor. Nadie paga solo.</p>
+      </div>
 
-      <div class="tiers">
-        <div class="tier">
-          <div class="tier-range">Lotes &lt; 500€</div>
-          <div class="tier-split">
-            <span class="tier-pct">5%</span>
-          </div>
-          <div class="tier-who">por transacción</div>
+      <div class="flex flex-col md:flex-row gap-6 max-w-3xl mx-auto items-stretch">
+        <div class="tier fade-up flex-1 rounded-2xl p-8 border border-gray-200 text-center hover:shadow-md transition-shadow duration-200">
+          <div class="text-sm text-gray-400 mb-5">Lotes &lt; 500€</div>
+          <div class="font-heading text-5xl font-bold text-gray-900 mb-1">5%</div>
+          <div class="text-sm text-gray-400">por transacción</div>
         </div>
 
-        <div class="tier tier--mid">
-          <div class="tier-badge">Más habitual</div>
-          <div class="tier-range">Lotes ≥ 500€</div>
-          <div class="tier-split">
-            <span class="tier-pct">4%</span>
-          </div>
-          <div class="tier-who">por transacción</div>
+        <div class="tier fade-up flex-1 rounded-2xl p-8 bg-[#1A3C6E] text-center relative shadow-xl md:scale-105">
+          <div class="absolute -top-3.5 left-1/2 -translate-x-1/2 px-4 py-1 rounded-full bg-[#E8A020] text-[#0d2240] text-xs font-bold uppercase tracking-wide whitespace-nowrap">Más habitual</div>
+          <div class="text-sm text-white/60 mb-5">Lotes ≥ 500€</div>
+          <div class="font-heading text-5xl font-bold text-white mb-1">4%</div>
+          <div class="text-sm text-white/50">por transacción</div>
         </div>
 
-        <div class="tier tier--top">
-          <div class="tier-range">Lotes ≥ 1.000€</div>
-          <div class="tier-split">
-            <span class="tier-pct">3%</span>
-          </div>
-          <div class="tier-who">por transacción</div>
+        <div class="tier fade-up flex-1 rounded-2xl p-8 border border-gray-200 text-center hover:shadow-md transition-shadow duration-200">
+          <div class="text-sm text-gray-400 mb-5">Lotes ≥ 1.000€</div>
+          <div class="font-heading text-5xl font-bold text-gray-900 mb-1">3%</div>
+          <div class="text-sm text-gray-400">por transacción</div>
         </div>
       </div>
 
-      <div class="pricing-perks">
-        <div class="perk">✓ Sin cuota mensual</div>
-        <div class="perk">✓ Sin costes de publicación</div>
-        <div class="perk">✓ Pago automático vía Stripe</div>
-        <div class="perk">✓ Los primeros 10 miembros pagan 0% durante 2 meses</div>
+      <div class="mt-10 flex flex-wrap justify-center gap-x-8 gap-y-3">
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <svg class="w-4 h-4 text-[#E8A020]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+          Sin cuota mensual
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <svg class="w-4 h-4 text-[#E8A020]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+          Sin costes de publicación
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <svg class="w-4 h-4 text-[#E8A020]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+          Pago automático vía Stripe
+        </div>
+        <div class="flex items-center gap-2 text-sm text-gray-600">
+          <svg class="w-4 h-4 text-[#E8A020]" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd"/></svg>
+          Primeros 10 miembros: 0% durante 2 meses
+        </div>
       </div>
 
-      <div class="premium-teaser">
-        <div class="premium-label">Próximamente</div>
-        <h3>Plan Premium</h3>
-        <p>Mayor visibilidad, estadísticas de mercado, tendencias por categoría y reducción de comisiones.</p>
+      <div class="mt-12 max-w-lg mx-auto rounded-2xl border border-dashed border-gray-200 p-6 text-center">
+        <div class="inline-block px-3 py-1 rounded-full bg-gray-100 text-gray-500 text-xs font-semibold uppercase tracking-wider mb-3">Próximamente</div>
+        <h3 class="font-heading font-bold text-gray-900 mb-1">Plan Premium</h3>
+        <p class="text-sm text-gray-500">Mayor visibilidad, estadísticas de mercado, tendencias por categoría y reducción de comisiones.</p>
       </div>
     </div>
   </section>
 
   <!-- EARLY ADOPTER -->
-  <section class="section founders" id="founders">
-    <div class="container">
-      <div class="section-label">Programa Early Adopter</div>
-      <h2>Sé uno de los<br /><em>10 primeros miembros</em></h2>
-      <p class="founders-sub">Los 10 primeros en completar una compra o venta obtienen condiciones exclusivas que no se repetirán.</p>
-      <div class="founders-benefits">
-        <div class="benefit-card">
-          <div class="benefit-icon">🎯</div>
-          <h3>0% comisión</h3>
-          <p>Durante los próximos 2 meses tras tu primera transacción. Sin letra pequeña.</p>
+  <section class="py-20" id="founders" style="background: linear-gradient(135deg,#0d2240 0%,#1A3C6E 100%);">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center mb-12">
+        <div class="inline-block px-3 py-1 rounded-full bg-[#E8A020]/20 text-[#E8A020] text-xs font-semibold uppercase tracking-wider mb-4">Programa Early Adopter</div>
+        <h2 class="font-heading text-3xl sm:text-4xl font-bold text-white">
+          Sé uno de los<br/><span class="text-[#E8A020]">10 primeros miembros</span>
+        </h2>
+        <p class="mt-4 text-white/60 max-w-md mx-auto">Los 10 primeros en completar una compra o venta obtienen condiciones exclusivas que no se repetirán.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+        <div class="benefit-card fade-up bg-white/10 border border-white/15 rounded-2xl p-6 text-center hover:bg-white/15 transition-colors duration-200">
+          <div class="w-12 h-12 rounded-xl bg-[#E8A020]/20 border border-[#E8A020]/30 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-[#E8A020]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9.568 3H5.25A2.25 2.25 0 003 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 005.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 009.568 3zM6 6h.008v.008H6V6z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white mb-2">0% comisión</h3>
+          <p class="text-sm text-white/60">Durante los próximos 2 meses tras tu primera transacción. Sin letra pequeña.</p>
         </div>
-        <div class="benefit-card highlight">
-          <div class="benefit-icon">⭐</div>
-          <h3>Insignia Fundador</h3>
-          <p>Badge "⭐ Fundador ReStock" visible en tu perfil para siempre.</p>
+
+        <div class="benefit-card fade-up bg-[#E8A020] rounded-2xl p-6 text-center shadow-xl">
+          <div class="w-12 h-12 rounded-xl bg-white/20 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-[#0d2240]" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M11.48 3.499a.562.562 0 011.04 0l2.125 5.111a.563.563 0 00.475.345l5.518.442c.499.04.701.663.321.988l-4.204 3.602a.563.563 0 00-.182.557l1.285 5.385a.562.562 0 01-.84.61l-4.725-2.885a.563.563 0 00-.586 0L6.982 20.54a.562.562 0 01-.84-.61l1.285-5.386a.562.562 0 00-.182-.557l-4.204-3.602a.563.563 0 01.321-.988l5.518-.442a.563.563 0 00.475-.345L11.48 3.5z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-[#0d2240] mb-2">Insignia Fundador</h3>
+          <p class="text-sm text-[#0d2240]/70">Badge "Fundador ReStock" visible en tu perfil para siempre.</p>
         </div>
-        <div class="benefit-card">
-          <div class="benefit-icon">🚀</div>
-          <h3>Acceso prioritario</h3>
-          <p>Antes que nadie a nuevas funcionalidades y mejoras de la plataforma.</p>
+
+        <div class="benefit-card fade-up bg-white/10 border border-white/15 rounded-2xl p-6 text-center hover:bg-white/15 transition-colors duration-200">
+          <div class="w-12 h-12 rounded-xl bg-[#E8A020]/20 border border-[#E8A020]/30 flex items-center justify-center mx-auto mb-4">
+            <svg class="w-6 h-6 text-[#E8A020]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3.75 13.5l10.5-11.25L12 10.5h8.25L9.75 21.75 12 13.5H3.75z"/>
+            </svg>
+          </div>
+          <h3 class="font-heading font-semibold text-white mb-2">Acceso prioritario</h3>
+          <p class="text-sm text-white/60">Antes que nadie a nuevas funcionalidades y mejoras de la plataforma.</p>
         </div>
       </div>
-      <div class="spots-counter">
-        <div class="spots-bar">
-          <div class="spots-fill" id="spotsBar"></div>
+
+      <div class="max-w-sm mx-auto text-center">
+        <div class="h-2 rounded-full bg-white/10 overflow-hidden mb-3">
+          <div id="spotsBar" class="h-full rounded-full bg-[#E8A020]"></div>
         </div>
-        <p class="spots-text">Quedan <strong id="spotsLeft">7</strong> plazas de 10</p>
+        <p class="text-sm text-white/60">Quedan <strong id="spotsLeft" class="text-white">—</strong> plazas de 10</p>
       </div>
     </div>
   </section>
 
   <!-- ACCESO -->
-  <section class="section access" id="acceso">
-    <div class="container">
-      <div class="access-inner">
-        <div class="section-label">Acceso beta</div>
-        <h2>Entra antes que nadie</h2>
-        <p>ReStock está en fase beta por invitación. Solicita tu código alpha o introdúcelo si ya lo tienes.</p>
-        <div class="access-tabs">
-          <button class="tab-btn active" data-tab="solicitar">Solicitar acceso</button>
-          <button class="tab-btn" data-tab="codigo">Tengo código</button>
-        </div>
-        <div class="tab-panel active" id="tab-solicitar">
-          <form class="access-form" id="requestForm">
-            <div class="form-row">
-              <input type="text" placeholder="Nombre" required />
-              <input type="email" placeholder="Email del negocio" required />
-            </div>
-            <input type="text" placeholder="Nombre de tu empresa o tienda" required />
-            <select required>
-              <option value="" disabled selected>¿Cómo usarás ReStock?</option>
-              <option>Quiero vender mi stock sobrante</option>
-              <option>Quiero comprar producto para revender</option>
-              <option>Las dos cosas</option>
-            </select>
-            <button type="submit" class="btn-primary btn-full">Solicitar plaza early adopter →</button>
-            <p class="form-note">Te contactamos en menos de 24h. Sin spam.</p>
-          </form>
-        </div>
-        <div class="tab-panel" id="tab-codigo">
-          <form class="access-form" id="codeForm">
-            <input type="text" placeholder="Introduce tu código (ej: RESTOCK-ALPHA-001)" class="code-input" id="codeInput" />
-            <button type="submit" class="btn-primary btn-full">Activar código →</button>
-          </form>
-          <div class="code-result" id="codeResult"></div>
-        </div>
+  <section class="py-20 bg-white" id="acceso">
+    <div class="max-w-lg mx-auto px-4 sm:px-6">
+      <div class="text-center mb-10">
+        <div class="inline-block px-3 py-1 rounded-full bg-[#1A3C6E]/10 text-[#1A3C6E] text-xs font-semibold uppercase tracking-wider mb-4">Acceso beta</div>
+        <h2 class="font-heading text-3xl font-bold text-gray-900">Entra antes que nadie</h2>
+        <p class="mt-3 text-gray-500 text-sm leading-relaxed">ReStock está en fase beta por invitación. Solicita tu código alpha o introdúcelo si ya lo tienes.</p>
+      </div>
+
+      <div class="flex rounded-xl border border-gray-200 overflow-hidden mb-6">
+        <button class="tab-btn flex-1 py-3 text-sm font-medium bg-[#1A3C6E] text-white transition-colors duration-200 cursor-pointer" data-tab="solicitar">Solicitar acceso</button>
+        <button class="tab-btn flex-1 py-3 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors duration-200 cursor-pointer" data-tab="codigo">Tengo código</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-solicitar">
+        <form id="requestForm" class="space-y-4">
+          <div class="grid grid-cols-2 gap-4">
+            <input type="text" placeholder="Nombre" required
+              class="px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/30 focus:border-[#1A3C6E] transition-all duration-200" />
+            <input type="email" placeholder="Email del negocio" required
+              class="px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/30 focus:border-[#1A3C6E] transition-all duration-200" />
+          </div>
+          <input type="text" placeholder="Nombre de tu empresa o tienda" required
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/30 focus:border-[#1A3C6E] transition-all duration-200" />
+          <select required
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/30 focus:border-[#1A3C6E] transition-all duration-200 bg-white cursor-pointer">
+            <option value="" disabled selected>¿Cómo usarás ReStock?</option>
+            <option>Quiero vender mi stock sobrante</option>
+            <option>Quiero comprar producto para revender</option>
+            <option>Las dos cosas</option>
+          </select>
+          <button type="submit"
+            class="w-full py-3.5 rounded-xl bg-[#1A3C6E] text-white font-semibold text-sm hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+            Solicitar plaza early adopter →
+          </button>
+          <p class="text-xs text-gray-400 text-center">Te contactamos en menos de 24h. Sin spam.</p>
+        </form>
+      </div>
+
+      <div class="tab-panel" id="tab-codigo">
+        <form id="codeForm" class="space-y-4">
+          <input type="text" id="codeInput" placeholder="Introduce tu código (ej: RESTOCK-ALPHA-001)"
+            class="w-full px-4 py-3 rounded-xl border border-gray-200 text-sm font-mono focus:outline-none focus:ring-2 focus:ring-[#1A3C6E]/30 focus:border-[#1A3C6E] transition-all duration-200" />
+          <button type="submit"
+            class="w-full py-3.5 rounded-xl bg-[#1A3C6E] text-white font-semibold text-sm hover:bg-[#163260] transition-colors duration-200 cursor-pointer">
+            Activar código →
+          </button>
+        </form>
+        <div id="codeResult" class="mt-4 p-4 rounded-xl text-sm hidden"></div>
       </div>
     </div>
   </section>
 
   <!-- FOOTER -->
-  <footer class="footer">
-    <div class="container footer-inner">
-      <div class="footer-brand">
-        <a href="#" class="logo">Re<span>Stock</span></a>
-        <p>El marketplace B2B del stock sobrante.<br />Barcelona · España · 2026</p>
-      </div>
-      <div class="footer-links">
-        <div class="footer-col">
-          <strong>Producto</strong>
-          <a href="#como-funciona">Cómo funciona</a>
-          <a href="#precios">Comisiones</a>
-          <a href="#founders">Early Adopter</a>
+  <footer style="background:#0d2240;">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="flex flex-col md:flex-row justify-between gap-10">
+        <div>
+          <a href="#" class="font-heading font-bold text-xl text-white">Re<span class="text-[#E8A020]">Stock</span></a>
+          <p class="mt-3 text-sm text-white/45 leading-relaxed max-w-xs">El marketplace B2B del stock sobrante.<br/>Barcelona · España · 2026</p>
         </div>
-        <div class="footer-col">
-          <strong>Contacto</strong>
-          <a href="#">jorgetorritas</a>
-          <a href="#">LinkedIn</a>
+        <div class="flex gap-16">
+          <div class="flex flex-col gap-3">
+            <span class="text-xs font-semibold text-white/40 uppercase tracking-wider">Producto</span>
+            <a href="#como-funciona" class="text-sm text-white/60 hover:text-white transition-colors duration-200">Cómo funciona</a>
+            <a href="#precios"       class="text-sm text-white/60 hover:text-white transition-colors duration-200">Comisiones</a>
+            <a href="#founders"      class="text-sm text-white/60 hover:text-white transition-colors duration-200">Early Adopter</a>
+          </div>
+          <div class="flex flex-col gap-3">
+            <span class="text-xs font-semibold text-white/40 uppercase tracking-wider">Contacto</span>
+            <a href="mailto:jorgetorrasvall@gmail.com" class="text-sm text-white/60 hover:text-white transition-colors duration-200">jorgetorrasvall@gmail.com</a>
+            <a href="https://linkedin.com" target="_blank" rel="noopener" class="text-sm text-white/60 hover:text-white transition-colors duration-200">LinkedIn</a>
+          </div>
         </div>
       </div>
     </div>
-    <div class="footer-bottom">
-      <div class="container">
-        <p>© 2026 ReStock. Todos los derechos reservados.</p>
-        <p>restock.es — próximamente</p>
+    <div class="border-t border-white/10">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 flex flex-col sm:flex-row justify-between items-center gap-2">
+        <p class="text-xs text-white/35">© 2026 ReStock. Todos los derechos reservados.</p>
+        <p class="text-xs text-white/35">restock.es — próximamente</p>
       </div>
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script>
+    // Nav scroll
+    const nav = document.getElementById('nav');
+    window.addEventListener('scroll', () => {
+      nav.classList.toggle('scrolled', window.scrollY > 40);
+    });
+
+    // Mobile menu
+    document.getElementById('navToggle').addEventListener('click', () => {
+      document.getElementById('mobileMenu').classList.toggle('hidden');
+    });
+    document.querySelectorAll('#mobileMenu a').forEach(a => {
+      a.addEventListener('click', () => document.getElementById('mobileMenu').classList.add('hidden'));
+    });
+
+    // Tabs
+    document.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.tab-btn').forEach(b => {
+          b.classList.remove('bg-[#1A3C6E]', 'text-white');
+          b.classList.add('text-gray-600');
+        });
+        btn.classList.add('bg-[#1A3C6E]', 'text-white');
+        btn.classList.remove('text-gray-600');
+        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Spots bar (IntersectionObserver)
+    const spotsBar  = document.getElementById('spotsBar');
+    const spotsLeft = document.getElementById('spotsLeft');
+    const used = 3, total = 10;
+    const spotsObs = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          setTimeout(() => {
+            spotsBar.style.width = (used / total * 100) + '%';
+            spotsLeft.textContent = total - used;
+          }, 300);
+          spotsObs.disconnect();
+        }
+      });
+    }, { threshold: 0.5 });
+    if (spotsBar) spotsObs.observe(spotsBar);
+
+    // Alpha code validation
+    const validCodes = Array.from({length: 20}, (_, i) => 'RESTOCK-ALPHA-' + String(i+1).padStart(3,'0'));
+    const codeForm   = document.getElementById('codeForm');
+    const codeResult = document.getElementById('codeResult');
+    if (codeForm) {
+      codeForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const val = document.getElementById('codeInput').value.trim().toUpperCase();
+        codeResult.className = 'mt-4 p-4 rounded-xl text-sm';
+        codeResult.classList.remove('hidden');
+        if (validCodes.includes(val)) {
+          codeResult.classList.add('bg-green-50', 'text-green-800', 'border', 'border-green-200');
+          codeResult.textContent = '✓ Código válido. ¡Bienvenido a ReStock! Redirigiendo a la plataforma…';
+          setTimeout(() => { window.location.href = 'login.html'; }, 2000);
+        } else {
+          codeResult.classList.add('bg-red-50', 'text-red-800', 'border', 'border-red-200');
+          codeResult.textContent = '✗ Código no reconocido. Comprueba que está escrito correctamente (ej: RESTOCK-ALPHA-001).';
+        }
+      });
+    }
+
+    // Request form
+    const requestForm = document.getElementById('requestForm');
+    if (requestForm) {
+      requestForm.addEventListener('submit', e => {
+        e.preventDefault();
+        const btn = requestForm.querySelector('button[type=submit]');
+        btn.textContent = '✓ Solicitud enviada — te contactamos en 24h';
+        btn.disabled = true;
+        btn.classList.remove('bg-[#1A3C6E]', 'hover:bg-[#163260]');
+        btn.classList.add('bg-green-700');
+        requestForm.querySelectorAll('input,select').forEach(el => el.disabled = true);
+      });
+    }
+
+    // Fade-up on scroll
+    const fadeEls = document.querySelectorAll('.problem-card, .how-step, .benefit-card, .tier, .why-list li');
+    const fadeObs = new IntersectionObserver((entries) => {
+      entries.forEach((entry, i) => {
+        if (entry.isIntersecting) {
+          setTimeout(() => entry.target.classList.add('visible'), i * 80);
+          fadeObs.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    fadeEls.forEach(el => fadeObs.observe(el));
+  </script>
 </body>
 </html>
