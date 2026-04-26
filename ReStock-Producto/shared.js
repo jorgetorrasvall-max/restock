@@ -1,28 +1,28 @@
-function getUser() {
-  const u = localStorage.getItem('rs_user');
-  return u ? JSON.parse(u) : null;
+async function getUser() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (!session) return null;
+  const { data: profile } = await _supabase
+    .from('profiles').select('*').eq('id', session.user.id).single();
+  return profile ? { ...profile, email: session.user.email } : null;
 }
 
-function setUser(user) {
-  localStorage.setItem('rs_user', JSON.stringify(user));
-}
-
-function logout() {
-  localStorage.removeItem('rs_user');
-  window.location.href = 'index.html';
-}
-
-function requireAuth() {
-  if (!getUser()) { window.location.href = 'login.html'; return false; }
+async function requireAuth() {
+  const { data: { session } } = await _supabase.auth.getSession();
+  if (!session) { window.location.href = 'login.html'; return false; }
   return true;
+}
+
+async function logout() {
+  await _supabase.auth.signOut();
+  window.location.href = 'index.html';
 }
 
 function getParam(key) {
   return new URLSearchParams(window.location.search).get(key);
 }
 
-function initNav() {
-  const user = getUser();
+async function initNav() {
+  const user = await getUser();
   const userAvatar = document.getElementById('userAvatar');
   const userName = document.getElementById('userName');
   const adminLink = document.getElementById('adminLink');
@@ -37,7 +37,7 @@ function initNav() {
     return;
   }
 
-  if (adminLink && user?.isAdmin) adminLink.style.display = 'flex';
+  if (adminLink && user?.is_admin) adminLink.style.display = 'flex';
 
   if (userBtn && dropdown) {
     userBtn.addEventListener('click', e => { e.stopPropagation(); dropdown.classList.toggle('open'); });
@@ -77,8 +77,8 @@ function showToast(msg, type = 'success') {
   setTimeout(() => { t.classList.remove('show'); setTimeout(() => t.remove(), 300); }, 3000);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  initNav();
+document.addEventListener('DOMContentLoaded', async () => {
+  await initNav();
   initNavSearch();
   initMobileNav();
 });
