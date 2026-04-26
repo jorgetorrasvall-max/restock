@@ -1,0 +1,4 @@
+const _supabase = window.supabase.createClient(
+  'https://qztkvrbctzwhxqpqccst.supabase.co',
+  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InF6dGt2cmJjdHp3aHhxcHFjY3N0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzcyMjc5ODYsImV4cCI6MjA5MjgwMzk4Nn0.CCQerwqtntoLlMZFdipYGro0cWHo8s-vXyCZDIUCPbQ'
+);
