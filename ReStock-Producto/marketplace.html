@@ -34,169 +34,135 @@
     * { font-family: 'Inter', system-ui, sans-serif; }
     .font-serif, h1, h2, h3 { font-family: 'Newsreader', Georgia, serif; }
     @media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
-    .sidebar-cat.active { color: #1A3C6E; font-weight: 600; background: rgba(26,60,110,0.06); }
-    .cond-badge-A { background: #ecfdf5; color: #059669; }
-    .cond-badge-B { background: #eff6ff; color: #0284c7; }
-    .cond-badge-C { background: #fffbeb; color: #d97706; }
-    .cond-badge-D { background: #fef2f2; color: #dc2626; }
-    #mobileFilters { display: none; }
-    #mobileFilters.open { display: block; }
   </style>
 </head>
 <body class="bg-paper text-ink antialiased">
 
+  <!-- ANNOUNCEMENT BAR -->
+  <div class="bg-ink text-paper text-center py-2.5 text-xs font-medium tracking-widest">
+    ★ RESTOCK &nbsp;·&nbsp; ALFA CERRADA &nbsp;·&nbsp; <span id="founderCount">6</span>/30 FUNDADORES &nbsp;★
+  </div>
+
   <!-- NAV -->
   <header class="sticky top-0 z-50 bg-paper/95 backdrop-blur-sm border-b border-warm">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-6">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center gap-5">
       <a href="index.html" class="font-serif italic text-xl font-semibold text-navy flex-shrink-0 hover:opacity-80 transition-opacity duration-150">ReStock</a>
-      <nav class="hidden md:flex items-center gap-1 flex-1">
-        <a href="marketplace.html" class="px-3 py-1.5 text-sm text-ink font-medium transition-colors duration-150">Explorar lotes</a>
-        <a href="index.html#como-funciona" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Cómo funciona</a>
-        <a href="index.html#comisiones" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Comisiones</a>
-      </nav>
-      <div class="hidden md:flex items-center gap-4 ml-auto" id="navAuth">
-        <a href="login.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Entrar</a>
-        <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
-      </div>
-      <button id="mobileMenuBtn" class="md:hidden ml-auto p-2 text-muted hover:text-ink cursor-pointer" aria-label="Abrir menú">
-        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/></svg>
-      </button>
-    </div>
-  </header>
 
-  <!-- PAGE HEADER -->
-  <div class="border-b border-warm bg-white">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-      <div class="flex flex-col sm:flex-row sm:items-center gap-3">
-        <div class="flex-1">
-          <h1 class="font-serif text-2xl font-semibold text-ink">Lotes disponibles</h1>
-          <p id="resultCount" class="text-sm text-muted mt-0.5">Cargando…</p>
-        </div>
-        <!-- Search bar -->
-        <div class="flex items-center gap-2 bg-paper border border-warm rounded-lg p-1 focus-within:border-navy/40 focus-within:ring-2 focus-within:ring-navy/10 transition-all duration-150 w-full sm:w-72">
-          <svg class="w-4 h-4 text-muted ml-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
-          <input id="searchInput" type="text" placeholder="Buscar lotes…" class="flex-1 text-sm py-2 focus:outline-none bg-transparent text-ink placeholder:text-muted" />
-        </div>
-        <!-- Mobile filter toggle -->
-        <button id="filterToggle" class="sm:hidden flex items-center gap-2 px-3 py-2 border border-warm rounded-lg text-sm text-muted bg-white cursor-pointer">
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12"/></svg>
-          Filtros
+      <!-- Search -->
+      <div class="hidden sm:flex flex-1 max-w-sm items-center gap-2 bg-white border border-warm rounded-lg px-3 h-9 focus-within:border-navy/40 focus-within:ring-2 focus-within:ring-navy/10 transition-all duration-150">
+        <svg class="w-3.5 h-3.5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+        <input id="searchInput" type="text" placeholder="Buscar lotes..." class="flex-1 text-sm focus:outline-none bg-transparent text-ink placeholder:text-muted" autocomplete="off" />
+        <button id="clearSearch" class="hidden text-muted hover:text-ink cursor-pointer" aria-label="Limpiar">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg>
         </button>
       </div>
 
-      <!-- Sort + active filters -->
-      <div class="flex items-center gap-3 mt-3 flex-wrap">
-        <select id="sortSelect" class="text-xs border border-warm rounded-md px-2 py-1.5 bg-white text-muted focus:outline-none focus:border-navy/40 cursor-pointer">
-          <option value="recent">Más recientes</option>
-          <option value="price-asc">Precio: menor primero</option>
-          <option value="price-desc">Precio: mayor primero</option>
-          <option value="views">Más vistos</option>
-        </select>
-        <div id="activeFilters" class="flex items-center gap-2 flex-wrap"></div>
-      </div>
-    </div>
-  </div>
+      <!-- Nav links -->
+      <nav class="hidden md:flex items-center gap-1">
+        <a href="marketplace.html" class="px-3 py-1.5 text-sm text-ink font-medium">Explorar</a>
+        <a href="publicar.html" class="px-3 py-1.5 text-sm text-muted hover:text-ink transition-colors duration-150">Vender</a>
+      </nav>
 
-  <!-- LAYOUT -->
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-    <div class="flex gap-8">
-
-      <!-- SIDEBAR (desktop) -->
-      <aside class="hidden lg:block w-52 flex-shrink-0">
-        <div class="sticky top-20 space-y-6">
-
-          <!-- Categories -->
-          <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Categoría</p>
-            <nav class="space-y-0.5" id="catNav">
-              <button data-cat="" class="sidebar-cat active w-full text-left px-3 py-2 rounded-md text-sm transition-colors duration-150 cursor-pointer hover:bg-warm/60">Todos los lotes</button>
-            </nav>
-          </div>
-
-          <div class="border-t border-warm"></div>
-
-          <!-- Condition -->
-          <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Condición</p>
-            <div class="space-y-1.5" id="condFilters">
-              <label class="flex items-center gap-2.5 cursor-pointer group">
-                <input type="checkbox" value="A" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
-                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-A font-medium">Nuevo con etiqueta</span>
-              </label>
-              <label class="flex items-center gap-2.5 cursor-pointer group">
-                <input type="checkbox" value="B" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
-                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-B font-medium">Nuevo sin etiqueta</span>
-              </label>
-              <label class="flex items-center gap-2.5 cursor-pointer group">
-                <input type="checkbox" value="C" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
-                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-C font-medium">Buen estado</span>
-              </label>
-              <label class="flex items-center gap-2.5 cursor-pointer group">
-                <input type="checkbox" value="D" class="cond-check rounded border-warm text-navy focus:ring-navy/20 cursor-pointer" checked />
-                <span class="text-xs px-2 py-0.5 rounded-full cond-badge-D font-medium">Defecto visible</span>
-              </label>
-            </div>
-          </div>
-
-          <div class="border-t border-warm"></div>
-
-          <!-- Price range -->
-          <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Precio máximo</p>
-            <div class="space-y-1.5">
-              <button data-maxprice="" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Sin límite</button>
-              <button data-maxprice="500" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Hasta 500€</button>
-              <button data-maxprice="1000" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Hasta 1.000€</button>
-              <button data-maxprice="2000" class="price-filter w-full text-left px-3 py-1.5 rounded-md text-sm text-muted hover:bg-warm/60 transition-colors duration-150 cursor-pointer">Hasta 2.000€</button>
-            </div>
-          </div>
-
-        </div>
-      </aside>
-
-      <!-- MOBILE FILTERS -->
-      <div id="mobileFilters" class="lg:hidden fixed inset-0 z-40 bg-paper overflow-y-auto">
-        <div class="flex items-center justify-between px-4 py-3 border-b border-warm">
-          <h2 class="font-serif text-lg font-semibold text-ink">Filtros</h2>
-          <button id="closeFilters" class="p-2 text-muted hover:text-ink cursor-pointer" aria-label="Cerrar">
-            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
-          </button>
-        </div>
-        <div class="px-4 py-5 space-y-6">
-          <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Categoría</p>
-            <nav class="space-y-0.5" id="catNavMobile"></nav>
-          </div>
-          <div class="border-t border-warm"></div>
-          <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Condición</p>
-            <div class="space-y-2" id="condFiltersMobile"></div>
-          </div>
-          <div class="border-t border-warm"></div>
-          <div>
-            <p class="text-xs font-semibold text-muted uppercase tracking-widest mb-2">Precio máximo</p>
-            <div class="space-y-1" id="priceFiltersMobile"></div>
-          </div>
-          <button id="applyFilters" class="w-full py-2.5 bg-navy text-white text-sm font-medium rounded-md hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Aplicar filtros</button>
-        </div>
+      <!-- Auth -->
+      <div class="hidden md:flex items-center gap-3 ml-auto" id="navAuth">
+        <a href="login.html" class="text-sm text-muted hover:text-ink transition-colors duration-150">Mi cuenta</a>
+        <a href="publicar.html" class="px-4 py-2 rounded-md bg-gold text-white text-sm font-semibold hover:opacity-90 transition-opacity duration-150 cursor-pointer">Publicar</a>
       </div>
 
-      <!-- PRODUCT GRID -->
-      <main class="flex-1 min-w-0">
-        <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4"></div>
-        <div id="emptyState" class="hidden text-center py-20">
-          <div class="font-serif text-5xl font-semibold text-warm mb-4">—</div>
-          <p class="text-base font-medium text-ink mb-1">Sin resultados</p>
-          <p class="text-sm text-muted">Prueba con otros filtros o categoría.</p>
-          <button onclick="resetFilters()" class="mt-4 text-sm text-navy font-medium hover:underline cursor-pointer">Limpiar filtros</button>
+      <!-- Mobile search icon -->
+      <button id="mobileSearchBtn" class="sm:hidden ml-auto p-2 text-muted hover:text-ink cursor-pointer" aria-label="Buscar">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+      </button>
+    </div>
+
+    <!-- Mobile search bar (hidden by default) -->
+    <div id="mobileSearch" class="hidden sm:hidden border-t border-warm px-4 py-2.5">
+      <div class="flex items-center gap-2 bg-white border border-warm rounded-lg px-3 h-9 focus-within:border-navy/40">
+        <svg class="w-3.5 h-3.5 text-muted flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+        <input id="searchInputMobile" type="text" placeholder="Buscar lotes..." class="flex-1 text-sm focus:outline-none bg-transparent text-ink placeholder:text-muted" autocomplete="off" />
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+
+    <!-- Breadcrumb -->
+    <nav class="pt-4 pb-1 text-xs text-muted tracking-wider uppercase flex items-center gap-1.5" aria-label="Breadcrumb">
+      <a href="index.html" class="hover:text-ink transition-colors duration-150">Inicio</a>
+      <span>›</span>
+      <span class="text-ink font-medium">Explorar lotes</span>
+    </nav>
+
+    <!-- EDITORIAL FEED -->
+    <div id="editorialFeed">
+
+      <!-- Page title -->
+      <div class="mt-4 mb-8">
+        <h1 class="font-serif text-3xl sm:text-4xl font-semibold text-ink leading-tight">Explora <em>todos los lotes</em></h1>
+        <p class="text-sm text-muted mt-2">Curado por categoría &nbsp;·&nbsp; destacados editoriales &nbsp;·&nbsp; feed personalizado.</p>
+      </div>
+
+      <!-- ── SECTION 1: Destacados ─────────────────────────────────────── -->
+      <section class="mb-14">
+        <div class="flex items-center justify-between mb-5">
+          <h2 class="font-serif text-xl font-semibold text-ink">Destacados <em>esta semana</em></h2>
+          <div class="flex items-center gap-4">
+            <span class="hidden sm:block text-[10px] font-semibold text-muted tracking-widest uppercase">Curador editorial</span>
+            <div class="flex gap-1">
+              <button id="featPrev" class="w-7 h-7 border border-warm rounded flex items-center justify-center text-muted hover:text-ink hover:border-navy/30 transition-colors duration-150 cursor-pointer" aria-label="Anterior">‹</button>
+              <button id="featNext" class="w-7 h-7 border border-warm rounded flex items-center justify-center text-muted hover:text-ink hover:border-navy/30 transition-colors duration-150 cursor-pointer" aria-label="Siguiente">›</button>
+            </div>
+          </div>
         </div>
-      </main>
+
+        <!-- Asymmetric: big card (col-span-3) + 2 stacked cards (col-span-2) -->
+        <div id="featuredSection" class="grid grid-cols-1 lg:grid-cols-5 gap-4 lg:h-[360px]"></div>
+      </section>
+
+      <!-- ── SECTION 2: Sector ─────────────────────────────────────────── -->
+      <section class="mb-14">
+        <div class="flex items-baseline justify-between mb-5">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="text-xs font-semibold text-muted tracking-widest">#2 /</span>
+            <span id="sectorLabel" class="text-xs font-bold text-navy tracking-widest uppercase"></span>
+            <h2 class="font-serif text-xl font-semibold text-ink">Recién publicado en <em>tu sector</em></h2>
+          </div>
+          <a id="sectorLink" href="#" class="text-xs text-muted hover:text-ink transition-colors duration-150 flex-shrink-0 hidden sm:block">Ver todos los lotes →</a>
+        </div>
+        <div id="sectorGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+      </section>
+
+      <!-- ── SECTION 3: Cercanos ───────────────────────────────────────── -->
+      <section class="mb-14">
+        <div class="flex items-baseline justify-between mb-5">
+          <div class="flex items-center gap-2.5 flex-wrap">
+            <span class="text-xs font-semibold text-muted tracking-widest">#3 /</span>
+            <span class="text-xs font-bold text-navy tracking-widest uppercase">CERCANOS</span>
+            <h2 class="font-serif text-xl font-semibold text-ink">Vendedores en <em>España y Portugal</em></h2>
+          </div>
+          <span class="text-xs text-muted flex-shrink-0 hidden sm:block" id="nearbyCount"></span>
+        </div>
+        <div id="nearbyGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+      </section>
 
     </div>
-  </div>
+
+    <!-- SEARCH RESULTS -->
+    <div id="searchResults" class="hidden pt-6">
+      <p id="searchCount" class="text-sm text-muted mb-5"></p>
+      <div id="searchGrid" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4"></div>
+      <div id="searchEmpty" class="hidden text-center py-20">
+        <div class="font-serif text-5xl font-semibold text-warm mb-4">—</div>
+        <p class="text-base font-medium text-ink mb-1">Sin resultados</p>
+        <p class="text-sm text-muted">Prueba con otros términos.</p>
+      </div>
+    </div>
+
+  </main>
 
   <!-- FOOTER -->
-  <footer class="border-t border-warm mt-12">
+  <footer class="border-t border-warm">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-3">
       <a href="index.html" class="font-serif italic text-base font-semibold text-navy hover:opacity-80 transition-opacity duration-150">ReStock</a>
       <p class="text-xs text-muted">© 2026 ReStock · Barcelona · <a href="mailto:hola@restock.es" class="hover:text-ink transition-colors duration-150">hola@restock.es</a></p>
@@ -206,250 +172,227 @@
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    // ── State ──────────────────────────────────────────────────────────────────
-    let state = {
-      cat: getParam('cat') || '',
-      q: getParam('q') || '',
-      conds: ['A','B','C','D'],
-      maxPrice: null,
-      sort: 'recent',
-    };
+    // ── Helpers ────────────────────────────────────────────────────────────────
+    function priceStr(n) { return n.toLocaleString('es-ES') + '€'; }
 
-    // ── Init nav auth ──────────────────────────────────────────────────────────
-    (function initNav() {
+    function condBadge(key) {
+      const c = CONDITIONS[key];
+      return `<span class="text-[10px] px-1.5 py-0.5 rounded font-bold uppercase tracking-wide leading-none" style="background:${c.bg};color:${c.color}">${c.label.split(' ')[0]}</span>`;
+    }
+
+    function catLabel(id) {
+      const c = CATEGORIES.find(c => c.id === id);
+      return c ? c.name : id;
+    }
+
+    function isFounderSeller(sellerId) {
+      return (MOCK_USERS.find(u => u.id === sellerId) || {}).isFounder === true;
+    }
+
+    // ── Nav auth ───────────────────────────────────────────────────────────────
+    (function() {
       const user = getUser();
       if (user) {
-        const nav = document.getElementById('navAuth');
-        nav.innerHTML = `
-          <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Mensajes</a>
+        document.getElementById('navAuth').innerHTML = `
+          <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150">Mensajes</a>
           <a href="perfil.html" class="flex items-center gap-2 cursor-pointer group">
             <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${user.avatar}</div>
             <span class="text-sm text-muted group-hover:text-ink transition-colors duration-150 hidden lg:block">${user.name.split('—')[0].trim()}</span>
           </a>
-          <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
+          <a href="publicar.html" class="px-4 py-2 rounded-md bg-gold text-white text-sm font-semibold hover:opacity-90 transition-opacity duration-150 cursor-pointer">Publicar</a>
         `;
       }
     })();
 
-    // ── Build sidebar ──────────────────────────────────────────────────────────
-    function buildSidebar() {
-      const cats = [{ id: '', name: 'Todos los lotes' }, ...CATEGORIES];
+    // ── Announcement bar founder count ─────────────────────────────────────────
+    document.getElementById('founderCount').textContent = ALPHA_CODES.filter(c => c.used).length;
 
-      function catBtn(c, mobile) {
-        const active = state.cat === c.id;
-        return `<button data-cat="${c.id}" class="sidebar-cat${active ? ' active' : ''} w-full text-left px-3 py-2 rounded-md text-sm transition-colors duration-150 cursor-pointer hover:bg-warm/60 ${mobile ? '' : ''}">${c.name}</button>`;
-      }
-
-      document.getElementById('catNav').innerHTML = cats.map(c => catBtn(c, false)).join('');
-      document.getElementById('catNavMobile').innerHTML = cats.map(c => catBtn(c, true)).join('');
-
-      const condHtml = CONDITIONS
-        ? Object.entries(CONDITIONS).map(([k,v]) => `
-          <label class="flex items-center gap-2.5 cursor-pointer">
-            <input type="checkbox" value="${k}" class="cond-check-m rounded border-warm cursor-pointer" ${state.conds.includes(k) ? 'checked' : ''} />
-            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${v.bg};color:${v.color}">${v.label}</span>
-          </label>`).join('')
-        : '';
-      document.getElementById('condFiltersMobile').innerHTML = condHtml;
-
-      const priceOpts = [
-        { val: '', label: 'Sin límite' },
-        { val: '500', label: 'Hasta 500€' },
-        { val: '1000', label: 'Hasta 1.000€' },
-        { val: '2000', label: 'Hasta 2.000€' },
-      ];
-      document.getElementById('priceFiltersMobile').innerHTML = priceOpts.map(p =>
-        `<button data-maxprice-m="${p.val}" class="price-filter-m w-full text-left px-3 py-1.5 rounded-md text-sm ${state.maxPrice === (p.val||null) ? 'text-navy font-semibold' : 'text-muted'} hover:bg-warm/60 transition-colors duration-150 cursor-pointer">${p.label}</button>`
-      ).join('');
-    }
-
-    // ── Render products ────────────────────────────────────────────────────────
-    function condBadge(key) {
-      const c = CONDITIONS[key];
-      return `<span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${c.bg};color:${c.color}">${c.label}</span>`;
-    }
-
-    function priceStr(n) {
-      return n.toLocaleString('es-ES') + '€';
-    }
-
-    function renderProducts() {
-      let items = PRODUCTS.filter(p => p.active);
-
-      if (state.cat) items = items.filter(p => p.category === state.cat);
-      if (state.q) {
-        const q = state.q.toLowerCase();
-        items = items.filter(p => p.title.toLowerCase().includes(q) || p.description.toLowerCase().includes(q));
-      }
-      if (state.conds.length < 4) items = items.filter(p => state.conds.includes(p.condition));
-      if (state.maxPrice) items = items.filter(p => p.price <= state.maxPrice);
-
-      if (state.sort === 'price-asc') items.sort((a,b) => a.price - b.price);
-      else if (state.sort === 'price-desc') items.sort((a,b) => b.price - a.price);
-      else if (state.sort === 'views') items.sort((a,b) => b.views - a.views);
-      else items.sort((a,b) => new Date(b.created) - new Date(a.created));
-
-      const count = items.length;
-      document.getElementById('resultCount').textContent = count === 0
-        ? 'Ningún lote encontrado'
-        : count === 1 ? '1 lote disponible' : `${count} lotes disponibles`;
-
-      const grid = document.getElementById('productGrid');
-      const empty = document.getElementById('emptyState');
-
-      if (count === 0) {
-        grid.classList.add('hidden');
-        empty.classList.remove('hidden');
-        return;
-      }
-      grid.classList.remove('hidden');
-      empty.classList.add('hidden');
-
-      grid.innerHTML = items.map(p => `
+    // ── Small card (used in grids) ─────────────────────────────────────────────
+    function smallCard(p) {
+      const founder = isFounderSeller(p.seller.id);
+      const cat = catLabel(p.category);
+      return `
         <a href="producto.html?id=${p.id}" class="group flex flex-col bg-white border border-warm rounded-xl overflow-hidden hover:border-navy/30 hover:shadow-sm transition-all duration-200 cursor-pointer">
           <div class="relative aspect-[4/3] bg-warm overflow-hidden">
             <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
-          </div>
-          <div class="p-4 flex flex-col flex-1">
-            <div class="flex items-start justify-between gap-2 mb-2">
-              <h2 class="font-serif text-base font-semibold text-ink leading-snug group-hover:text-navy transition-colors duration-150 line-clamp-2">${p.title}</h2>
-              <div class="font-serif text-lg font-semibold text-navy flex-shrink-0">${priceStr(p.price)}</div>
-            </div>
-            <div class="flex items-center gap-2 mb-3 flex-wrap">
+            <div class="absolute top-2 left-2 flex flex-col gap-1">
               ${condBadge(p.condition)}
-              <span class="text-xs text-muted">${p.quantity} ${p.unit}</span>
             </div>
-            <div class="mt-auto flex items-center justify-between">
-              <div class="flex items-center gap-1.5">
-                <div class="w-5 h-5 rounded-full bg-navy text-white text-[10px] font-semibold flex items-center justify-center flex-shrink-0">${p.seller.avatar}</div>
-                <span class="text-xs text-muted truncate max-w-[120px]">${p.seller.name}</span>
-              </div>
-              <div class="flex items-center gap-1 text-xs text-muted">
-                <svg class="w-3.5 h-3.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/></svg>
-                ${p.views}
-              </div>
+            ${founder ? `<div class="absolute top-2 right-2"><span class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-gold text-white uppercase tracking-wide leading-none">★ Fundador</span></div>` : ''}
+          </div>
+          <div class="p-3 flex flex-col flex-1">
+            <div class="text-[10px] text-muted uppercase tracking-wide mb-1">${cat} · ${p.seller.city}</div>
+            <h3 class="font-serif text-sm font-semibold text-ink leading-snug group-hover:text-navy transition-colors duration-150 line-clamp-2 mb-3">${p.title}</h3>
+            <div class="mt-auto flex items-baseline justify-between">
+              <span class="font-serif text-base font-semibold text-navy">${priceStr(p.price)}</span>
+              <span class="text-xs text-muted">${p.quantity} ${p.unit}</span>
             </div>
           </div>
         </a>
-      `).join('');
+      `;
     }
 
-    // ── Active filter chips ────────────────────────────────────────────────────
-    function renderFilterChips() {
-      const chips = [];
-      if (state.cat) {
-        const c = CATEGORIES.find(c => c.id === state.cat);
-        if (c) chips.push(`<button onclick="setCat('')" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-navy/8 border border-navy/20 text-xs text-navy font-medium cursor-pointer hover:bg-navy/15 transition-colors duration-150">${c.name} <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>`);
-      }
-      if (state.q) {
-        chips.push(`<button onclick="setQ('')" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-navy/8 border border-navy/20 text-xs text-navy font-medium cursor-pointer hover:bg-navy/15 transition-colors duration-150">"${state.q}" <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>`);
-      }
-      if (state.maxPrice) {
-        chips.push(`<button onclick="setMaxPrice(null)" class="flex items-center gap-1 px-2.5 py-1 rounded-full bg-navy/8 border border-navy/20 text-xs text-navy font-medium cursor-pointer hover:bg-navy/15 transition-colors duration-150">Hasta ${priceStr(state.maxPrice)} <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M6 18L18 6M6 6l12 12"/></svg></button>`);
-      }
-      document.getElementById('activeFilters').innerHTML = chips.join('');
+    // ── Featured big card (editorial, image background) ─────────────────────────
+    function featBigCard(p) {
+      const cat = catLabel(p.category);
+      const pricePerUnit = p.quantity > 0 ? (p.price / p.quantity).toFixed(2) : null;
+      return `
+        <a href="producto.html?id=${p.id}" class="group relative lg:col-span-3 rounded-xl overflow-hidden cursor-pointer flex flex-col" style="min-height:280px;">
+          <img src="${p.images[0]}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" loading="lazy" />
+          <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
+          <div class="relative z-10 p-4 flex-shrink-0">
+            <span class="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-widest bg-paper/90 text-ink">★ Editorial</span>
+          </div>
+          <div class="relative z-10 mt-auto p-5">
+            <div class="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">${cat} · ${p.seller.city}</div>
+            <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-white leading-tight mb-3 group-hover:opacity-90 transition-opacity duration-150">${p.title}</h2>
+            <div class="flex items-baseline gap-3">
+              <span class="font-serif text-2xl font-semibold text-gold">${priceStr(p.price)}</span>
+              <span class="text-sm text-white/60">${p.quantity} ${p.unit}${pricePerUnit ? ` · ${pricePerUnit}€/ud.` : ''}</span>
+            </div>
+          </div>
+        </a>
+      `;
     }
 
-    // ── State setters ──────────────────────────────────────────────────────────
-    function setCat(val) {
-      state.cat = val;
-      document.querySelectorAll('.sidebar-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === val));
-      refresh();
+    // ── Featured side card (horizontal, smaller) ────────────────────────────────
+    function featSideCard(p) {
+      if (!p) return '<div class="hidden lg:block"></div>';
+      const founder = isFounderSeller(p.seller.id);
+      const cat = catLabel(p.category);
+      return `
+        <a href="producto.html?id=${p.id}" class="group flex bg-white border border-warm rounded-xl overflow-hidden hover:border-navy/30 hover:shadow-sm transition-all duration-200 cursor-pointer">
+          <div class="relative w-32 flex-shrink-0 bg-warm overflow-hidden">
+            <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
+            ${founder ? `<div class="absolute top-1.5 left-1.5"><span class="text-[9px] px-1 py-0.5 rounded font-bold bg-gold text-white uppercase leading-none">★ Fundador</span></div>` : ''}
+          </div>
+          <div class="p-3 flex flex-col justify-between flex-1 min-w-0">
+            <div>
+              <div class="text-[10px] text-muted uppercase tracking-wide mb-0.5">${cat} · ${p.seller.city}</div>
+              <h3 class="font-serif text-sm font-semibold text-ink leading-snug group-hover:text-navy transition-colors duration-150 line-clamp-2">${p.title}</h3>
+            </div>
+            <div class="flex items-baseline justify-between mt-2">
+              <span class="font-serif text-base font-semibold text-navy">${priceStr(p.price)}</span>
+              <span class="text-xs text-muted">${p.quantity} ${p.unit}</span>
+            </div>
+          </div>
+        </a>
+      `;
     }
-    function setQ(val) {
-      state.q = val;
-      document.getElementById('searchInput').value = val;
-      refresh();
+
+    // ── Build editorial feed ────────────────────────────────────────────────────
+    const allActive = PRODUCTS.filter(p => p.active)
+      .sort((a, b) => new Date(b.created) - new Date(a.created));
+
+    let featOffset = 0;
+
+    function renderFeatured() {
+      const slice = allActive.slice(featOffset, featOffset + 3);
+      const [p0, p1, p2] = slice;
+      document.getElementById('featuredSection').innerHTML =
+        featBigCard(p0) +
+        `<div class="lg:col-span-2 flex flex-col gap-4">${featSideCard(p1)}${featSideCard(p2)}</div>`;
     }
-    function setMaxPrice(val) {
-      state.maxPrice = val;
-      document.querySelectorAll('.price-filter').forEach(b => {
-        const bval = b.dataset.maxprice ? parseInt(b.dataset.maxprice) : null;
-        b.classList.toggle('text-navy', bval === val);
-        b.classList.toggle('font-semibold', bval === val);
-        b.classList.toggle('text-muted', bval !== val);
-      });
-      refresh();
+
+    function buildFeed() {
+      renderFeatured();
+
+      // Section 2: top category by count
+      const catCounts = {};
+      allActive.forEach(p => { catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
+      const topCat = Object.entries(catCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
+      const sectorItems = allActive.filter(p => p.category === topCat).slice(0, 4);
+      document.getElementById('sectorLabel').textContent = catLabel(topCat).toUpperCase();
+      document.getElementById('sectorLink').href = `marketplace.html?cat=${topCat}`;
+      document.getElementById('sectorGrid').innerHTML = sectorItems.map(smallCard).join('');
+
+      // Section 3: remaining products not in featured
+      const featIds = new Set(allActive.slice(0, 3).map(p => p.id));
+      const nearbyItems = allActive.filter(p => !featIds.has(p.id)).slice(0, 4);
+      const countLabel = nearbyItems.length > 0 ? `${nearbyItems.length} lotes` : '';
+      document.getElementById('nearbyCount').textContent = countLabel ? `Ver ${countLabel} →` : '';
+      document.getElementById('nearbyGrid').innerHTML = nearbyItems.map(smallCard).join('');
     }
-    function resetFilters() {
-      state = { cat: '', q: '', conds: ['A','B','C','D'], maxPrice: null, sort: 'recent' };
+
+    // ── Carousel prev/next ──────────────────────────────────────────────────────
+    document.getElementById('featPrev').addEventListener('click', () => {
+      if (featOffset > 0) { featOffset--; renderFeatured(); }
+    });
+    document.getElementById('featNext').addEventListener('click', () => {
+      if (featOffset + 3 < allActive.length) { featOffset++; renderFeatured(); }
+    });
+
+    // ── Search ──────────────────────────────────────────────────────────────────
+    function doSearch(q) {
+      const feed = document.getElementById('editorialFeed');
+      const results = document.getElementById('searchResults');
+      const clearBtn = document.getElementById('clearSearch');
+
+      if (!q) {
+        feed.classList.remove('hidden');
+        results.classList.add('hidden');
+        if (clearBtn) clearBtn.classList.add('hidden');
+        return;
+      }
+
+      feed.classList.add('hidden');
+      results.classList.remove('hidden');
+      if (clearBtn) clearBtn.classList.remove('hidden');
+
+      const ql = q.toLowerCase();
+      const items = PRODUCTS.filter(p => p.active && (
+        p.title.toLowerCase().includes(ql) ||
+        p.description.toLowerCase().includes(ql) ||
+        catLabel(p.category).toLowerCase().includes(ql) ||
+        p.seller.name.toLowerCase().includes(ql)
+      ));
+
+      document.getElementById('searchCount').textContent =
+        items.length === 0 ? 'Ningún resultado' :
+        `${items.length} lote${items.length === 1 ? '' : 's'} encontrado${items.length === 1 ? '' : 's'}`;
+
+      const grid = document.getElementById('searchGrid');
+      const empty = document.getElementById('searchEmpty');
+      if (items.length === 0) {
+        grid.classList.add('hidden');
+        empty.classList.remove('hidden');
+      } else {
+        grid.classList.remove('hidden');
+        empty.classList.add('hidden');
+        grid.innerHTML = items.map(smallCard).join('');
+      }
+    }
+
+    document.getElementById('searchInput').addEventListener('input', e => doSearch(e.target.value.trim()));
+
+    document.getElementById('clearSearch').addEventListener('click', () => {
       document.getElementById('searchInput').value = '';
-      document.getElementById('sortSelect').value = 'recent';
-      document.querySelectorAll('.cond-check').forEach(cb => cb.checked = true);
-      buildSidebar();
-      refresh();
+      doSearch('');
+    });
+
+    // Mobile search toggle
+    document.getElementById('mobileSearchBtn').addEventListener('click', () => {
+      const ms = document.getElementById('mobileSearch');
+      ms.classList.toggle('hidden');
+      if (!ms.classList.contains('hidden')) ms.querySelector('input').focus();
+    });
+    document.getElementById('searchInputMobile').addEventListener('input', e => {
+      document.getElementById('searchInput').value = e.target.value;
+      doSearch(e.target.value.trim());
+    });
+
+    // ── Boot ────────────────────────────────────────────────────────────────────
+    buildFeed();
+
+    const qParam = getParam('q');
+    if (qParam) {
+      document.getElementById('searchInput').value = qParam;
+      doSearch(qParam);
     }
-    function refresh() {
-      renderProducts();
-      renderFilterChips();
+    const catParam = getParam('cat');
+    if (catParam) {
+      doSearch(catLabel(catParam));
     }
-
-    // ── Event listeners ────────────────────────────────────────────────────────
-    document.addEventListener('click', e => {
-      // Category nav
-      const catBtn = e.target.closest('.sidebar-cat');
-      if (catBtn) { setCat(catBtn.dataset.cat); return; }
-      // Price filter
-      const priceBtn = e.target.closest('.price-filter');
-      if (priceBtn) {
-        const val = priceBtn.dataset.maxprice ? parseInt(priceBtn.dataset.maxprice) : null;
-        setMaxPrice(val); return;
-      }
-    });
-
-    document.getElementById('searchInput').addEventListener('input', e => {
-      state.q = e.target.value.trim();
-      refresh();
-    });
-
-    document.getElementById('sortSelect').addEventListener('change', e => {
-      state.sort = e.target.value;
-      refresh();
-    });
-
-    document.querySelectorAll('.cond-check').forEach(cb => {
-      cb.addEventListener('change', () => {
-        state.conds = Array.from(document.querySelectorAll('.cond-check:checked')).map(c => c.value);
-        refresh();
-      });
-    });
-
-    // Mobile filters
-    document.getElementById('filterToggle').addEventListener('click', () => {
-      document.getElementById('mobileFilters').classList.add('open');
-    });
-    document.getElementById('closeFilters').addEventListener('click', () => {
-      document.getElementById('mobileFilters').classList.remove('open');
-    });
-    document.getElementById('applyFilters').addEventListener('click', () => {
-      // Read mobile state
-      state.conds = Array.from(document.querySelectorAll('.cond-check-m:checked')).map(c => c.value);
-      document.getElementById('mobileFilters').classList.remove('open');
-      buildSidebar();
-      refresh();
-    });
-    document.addEventListener('click', e => {
-      const mCat = e.target.closest('[data-cat]');
-      if (mCat && document.getElementById('catNavMobile').contains(mCat)) {
-        document.querySelectorAll('#catNavMobile .sidebar-cat').forEach(b => b.classList.toggle('active', b.dataset.cat === mCat.dataset.cat));
-        state.cat = mCat.dataset.cat;
-      }
-      const mPrice = e.target.closest('[data-maxprice-m]');
-      if (mPrice) {
-        state.maxPrice = mPrice.dataset.maxpriceM ? parseInt(mPrice.dataset.maxpriceM) : null;
-        document.querySelectorAll('.price-filter-m').forEach(b => {
-          const bval = b.dataset.maxpriceMM ? parseInt(b.dataset.maxpriceM) : null;
-          b.classList.toggle('text-navy', bval === state.maxPrice);
-          b.classList.toggle('font-semibold', bval === state.maxPrice);
-          b.classList.toggle('text-muted', bval !== state.maxPrice);
-        });
-      }
-    });
-
-    // ── Boot ───────────────────────────────────────────────────────────────────
-    if (state.q) document.getElementById('searchInput').value = state.q;
-    buildSidebar();
-    refresh();
   </script>
 </body>
 </html>
