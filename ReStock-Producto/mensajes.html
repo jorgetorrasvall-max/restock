@@ -153,7 +153,7 @@
         return `
           <div class="conv-item px-4 py-3 border-b border-warm/60 ${c.id === activeConvId ? 'active' : ''}" data-conv="${c.id}">
             <div class="flex items-center gap-3">
-              <div class="w-8 h-8 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${c.with.avatar}</div>
+              <div class="w-8 h-8 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${c.with.name[0].toUpperCase()}</div>
               <div class="flex-1 min-w-0">
                 <div class="flex items-center justify-between gap-2">
                   <p class="text-sm font-semibold text-ink truncate">${c.with.name}</p>
@@ -187,7 +187,7 @@
       });
 
       // Fill chat header
-      document.getElementById('chatAvatar').textContent = conv.with.avatar;
+      document.getElementById('chatAvatar').textContent = conv.with.name[0].toUpperCase();
       document.getElementById('chatName').textContent = conv.with.name;
       const prod = PRODUCTS.find(p => p.id === conv.productId);
       const link = document.getElementById('chatProductLink');

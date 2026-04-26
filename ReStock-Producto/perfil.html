@@ -160,7 +160,7 @@
     `;
 
     // ── Profile header ─────────────────────────────────────────────────────────
-    document.getElementById('avatarCircle').textContent = user.avatar;
+    document.getElementById('avatarCircle').textContent = user.name[0].toUpperCase();
     document.getElementById('profileName').textContent = user.name;
     if (user.isFounder) document.getElementById('founderBadge').classList.remove('hidden');
     if (user.isAdmin) {
@@ -170,7 +170,7 @@
     document.getElementById('profileMeta').innerHTML = `
       <span>${user.city}</span>
       <span class="w-1 h-1 rounded-full bg-warm"></span>
-      <span>${user.type}</span>
+      <span>Comprador y Vendedor</span>
       <span class="w-1 h-1 rounded-full bg-warm"></span>
       <span>${user.email}</span>
     `;
@@ -179,7 +179,7 @@
     document.getElementById('accName').textContent = user.name;
     document.getElementById('accEmail').textContent = user.email;
     document.getElementById('accCity').textContent = user.city;
-    document.getElementById('accType').textContent = user.type;
+    document.getElementById('accType').textContent = 'Comprador y Vendedor';
 
     // ── Mis lotes ──────────────────────────────────────────────────────────────
     const myLotes = PRODUCTS.filter(p => p.seller.id === user.id && p.active);

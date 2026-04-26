@@ -264,7 +264,7 @@
         price: parseFloat(document.getElementById('fPrice').value),
         quantity: parseInt(document.getElementById('fQuantity').value),
         unit: document.getElementById('fUnit').value,
-        seller: { id: user.id, name: user.name, city: user.city, rating: 5.0, reviews: 0, avatar: user.avatar, since: 'Ahora' },
+        seller: { id: user.id, name: user.name, city: user.city, rating: 5.0, reviews: 0, avatar: user.name[0].toUpperCase(), since: 'Ahora' },
         description: document.getElementById('fDesc').value.trim(),
         images: [imgUrl || `https://placehold.co/640x420/1A3C6E/FFFFFF?text=${encodeURIComponent(title.slice(0,20))}`],
         created: new Date().toISOString().slice(0,10),
