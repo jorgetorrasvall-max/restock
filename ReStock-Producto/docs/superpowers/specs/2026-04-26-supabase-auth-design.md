@@ -38,7 +38,6 @@ CREATE TABLE profiles (
   name         text NOT NULL,
   company      text NOT NULL,
   city         text NOT NULL,
-  user_type    text NOT NULL CHECK (user_type IN ('buyer', 'seller', 'both')),
   is_admin     boolean DEFAULT false,
   is_founder   boolean DEFAULT false,
   created_at   timestamptz DEFAULT now()
@@ -53,13 +52,12 @@ Cuando `auth.users` recibe un nuevo registro, un trigger inserta automáticament
 CREATE OR REPLACE FUNCTION handle_new_user()
 RETURNS trigger AS $$
 BEGIN
-  INSERT INTO public.profiles (id, name, company, city, user_type)
+  INSERT INTO public.profiles (id, name, company, city)
   VALUES (
     NEW.id,
     NEW.raw_user_meta_data->>'name',
     NEW.raw_user_meta_data->>'company',
-    NEW.raw_user_meta_data->>'city',
-    NEW.raw_user_meta_data->>'user_type'
+    NEW.raw_user_meta_data->>'city'
   );
   RETURN NEW;
 END;
@@ -111,8 +109,8 @@ Usuario → botón Google → supabase.auth.signInWithOAuth({ provider: 'google'
 
 ### Registro (email/contraseña)
 ```
-Usuario → tab "Crear cuenta" → rellena: email, pass, nombre, empresa, ciudad, tipo
-→ supabase.auth.signUp({ email, password, options: { data: { name, company, city, user_type } } })
+Usuario → tab "Crear cuenta" → rellena: email, pass, nombre, empresa, ciudad
+→ supabase.auth.signUp({ email, password, options: { data: { name, company, city } } })
 → trigger crea fila en profiles automáticamente
 → **sin email de confirmación** (desactivar en Supabase dashboard: Settings → Auth → "Enable email confirmations" → off, recomendado para alpha)
 → redirect a marketplace.html
@@ -179,12 +177,11 @@ Una sola página con dos tabs: **Entrar** y **Crear cuenta**.
 - Email, contraseña
 - Nombre completo, nombre de empresa
 - Ciudad (campo libre)
-- Selector: Comprador / Vendedor / Ambos
 - Botón "Crear cuenta" → `signUp()` con metadata
 - Botón "Continuar con Google" → OAuth (pide datos restantes en `perfil.html`)
 
 **Google OAuth — perfil incompleto:**  
-Si el usuario entra con Google y `profiles` no tiene su fila aún (o los campos `name`/`company`/`city`/`user_type` están vacíos), se redirige a `perfil.html`. `perfil.html` detecta este estado comprobando `if (!user.company)` y muestra un formulario modal de "Completa tu perfil" bloqueante (no se puede cerrar sin rellenar). Al guardar, hace `UPDATE` en la tabla `profiles`.
+Si el usuario entra con Google y `profiles` no tiene su fila aún (o los campos `name`/`company`/`city` están vacíos), se redirige a `perfil.html`. `perfil.html` detecta este estado comprobando `if (!user.company)` y muestra un formulario modal de "Completa tu perfil" bloqueante (no se puede cerrar sin rellenar). Al guardar, hace `UPDATE` en la tabla `profiles`.
 
 ---
 
