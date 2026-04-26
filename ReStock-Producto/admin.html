@@ -214,8 +214,9 @@
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    const user = getUser();
-    if (!user || !user.isAdmin) window.location.href = 'login.html';
+    (async () => {
+    const user = await getUser();
+    if (!user || !user.isAdmin) { window.location.href = 'login.html'; return; }
 
     // ── Nav ────────────────────────────────────────────────────────────────────
     document.getElementById('navAuth').innerHTML = `
@@ -348,6 +349,7 @@
         document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
       });
     });
+    })();
   </script>
 </body>
 </html>

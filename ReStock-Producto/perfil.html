@@ -149,8 +149,9 @@
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    requireAuth();
-    const user = getUser();
+    (async () => {
+    await requireAuth();
+    const user = await getUser();
 
     // ── Nav ────────────────────────────────────────────────────────────────────
     document.getElementById('navAuth').innerHTML = `
@@ -224,6 +225,7 @@
         document.getElementById('tab-' + tab).classList.add('active');
       });
     });
+    })();
   </script>
 </body>
 </html>

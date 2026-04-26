@@ -124,14 +124,15 @@
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    requireAuth();
-    const user = getUser();
+    (async () => {
+    await requireAuth();
+    const user = await getUser();
 
     // ── Nav ────────────────────────────────────────────────────────────────────
     document.getElementById('navAuth').innerHTML = `
       <a href="perfil.html" class="flex items-center gap-2 cursor-pointer group">
-        <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.avatar}</div>
-        <span class="text-sm text-muted group-hover:text-ink transition-colors duration-150 hidden lg:block">${user.name.split('—')[0].trim()}</span>
+        <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.name[0].toUpperCase()}</div>
+        <span class="text-sm text-muted group-hover:text-ink transition-colors duration-150 hidden lg:block">${user.name}</span>
       </a>
       <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
     `;
@@ -263,6 +264,7 @@
       const conv = conversations.find(c => c.productId === parseInt(productParam));
       if (conv) openConversation(conv.id);
     }
+    })();
   </script>
 </body>
 </html>

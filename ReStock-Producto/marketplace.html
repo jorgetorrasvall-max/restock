@@ -192,14 +192,14 @@
     }
 
     // ── Nav auth ───────────────────────────────────────────────────────────────
-    (function() {
-      const user = getUser();
+    (async () => {
+      const user = await getUser();
       if (user) {
         document.getElementById('navAuth').innerHTML = `
           <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150">Mensajes</a>
           <a href="perfil.html" class="flex items-center gap-2 cursor-pointer group">
-            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${user.avatar}</div>
-            <span class="text-sm text-muted group-hover:text-ink transition-colors duration-150 hidden lg:block">${user.name.split('—')[0].trim()}</span>
+            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${user.name[0].toUpperCase()}</div>
+            <span class="text-sm text-muted group-hover:text-ink transition-colors duration-150 hidden lg:block">${user.name}</span>
           </a>
           <a href="publicar.html" class="px-4 py-2 rounded-md bg-gold text-white text-sm font-semibold hover:opacity-90 transition-opacity duration-150 cursor-pointer">Publicar</a>
         `;

@@ -199,18 +199,19 @@
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    requireAuth();
+    (async () => {
+    await requireAuth();
 
-    (function() {
-      const user = getUser();
+    {
+      const user = await getUser();
       if (!user) return;
       document.getElementById('navAuth').innerHTML = `
         <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Mensajes</a>
         <a href="perfil.html" class="flex items-center gap-2 cursor-pointer">
-          <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.avatar}</div>
+          <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.name[0].toUpperCase()}</div>
         </a>
       `;
-    })();
+    }
 
     CATEGORIES.forEach(c => {
       const o = document.createElement('option');
@@ -246,9 +247,9 @@
       }
     });
 
-    document.getElementById('publishForm').addEventListener('submit', e => {
+    document.getElementById('publishForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const user = getUser();
+      const user = await getUser();
       const err = document.getElementById('formError');
       const category = document.getElementById('fCategory').value;
       if (!category) { err.textContent = 'Selecciona una categoría.'; err.classList.remove('hidden'); return; }
@@ -269,11 +270,10 @@
         created: new Date().toISOString().slice(0,10),
         views: 0, active: true,
       });
-      user.products = (user.products || 0) + 1;
-      setUser(user);
       document.getElementById('viewLoteLink').href = `producto.html?id=${newId}`;
       document.getElementById('successModal').classList.remove('hidden');
     });
+    })();
   </script>
 </body>
 </html>

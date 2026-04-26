@@ -151,13 +151,13 @@
   <script src="shared.js"></script>
   <script>
     // ── Auth nav ───────────────────────────────────────────────────────────────
-    (function() {
-      const user = getUser();
+    (async () => {
+      const user = await getUser();
       if (user) {
         document.getElementById('navAuth').innerHTML = `
           <a href="mensajes.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Mensajes</a>
           <a href="perfil.html" class="flex items-center gap-2 cursor-pointer group">
-            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.avatar}</div>
+            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center">${user.name[0].toUpperCase()}</div>
           </a>
           <a href="publicar.html" class="px-4 py-2 rounded-md bg-navy text-white text-sm font-medium hover:bg-navy-dark transition-colors duration-150 cursor-pointer">Publicar lote</a>
         `;
@@ -167,6 +167,7 @@
     // ── Load product ───────────────────────────────────────────────────────────
     const id = parseInt(getParam('id'));
     const product = PRODUCTS.find(p => p.id === id);
+    (async () => {
 
     if (!product) {
       document.getElementById('notFound').classList.remove('hidden');
@@ -222,7 +223,7 @@
       `;
 
       // CTA buttons
-      const user = getUser();
+      const user = await getUser();
       const isOwner = user && (user.id === product.seller.id || user.isAdmin);
       const ctaHtml = isOwner
         ? `<div class="px-3 py-2 rounded-md border border-warm text-xs text-muted text-center">Tu lote</div>
@@ -283,10 +284,11 @@
         </a>
       `).join('');
     }
+    })();
 
     // ── Contact seller ─────────────────────────────────────────────────────────
-    function contactSeller() {
-      const user = getUser();
+    async function contactSeller() {
+      const user = await getUser();
       if (!user) { window.location.href = 'login.html'; return; }
       window.location.href = `mensajes.html?product=${product.id}`;
     }
