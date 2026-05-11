@@ -44,11 +44,6 @@ async function initNav() {
     document.addEventListener('click', () => dropdown.classList.remove('open'));
   }
 
-  const msgBadge = document.getElementById('msgBadge');
-  if (msgBadge) {
-    const unread = MOCK_CONVERSATIONS.reduce((s, c) => s + c.unread, 0);
-    if (unread > 0) { msgBadge.textContent = unread; msgBadge.style.display = 'flex'; }
-  }
 }
 
 function initNavSearch() {
