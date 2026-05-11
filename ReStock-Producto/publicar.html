@@ -249,29 +249,49 @@
 
     document.getElementById('publishForm').addEventListener('submit', async e => {
       e.preventDefault();
-      const user = await getUser();
+      const { data: { session } } = await _supabase.auth.getSession();
+      if (!session) { window.location.href = 'login.html'; return; }
+
       const err = document.getElementById('formError');
       const category = document.getElementById('fCategory').value;
       if (!category) { err.textContent = 'Selecciona una categoría.'; err.classList.remove('hidden'); return; }
       err.classList.add('hidden');
 
+      const submitBtn = document.querySelector('#publishForm button[type="submit"]');
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Publicando…';
+
       const title = document.getElementById('fTitle').value.trim();
       const imgUrl = document.getElementById('fImage').value.trim();
-      const newId = Math.max(...PRODUCTS.map(p => p.id)) + 1;
-      PRODUCTS.push({
-        id: newId, title, category,
-        condition: document.querySelector('input[name="condition"]:checked').value,
-        price: parseFloat(document.getElementById('fPrice').value),
-        quantity: parseInt(document.getElementById('fQuantity').value),
-        unit: document.getElementById('fUnit').value,
-        seller: { id: user.id, name: user.name, city: user.city, rating: 5.0, reviews: 0, avatar: user.name[0].toUpperCase(), since: 'Ahora' },
+      const imageUrl = imgUrl || `https://placehold.co/640x420/1A3C6E/FFFFFF?text=${encodeURIComponent(title.slice(0, 20))}`;
+
+      const payload = {
+        title,
+        category,
+        condition: document.querySelector('input[name="condition"]:checked')?.value || 'A',
+        price:       parseInt(document.getElementById('fPrice').value, 10),
+        quantity:    parseInt(document.getElementById('fQuantity').value, 10),
+        unit:        document.getElementById('fUnit').value || 'unidades',
         description: document.getElementById('fDesc').value.trim(),
-        images: [imgUrl || `https://placehold.co/640x420/1A3C6E/FFFFFF?text=${encodeURIComponent(title.slice(0,20))}`],
-        created: new Date().toISOString().slice(0,10),
-        views: 0, active: true,
-      });
-      document.getElementById('viewLoteLink').href = `producto.html?id=${newId}`;
-      document.getElementById('successModal').classList.remove('hidden');
+        images:      [imageUrl],
+        seller_id:   session.user.id,
+      };
+
+      const { data: product, error } = await _supabase
+        .from('products')
+        .insert(payload)
+        .select('id')
+        .single();
+
+      if (error) {
+        err.textContent = 'Error al publicar el lote. Inténtalo de nuevo.';
+        err.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publicar lote →';
+        return;
+      }
+
+      window.location.href = `producto.html?id=${product.id}`;
     });
     })();
   </script>
