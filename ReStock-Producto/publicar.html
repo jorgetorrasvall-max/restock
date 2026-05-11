@@ -277,6 +277,14 @@
         seller_id:   session.user.id,
       };
 
+      if (!payload.price || !payload.quantity || isNaN(payload.price) || isNaN(payload.quantity)) {
+        err.textContent = 'Precio y cantidad deben ser números válidos.';
+        err.classList.remove('hidden');
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'Publicar lote →';
+        return;
+      }
+
       const { data: product, error } = await _supabase
         .from('products')
         .insert(payload)
