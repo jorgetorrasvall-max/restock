@@ -65,6 +65,7 @@
         <button class="tab-btn active" data-tab="overview">Resumen</button>
         <button class="tab-btn" data-tab="productos">Lotes</button>
         <button class="tab-btn" data-tab="usuarios">Usuarios</button>
+        <button class="tab-btn" data-tab="ordenes">Órdenes</button>
         <button class="tab-btn" data-tab="codigos">Códigos alpha</button>
         <button class="tab-btn" data-tab="sistema">Sistema</button>
       </div>
@@ -160,6 +161,29 @@
       </div>
     </div>
 
+    <!-- ÓRDENES -->
+    <div id="tab-ordenes" class="tab-panel">
+      <div class="bg-white border border-warm rounded-xl overflow-hidden">
+        <div class="px-5 py-4 border-b border-warm">
+          <h2 class="font-serif text-base font-semibold text-ink">Órdenes de compra</h2>
+        </div>
+        <div class="overflow-x-auto">
+          <table class="w-full text-sm">
+            <thead>
+              <tr class="border-b border-warm bg-paper">
+                <th class="text-left px-5 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Lote</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Comprador</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Importe</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Estado</th>
+                <th class="text-left px-4 py-3 text-xs font-semibold text-muted uppercase tracking-wider">Fecha</th>
+              </tr>
+            </thead>
+            <tbody id="ordersTable" class="divide-y divide-warm"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
     <!-- CÓDIGOS -->
     <div id="tab-codigos" class="tab-panel">
       <div class="bg-white border border-warm rounded-xl overflow-hidden">
@@ -199,8 +223,8 @@
           <dl class="text-sm space-y-2">
             <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Stack</dt><dd class="text-ink">HTML + Tailwind CDN</dd></div>
             <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Tipografía</dt><dd class="text-ink">Newsreader + Inter</dd></div>
-            <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Datos</dt><dd class="text-ink">Mock (data.js)</dd></div>
-            <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Auth</dt><dd class="text-ink">localStorage</dd></div>
+            <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Datos</dt><dd class="text-ink">Supabase</dd></div>
+            <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Auth</dt><dd class="text-ink">Supabase Auth</dd></div>
             <div class="grid grid-cols-2 gap-2"><dt class="text-muted">Lotes en DB</dt><dd id="techLotes" class="text-ink"></dd></div>
           </dl>
         </div>
@@ -214,142 +238,162 @@
   <script src="data.js"></script>
   <script src="shared.js"></script>
   <script>
-    (async () => {
-    const user = await getUser();
-    if (!user || !user.isAdmin) { window.location.href = 'login.html'; return; }
+  (async () => {
+  const user = await getUser();
+  if (!user || !user.is_admin) { window.location.href = 'login.html'; return; }
 
-    // ── Nav ────────────────────────────────────────────────────────────────────
-    document.getElementById('navAuth').innerHTML = `
-      <a href="perfil.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">${user.name}</a>
-      <button onclick="logout()" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Salir</button>
-    `;
+  document.getElementById('navAuth').innerHTML = `
+    <a href="perfil.html" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">${user.name}</a>
+    <button onclick="logout()" class="text-sm text-muted hover:text-ink transition-colors duration-150 cursor-pointer">Salir</button>
+  `;
 
-    // ── Stats ──────────────────────────────────────────────────────────────────
-    const activeLotes = PRODUCTS.filter(p => p.active);
-    const totalValue = activeLotes.reduce((s, p) => s + p.price, 0);
-    const usedCodes = ALPHA_CODES.filter(c => c.used).length;
-    const totalCodes = ALPHA_CODES.length;
+  const [usersRes, productsRes, ordersRes] = await Promise.all([
+    _supabase.from('profiles').select('*').order('created_at', { ascending: false }),
+    _supabase.from('products').select('*, profiles(name)').order('created_at', { ascending: false }),
+    _supabase.from('orders').select('*, products(title)').order('created_at', { ascending: false })
+  ]);
 
-    document.getElementById('statLotes').textContent = activeLotes.length;
-    document.getElementById('statUsers').textContent = MOCK_USERS.length;
-    document.getElementById('statValue').textContent = (totalValue / 1000).toFixed(1) + 'k';
-    document.getElementById('statCodes').textContent = `${usedCodes}/${totalCodes}`;
-    document.getElementById('codeBar').style.width = (usedCodes / totalCodes * 100) + '%';
+  const allProfiles = usersRes.data || [];
+  const allProducts = productsRes.data || [];
+  const allOrders   = ordersRes.data || [];
+  const activeLotes = allProducts.filter(p => p.active && !p.sold);
 
-    // Top products
-    const topProds = [...activeLotes].sort((a,b) => b.views - a.views).slice(0, 5);
-    const maxViews = topProds[0]?.views || 1;
-    document.getElementById('topProducts').innerHTML = topProds.map(p => `
+  // ── Stats ──────────────────────────────────────────────────────────────────
+  const totalValue = activeLotes.reduce((s, p) => s + p.price, 0);
+  document.getElementById('statLotes').textContent = activeLotes.length;
+  document.getElementById('statUsers').textContent = allProfiles.length;
+  document.getElementById('statValue').textContent = totalValue >= 1000
+    ? (totalValue / 1000).toFixed(1) + 'k'
+    : totalValue.toLocaleString('es-ES');
+  document.getElementById('statCodes').textContent = '6/10';
+  document.getElementById('codeBar').style.width = '60%';
+
+  // ── Top products ───────────────────────────────────────────────────────────
+  const topProds = [...activeLotes].sort((a, b) => b.views - a.views).slice(0, 5);
+  const maxViews = topProds[0]?.views || 1;
+  document.getElementById('topProducts').innerHTML = topProds.map(p => `
+    <div>
+      <div class="flex items-center justify-between mb-1">
+        <a href="producto.html?id=${p.id}" class="text-sm text-ink hover:text-navy transition-colors duration-150 truncate max-w-[70%] cursor-pointer">${p.title}</a>
+        <span class="text-xs text-muted flex-shrink-0">${p.views} vistas</span>
+      </div>
+      <div class="h-1.5 bg-warm rounded-full overflow-hidden">
+        <div class="h-full bg-navy rounded-full" style="width:${(p.views / maxViews * 100).toFixed(0)}%"></div>
+      </div>
+    </div>
+  `).join('');
+
+  // ── Category breakdown ─────────────────────────────────────────────────────
+  const catCounts = {};
+  activeLotes.forEach(p => { catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
+  const catSorted = Object.entries(catCounts).sort((a, b) => b[1] - a[1]);
+  const maxCat = catSorted[0]?.[1] || 1;
+  document.getElementById('catBreakdown').innerHTML = catSorted.map(([catId, count]) => {
+    const cat = CATEGORIES.find(c => c.id === catId);
+    return `
       <div>
         <div class="flex items-center justify-between mb-1">
-          <a href="producto.html?id=${p.id}" class="text-sm text-ink hover:text-navy transition-colors duration-150 truncate max-w-[70%] cursor-pointer">${p.title}</a>
-          <span class="text-xs text-muted flex-shrink-0">${p.views} vistas</span>
+          <span class="text-sm text-ink">${cat ? cat.name : catId}</span>
+          <span class="text-xs text-muted">${count} lote${count > 1 ? 's' : ''}</span>
         </div>
         <div class="h-1.5 bg-warm rounded-full overflow-hidden">
-          <div class="h-full bg-navy rounded-full" style="width:${(p.views/maxViews*100).toFixed(0)}%"></div>
+          <div class="h-full bg-gold rounded-full" style="width:${(count / maxCat * 100).toFixed(0)}%"></div>
         </div>
       </div>
-    `).join('');
+    `;
+  }).join('');
 
-    // Category breakdown
-    const catCounts = {};
-    activeLotes.forEach(p => { catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
-    const catSorted = Object.entries(catCounts).sort((a,b) => b[1] - a[1]);
-    const maxCat = catSorted[0]?.[1] || 1;
-    document.getElementById('catBreakdown').innerHTML = catSorted.map(([catId, count]) => {
-      const cat = CATEGORIES.find(c => c.id === catId);
-      return `
-        <div>
-          <div class="flex items-center justify-between mb-1">
-            <span class="text-sm text-ink">${cat ? cat.name : catId}</span>
-            <span class="text-xs text-muted">${count} lote${count>1?'s':''}</span>
-          </div>
-          <div class="h-1.5 bg-warm rounded-full overflow-hidden">
-            <div class="h-full bg-gold rounded-full" style="width:${(count/maxCat*100).toFixed(0)}%"></div>
-          </div>
-        </div>
-      `;
-    }).join('');
-
-    // ── Lotes table ────────────────────────────────────────────────────────────
-    document.getElementById('lotesCount').textContent = `${activeLotes.length} lotes`;
-    document.getElementById('lotesTable').innerHTML = activeLotes.map(p => {
-      const cond = CONDITIONS[p.condition];
-      return `
-        <tr class="hover:bg-paper transition-colors duration-100">
-          <td class="px-5 py-3">
-            <a href="producto.html?id=${p.id}" class="text-sm font-medium text-ink hover:text-navy transition-colors duration-150 cursor-pointer line-clamp-1">${p.title}</a>
-          </td>
-          <td class="px-4 py-3 text-sm text-muted">${CATEGORIES.find(c=>c.id===p.category)?.name || p.category}</td>
-          <td class="px-4 py-3 font-serif text-sm font-semibold text-navy">${p.price.toLocaleString('es-ES')}€</td>
-          <td class="px-4 py-3 text-sm text-muted">${p.seller.name}</td>
-          <td class="px-4 py-3 text-sm text-muted">${p.views}</td>
-          <td class="px-4 py-3">
-            <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${cond.bg};color:${cond.color}">${cond.label}</span>
-          </td>
-        </tr>
-      `;
-    }).join('');
-
-    // ── Users table ────────────────────────────────────────────────────────────
-    document.getElementById('usersTable').innerHTML = MOCK_USERS.map(u => `
+  // ── Lotes table ────────────────────────────────────────────────────────────
+  document.getElementById('lotesCount').textContent = `${allProducts.length} lotes`;
+  document.getElementById('lotesTable').innerHTML = allProducts.map(p => {
+    const cond = CONDITIONS[p.condition] || { label: p.condition, color: '#5C5C5C', bg: '#f5f5f5' };
+    return `
       <tr class="hover:bg-paper transition-colors duration-100">
         <td class="px-5 py-3">
-          <div class="flex items-center gap-2.5">
-            <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${u.name[0].toUpperCase()}</div>
-            <span class="text-sm font-medium text-ink">${u.name}</span>
-          </div>
+          <a href="producto.html?id=${p.id}" class="text-sm font-medium text-ink hover:text-navy transition-colors duration-150 cursor-pointer line-clamp-1">${p.title}</a>
         </td>
-        <td class="px-4 py-3 text-sm text-muted">${u.email}</td>
-        <td class="px-4 py-3 text-sm text-muted">${u.city}</td>
-        <td class="px-4 py-3 text-sm text-muted">${u.type}</td>
+        <td class="px-4 py-3 text-sm text-muted">${CATEGORIES.find(c => c.id === p.category)?.name || p.category}</td>
+        <td class="px-4 py-3 font-serif text-sm font-semibold text-navy">${p.price.toLocaleString('es-ES')}€</td>
+        <td class="px-4 py-3 text-sm text-muted">${p.profiles?.name || '—'}</td>
+        <td class="px-4 py-3 text-sm text-muted">${p.views}</td>
         <td class="px-4 py-3">
-          <div class="flex items-center gap-1.5 flex-wrap">
-            ${u.isFounder ? '<span class="text-xs px-2 py-0.5 rounded-full bg-gold-light border border-gold/30 text-gold font-semibold">Fundador</span>' : ''}
-            ${u.isAdmin ? '<span class="text-xs px-2 py-0.5 rounded-full bg-navy/10 border border-navy/20 text-navy font-semibold">Admin</span>' : ''}
-          </div>
+          <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${cond.bg};color:${cond.color}">${cond.label}</span>
         </td>
       </tr>
-    `).join('');
-
-    // ── Codes table ────────────────────────────────────────────────────────────
-    document.getElementById('codesUsedLabel').textContent = `${usedCodes} de ${totalCodes} usados`;
-    document.getElementById('codesTable').innerHTML = ALPHA_CODES.map(c => `
-      <tr class="hover:bg-paper transition-colors duration-100">
-        <td class="px-5 py-3 font-mono text-xs text-ink">${c.code}</td>
-        <td class="px-4 py-3">
-          ${c.used
-            ? '<span class="text-xs px-2 py-0.5 rounded-full bg-green-50 border border-green-200 text-green-700 font-medium">Usado</span>'
-            : '<span class="text-xs px-2 py-0.5 rounded-full bg-warm text-muted font-medium">Disponible</span>'}
-        </td>
-        <td class="px-4 py-3 text-sm text-muted">${c.usedBy || '—'}</td>
-      </tr>
-    `).join('');
-
-    // ── System ─────────────────────────────────────────────────────────────────
-    document.getElementById('techLotes').textContent = PRODUCTS.length;
-    document.getElementById('sessionInfo').innerHTML = `
-      <p>Logueado como <strong class="text-ink">${user.name}</strong></p>
-      <p>Email: ${user.email}</p>
-      <p>localStorage: ${Object.keys(localStorage).length} clave(s)</p>
     `;
-    document.getElementById('clearBtn').onclick = () => {
-      if (confirm('¿Limpiar localStorage? Perderás la sesión actual.')) {
-        localStorage.clear();
-        window.location.href = 'login.html';
-      }
-    };
+  }).join('');
 
-    // ── Tabs ───────────────────────────────────────────────────────────────────
-    document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-        document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
-        btn.classList.add('active');
-        document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
-      });
+  // ── Users table ────────────────────────────────────────────────────────────
+  document.getElementById('usersTable').innerHTML = allProfiles.map(u => `
+    <tr class="hover:bg-paper transition-colors duration-100">
+      <td class="px-5 py-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-7 h-7 rounded-full bg-navy text-white text-xs font-semibold flex items-center justify-center flex-shrink-0">${(u.name || '?')[0].toUpperCase()}</div>
+          <span class="text-sm font-medium text-ink">${u.name || '—'}</span>
+        </div>
+      </td>
+      <td class="px-4 py-3 text-sm text-muted">—</td>
+      <td class="px-4 py-3 text-sm text-muted">${u.city || '—'}</td>
+      <td class="px-4 py-3 text-sm text-muted">${u.type || '—'}</td>
+      <td class="px-4 py-3">
+        <div class="flex items-center gap-1.5 flex-wrap">
+          ${u.is_founder ? '<span class="text-xs px-2 py-0.5 rounded-full bg-gold-light border border-gold/30 text-gold font-semibold">Fundador</span>' : ''}
+          ${u.is_admin ? '<span class="text-xs px-2 py-0.5 rounded-full bg-navy/10 border border-navy/20 text-navy font-semibold">Admin</span>' : ''}
+        </div>
+      </td>
+    </tr>
+  `).join('');
+
+  // ── Codes tab ──────────────────────────────────────────────────────────────
+  document.getElementById('codesUsedLabel').textContent = '6 de 10 usados';
+  document.getElementById('codesTable').innerHTML = `
+    <tr>
+      <td colspan="3" class="px-5 py-8 text-center text-sm text-muted">Los códigos alpha son gestionados manualmente. 6 de 10 usados.</td>
+    </tr>
+  `;
+
+  // ── Orders tab ─────────────────────────────────────────────────────────────
+  document.getElementById('ordersTable').innerHTML = allOrders.length === 0
+    ? '<tr><td colspan="5" class="px-5 py-8 text-center text-sm text-muted">Sin órdenes todavía.</td></tr>'
+    : allOrders.map(o => {
+        const isPaid = o.status === 'paid';
+        return `
+          <tr class="hover:bg-paper transition-colors duration-100">
+            <td class="px-5 py-3 text-sm font-medium text-ink">${o.products?.title || '—'}</td>
+            <td class="px-4 py-3 text-sm text-muted">${o.buyer_email || '—'}</td>
+            <td class="px-4 py-3 font-serif text-sm font-semibold text-navy">${(o.amount / 100).toLocaleString('es-ES')}€</td>
+            <td class="px-4 py-3">
+              <span class="text-xs px-2 py-0.5 rounded-full font-medium ${isPaid ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-yellow-50 border border-yellow-200 text-yellow-700'}">
+                ${isPaid ? 'Pagado' : 'Pendiente'}
+              </span>
+            </td>
+            <td class="px-4 py-3 text-sm text-muted">${new Date(o.created_at).toLocaleDateString('es-ES')}</td>
+          </tr>
+        `;
+      }).join('');
+
+  // ── System tab ─────────────────────────────────────────────────────────────
+  document.getElementById('techLotes').textContent = allProducts.length;
+  document.getElementById('sessionInfo').innerHTML = `
+    <p>Logueado como <strong class="text-ink">${user.name}</strong></p>
+    <p>Email: ${user.email}</p>
+  `;
+  document.getElementById('clearBtn').onclick = () => {
+    if (confirm('¿Limpiar sesión?')) {
+      _supabase.auth.signOut().then(() => { window.location.href = 'login.html'; });
+    }
+  };
+
+  // ── Tabs ───────────────────────────────────────────────────────────────────
+  document.querySelectorAll('.tab-btn[data-tab]').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById('tab-' + btn.dataset.tab).classList.add('active');
     });
-    })();
+  });
+  })();
   </script>
 </body>
 </html>
