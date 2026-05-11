@@ -187,8 +187,8 @@
       return c ? c.name : id;
     }
 
-    function isFounderSeller(sellerId) {
-      return (MOCK_USERS.find(u => u.id === sellerId) || {}).isFounder === true;
+    function isFounderSeller(p) {
+      return p.profiles?.is_founder === true;
     }
 
     // ── Nav auth ───────────────────────────────────────────────────────────────
@@ -211,19 +211,21 @@
 
     // ── Small card (used in grids) ─────────────────────────────────────────────
     function smallCard(p) {
-      const founder = isFounderSeller(p.seller.id);
+      const founder = isFounderSeller(p);
       const cat = catLabel(p.category);
+      const city = p.profiles?.city || '';
       return `
         <a href="producto.html?id=${p.id}" class="group flex flex-col bg-white border border-warm rounded-xl overflow-hidden hover:border-navy/30 hover:shadow-sm transition-all duration-200 cursor-pointer">
           <div class="relative aspect-[4/3] bg-warm overflow-hidden">
-            <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
+            <img src="${p.images?.[0] || ''}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
             <div class="absolute top-2 left-2 flex flex-col gap-1">
               ${condBadge(p.condition)}
             </div>
             ${founder ? `<div class="absolute top-2 right-2"><span class="text-[9px] px-1.5 py-0.5 rounded font-bold bg-gold text-white uppercase tracking-wide leading-none">★ Fundador</span></div>` : ''}
+            ${p.sold ? `<div class="absolute inset-0 bg-ink/60 flex items-center justify-center rounded-t-xl"><span class="text-white font-serif text-2xl font-semibold tracking-widest">SOLD</span></div>` : ''}
           </div>
           <div class="p-3 flex flex-col flex-1">
-            <div class="text-[10px] text-muted uppercase tracking-wide mb-1">${cat} · ${p.seller.city}</div>
+            <div class="text-[10px] text-muted uppercase tracking-wide mb-1">${cat}${city ? ' · ' + city : ''}</div>
             <h3 class="font-serif text-sm font-semibold text-ink leading-snug group-hover:text-navy transition-colors duration-150 line-clamp-2 mb-3">${p.title}</h3>
             <div class="mt-auto flex items-baseline justify-between">
               <span class="font-serif text-base font-semibold text-navy">${priceStr(p.price)}</span>
@@ -237,16 +239,17 @@
     // ── Featured big card (editorial, image background) ─────────────────────────
     function featBigCard(p) {
       const cat = catLabel(p.category);
+      const city = p.profiles?.city || '';
       const pricePerUnit = p.quantity > 0 ? (p.price / p.quantity).toFixed(2) : null;
       return `
         <a href="producto.html?id=${p.id}" class="group relative lg:col-span-3 rounded-xl overflow-hidden cursor-pointer flex flex-col" style="min-height:280px;">
-          <img src="${p.images[0]}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" loading="lazy" />
+          <img src="${p.images?.[0] || ''}" alt="${p.title}" class="absolute inset-0 w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-500" loading="lazy" />
           <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent"></div>
           <div class="relative z-10 p-4 flex-shrink-0">
             <span class="text-[10px] px-2 py-1 rounded font-bold uppercase tracking-widest bg-paper/90 text-ink">★ Editorial</span>
           </div>
           <div class="relative z-10 mt-auto p-5">
-            <div class="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">${cat} · ${p.seller.city}</div>
+            <div class="text-[10px] font-bold uppercase tracking-widest text-white/60 mb-2">${cat}${city ? ' · ' + city : ''}</div>
             <h2 class="font-serif text-2xl sm:text-3xl font-semibold text-white leading-tight mb-3 group-hover:opacity-90 transition-opacity duration-150">${p.title}</h2>
             <div class="flex items-baseline gap-3">
               <span class="font-serif text-2xl font-semibold text-gold">${priceStr(p.price)}</span>
@@ -260,17 +263,18 @@
     // ── Featured side card (horizontal, smaller) ────────────────────────────────
     function featSideCard(p) {
       if (!p) return '<div class="hidden lg:block"></div>';
-      const founder = isFounderSeller(p.seller.id);
+      const founder = isFounderSeller(p);
       const cat = catLabel(p.category);
+      const city = p.profiles?.city || '';
       return `
         <a href="producto.html?id=${p.id}" class="group flex bg-white border border-warm rounded-xl overflow-hidden hover:border-navy/30 hover:shadow-sm transition-all duration-200 cursor-pointer">
           <div class="relative w-32 flex-shrink-0 bg-warm overflow-hidden">
-            <img src="${p.images[0]}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
+            <img src="${p.images?.[0] || ''}" alt="${p.title}" class="w-full h-full object-cover group-hover:scale-[1.02] transition-transform duration-300" loading="lazy" />
             ${founder ? `<div class="absolute top-1.5 left-1.5"><span class="text-[9px] px-1 py-0.5 rounded font-bold bg-gold text-white uppercase leading-none">★ Fundador</span></div>` : ''}
           </div>
           <div class="p-3 flex flex-col justify-between flex-1 min-w-0">
             <div>
-              <div class="text-[10px] text-muted uppercase tracking-wide mb-0.5">${cat} · ${p.seller.city}</div>
+              <div class="text-[10px] text-muted uppercase tracking-wide mb-0.5">${cat}${city ? ' · ' + city : ''}</div>
               <h3 class="font-serif text-sm font-semibold text-ink leading-snug group-hover:text-navy transition-colors duration-150 line-clamp-2">${p.title}</h3>
             </div>
             <div class="flex items-baseline justify-between mt-2">
@@ -282,14 +286,23 @@
       `;
     }
 
-    // ── Build editorial feed ────────────────────────────────────────────────────
-    const allActive = PRODUCTS.filter(p => p.active)
-      .sort((a, b) => new Date(b.created) - new Date(a.created));
+    // ── Load products from Supabase ────────────────────────────────────────────
+    async function loadProducts() {
+      const { data, error } = await _supabase
+        .from('products')
+        .select('*, profiles(name, city, rating, reviews)')
+        .eq('active', true)
+        .order('created_at', { ascending: false });
+      if (error) { console.error('Error cargando productos:', error); return []; }
+      return data;
+    }
 
+    // ── Build editorial feed ────────────────────────────────────────────────────
+    let ALL_PRODUCTS = [];
     let featOffset = 0;
 
     function renderFeatured() {
-      const slice = allActive.slice(featOffset, featOffset + 3);
+      const slice = ALL_PRODUCTS.slice(featOffset, featOffset + 3);
       const [p0, p1, p2] = slice;
       document.getElementById('featuredSection').innerHTML =
         featBigCard(p0) +
@@ -301,16 +314,16 @@
 
       // Section 2: top category by count
       const catCounts = {};
-      allActive.forEach(p => { catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
+      ALL_PRODUCTS.forEach(p => { catCounts[p.category] = (catCounts[p.category] || 0) + 1; });
       const topCat = Object.entries(catCounts).sort((a, b) => b[1] - a[1])[0]?.[0] || '';
-      const sectorItems = allActive.filter(p => p.category === topCat).slice(0, 4);
+      const sectorItems = ALL_PRODUCTS.filter(p => p.category === topCat).slice(0, 4);
       document.getElementById('sectorLabel').textContent = catLabel(topCat).toUpperCase();
       document.getElementById('sectorLink').href = `marketplace.html?cat=${topCat}`;
       document.getElementById('sectorGrid').innerHTML = sectorItems.map(smallCard).join('');
 
       // Section 3: remaining products not in featured
-      const featIds = new Set(allActive.slice(0, 3).map(p => p.id));
-      const nearbyItems = allActive.filter(p => !featIds.has(p.id)).slice(0, 4);
+      const featIds = new Set(ALL_PRODUCTS.slice(0, 3).map(p => p.id));
+      const nearbyItems = ALL_PRODUCTS.filter(p => !featIds.has(p.id)).slice(0, 4);
       const countLabel = nearbyItems.length > 0 ? `${nearbyItems.length} lotes` : '';
       document.getElementById('nearbyCount').textContent = countLabel ? `Ver ${countLabel} →` : '';
       document.getElementById('nearbyGrid').innerHTML = nearbyItems.map(smallCard).join('');
@@ -321,7 +334,7 @@
       if (featOffset > 0) { featOffset--; renderFeatured(); }
     });
     document.getElementById('featNext').addEventListener('click', () => {
-      if (featOffset + 3 < allActive.length) { featOffset++; renderFeatured(); }
+      if (featOffset + 3 < ALL_PRODUCTS.length) { featOffset++; renderFeatured(); }
     });
 
     // ── Search ──────────────────────────────────────────────────────────────────
@@ -342,11 +355,11 @@
       if (clearBtn) clearBtn.classList.remove('hidden');
 
       const ql = q.toLowerCase();
-      const items = PRODUCTS.filter(p => p.active && (
+      const items = ALL_PRODUCTS.filter(p => (
         p.title.toLowerCase().includes(ql) ||
-        p.description.toLowerCase().includes(ql) ||
+        (p.description || '').toLowerCase().includes(ql) ||
         catLabel(p.category).toLowerCase().includes(ql) ||
-        p.seller.name.toLowerCase().includes(ql)
+        (p.profiles?.name || '').toLowerCase().includes(ql)
       ));
 
       document.getElementById('searchCount').textContent =
@@ -383,18 +396,23 @@
       doSearch(e.target.value.trim());
     });
 
-    // ── Boot ────────────────────────────────────────────────────────────────────
-    buildFeed();
+    // ── Init & Boot ─────────────────────────────────────────────────────────────
+    async function init() {
+      ALL_PRODUCTS = await loadProducts();
+      buildFeed();
 
-    const qParam = getParam('q');
-    if (qParam) {
-      document.getElementById('searchInput').value = qParam;
-      doSearch(qParam);
+      const qParam = getParam('q');
+      if (qParam) {
+        document.getElementById('searchInput').value = qParam;
+        doSearch(qParam);
+      }
+      const catParam = getParam('cat');
+      if (catParam) {
+        doSearch(catLabel(catParam));
+      }
     }
-    const catParam = getParam('cat');
-    if (catParam) {
-      doSearch(catLabel(catParam));
-    }
+
+    document.addEventListener('DOMContentLoaded', init);
   </script>
 </body>
 </html>
