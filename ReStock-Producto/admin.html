@@ -215,7 +215,7 @@
         </div>
         <div class="bg-white border border-warm rounded-xl p-5">
           <h2 class="font-serif text-base font-semibold text-ink mb-1">Limpiar datos</h2>
-          <p class="text-xs text-muted mb-4">Elimina el localStorage y reinicia la sesión. Los datos mock de <code class="text-xs bg-warm px-1 rounded">data.js</code> permanecen intactos.</p>
+          <p class="text-xs text-muted mb-4">Cierra la sesión de Supabase Auth. Las constantes de configuración en <code class="text-xs bg-warm px-1 rounded">data.js</code> (categorías, condiciones) permanecen intactas.</p>
           <button id="clearBtn" class="px-4 py-2 rounded-md border border-red-200 text-sm font-medium text-red-600 hover:bg-red-50 transition-colors duration-150 cursor-pointer">Limpiar localStorage</button>
         </div>
         <div class="bg-white border border-warm rounded-xl p-5">
@@ -253,6 +253,10 @@
     _supabase.from('orders').select('*, products(title)').order('created_at', { ascending: false })
   ]);
 
+  if (usersRes.error || productsRes.error || ordersRes.error) {
+    console.error('Error loading admin data:', usersRes.error || productsRes.error || ordersRes.error);
+  }
+
   const allProfiles = usersRes.data || [];
   const allProducts = productsRes.data || [];
   const allOrders   = ordersRes.data || [];
@@ -269,13 +273,13 @@
   document.getElementById('codeBar').style.width = '60%';
 
   // ── Top products ───────────────────────────────────────────────────────────
-  const topProds = [...activeLotes].sort((a, b) => b.views - a.views).slice(0, 5);
+  const topProds = [...activeLotes].sort((a, b) => (b.views || 0) - (a.views || 0)).slice(0, 5);
   const maxViews = topProds[0]?.views || 1;
   document.getElementById('topProducts').innerHTML = topProds.map(p => `
     <div>
       <div class="flex items-center justify-between mb-1">
         <a href="producto.html?id=${p.id}" class="text-sm text-ink hover:text-navy transition-colors duration-150 truncate max-w-[70%] cursor-pointer">${p.title}</a>
-        <span class="text-xs text-muted flex-shrink-0">${p.views} vistas</span>
+        <span class="text-xs text-muted flex-shrink-0">${p.views || 0} vistas</span>
       </div>
       <div class="h-1.5 bg-warm rounded-full overflow-hidden">
         <div class="h-full bg-navy rounded-full" style="width:${(p.views / maxViews * 100).toFixed(0)}%"></div>
@@ -315,7 +319,7 @@
         <td class="px-4 py-3 text-sm text-muted">${CATEGORIES.find(c => c.id === p.category)?.name || p.category}</td>
         <td class="px-4 py-3 font-serif text-sm font-semibold text-navy">${p.price.toLocaleString('es-ES')}€</td>
         <td class="px-4 py-3 text-sm text-muted">${p.profiles?.name || '—'}</td>
-        <td class="px-4 py-3 text-sm text-muted">${p.views}</td>
+        <td class="px-4 py-3 text-sm text-muted">${p.views || 0}</td>
         <td class="px-4 py-3">
           <span class="text-xs px-2 py-0.5 rounded-full font-medium" style="background:${cond.bg};color:${cond.color}">${cond.label}</span>
         </td>
@@ -361,7 +365,7 @@
           <tr class="hover:bg-paper transition-colors duration-100">
             <td class="px-5 py-3 text-sm font-medium text-ink">${o.products?.title || '—'}</td>
             <td class="px-4 py-3 text-sm text-muted">${o.buyer_email || '—'}</td>
-            <td class="px-4 py-3 font-serif text-sm font-semibold text-navy">${(o.amount / 100).toLocaleString('es-ES')}€</td>
+            <td class="px-4 py-3 font-serif text-sm font-semibold text-navy">${((o.amount ?? 0) / 100).toLocaleString('es-ES')}€</td>
             <td class="px-4 py-3">
               <span class="text-xs px-2 py-0.5 rounded-full font-medium ${isPaid ? 'bg-green-50 border border-green-200 text-green-700' : 'bg-yellow-50 border border-yellow-200 text-yellow-700'}">
                 ${isPaid ? 'Pagado' : 'Pendiente'}
