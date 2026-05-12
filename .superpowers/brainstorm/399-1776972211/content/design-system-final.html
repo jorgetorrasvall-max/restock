@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F3F4F6; font-family: 'DM Sans', sans-serif; color: #111; }
+  .page { max-width: 860px; margin: 0 auto; padding: 32px 24px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 22px; font-weight: 800; letter-spacing: -0.5px; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #6B7280; margin-bottom: 32px; }
+
+  /* Section */
+  .section { margin-bottom: 32px; }
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #6366F1; margin-bottom: 14px; }
+
+  /* Tokens */
+  .tokens { display: flex; gap: 10px; flex-wrap: wrap; }
+  .token { border-radius: 8px; overflow: hidden; border: 1px solid #E5E7EB; width: 120px; }
+  .token-color { height: 48px; }
+  .token-info { background: #fff; padding: 8px; }
+  .token-name { font-size: 10px; font-weight: 600; color: #111; }
+  .token-hex { font-size: 9px; color: #9CA3AF; font-family: monospace; }
+  .token-role { font-size: 9px; color: #6B7280; margin-top: 1px; }
+
+  /* Type scale */
+  .type-row { display: flex; align-items: baseline; gap: 16px; padding: 12px 0; border-bottom: 1px solid #F3F4F6; }
+  .type-label { font-size: 10px; color: #9CA3AF; width: 80px; flex-shrink: 0; font-family: monospace; }
+  .type-preview { flex: 1; }
+
+  /* Component grid */
+  .comp-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .comp-card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; padding: 16px; }
+  .comp-name { font-size: 10px; font-weight: 700; color: #6366F1; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 10px; }
+
+  /* Page thumbnails */
+  .pages-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  .page-thumb { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; overflow: hidden; }
+  .page-thumb-header { background: #111; padding: 8px 10px; }
+  .page-thumb-title { font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: #fff; }
+  .page-thumb-body { padding: 10px; }
+  .page-thumb-desc { font-size: 10px; color: #6B7280; line-height: 1.4; }
+
+  /* Mini components */
+  .row-item { display: flex; align-items: center; gap: 8px; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 10px; margin-bottom: 5px; background: #fff; }
+  .thumb { width: 28px; height: 28px; border-radius: 4px; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 12px; flex-shrink: 0; }
+  .rname { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 10px; color: #111; }
+  .rmeta { font-size: 9px; color: #9CA3AF; }
+  .rprice { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 11px; margin-left: auto; color: #111; }
+  .r-cta { background: #111; color: #fff; border: none; border-radius: 4px; padding: 3px 8px; font-size: 9px; font-weight: 700; cursor: default; flex-shrink: 0; }
+
+  .pill { display: inline-flex; align-items: center; gap: 5px; background: #EEF2FF; color: #6366F1; border-radius: 99px; padding: 3px 10px; font-size: 10px; font-weight: 600; }
+  .dot { width: 5px; height: 5px; background: #6366F1; border-radius: 50%; }
+  .tag-neg { background: #FEF9C3; color: #854D0E; font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px; }
+  .progress { height: 3px; background: #F3F4F6; border-radius: 2px; margin-top: 3px; width: 70px; }
+  .progress-bar { height: 100%; border-radius: 2px; background: #6366F1; }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>ReStock — Design System</h1>
+  <p class="sub">Decisiones validadas · Listo para implementar</p>
+
+  <!-- COLORES -->
+  <div class="section">
+    <div class="section-title">01 · Tokens de color</div>
+    <div class="tokens">
+      <div class="token">
+        <div class="token-color" style="background:#111;"></div>
+        <div class="token-info"><div class="token-name">Negro</div><div class="token-hex">#111111</div><div class="token-role">Botones primarios · Hero bg</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#6366F1;"></div>
+        <div class="token-info"><div class="token-name">Índigo</div><div class="token-hex">#6366F1</div><div class="token-role">Acento · Links · Barras</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#818CF8;"></div>
+        <div class="token-info"><div class="token-name">Índigo claro</div><div class="token-hex">#818CF8</div><div class="token-role">Precios en hero oscuro</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#EEF2FF; border:1px solid #E5E7EB;"></div>
+        <div class="token-info"><div class="token-name">Índigo bg</div><div class="token-hex">#EEF2FF</div><div class="token-role">Pills · Tags · Chips activos</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#fff; border:1px solid #E5E7EB;"></div>
+        <div class="token-info"><div class="token-name">Blanco</div><div class="token-hex">#FFFFFF</div><div class="token-role">Fondo plataforma · Cards</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#FAFAFA; border:1px solid #E5E7EB;"></div>
+        <div class="token-info"><div class="token-name">Gris bg</div><div class="token-hex">#FAFAFA</div><div class="token-role">Fondo página plataforma</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#6B7280;"></div>
+        <div class="token-info"><div class="token-name">Texto muted</div><div class="token-hex">#6B7280</div><div class="token-role">Subtítulos · Metadatos</div></div>
+      </div>
+      <div class="token">
+        <div class="token-color" style="background:#E5E7EB; border:1px solid #D1D5DB;"></div>
+        <div class="token-info"><div class="token-name">Border</div><div class="token-hex">#E5E7EB</div><div class="token-role">Bordes de cards y filas</div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TIPOGRAFÍA -->
+  <div class="section">
+    <div class="section-title">02 · Escala tipográfica</div>
+    <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;padding:16px;">
+      <div class="type-row">
+        <div class="type-label">display/800</div>
+        <div class="type-preview" style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1.1;">El stock sobrante</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">h1/700</div>
+        <div class="type-preview" style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:700;letter-spacing:-0.5px;">Marketplace B2B</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">h2/600</div>
+        <div class="type-preview" style="font-family:'Space Grotesk',sans-serif;font-size:16px;font-weight:600;">Cómo funciona</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">h3/600</div>
+        <div class="type-preview" style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:600;">Nike Air Max — 200 pares</div>
+      </div>
+      <div class="type-row">
+        <div class="type-label">body/400</div>
+        <div class="type-preview" style="font-family:'DM Sans',sans-serif;font-size:14px;font-weight:400;color:#6B7280;">Convierte tu inventario parado en liquidez para tu negocio.</div>
+      </div>
+      <div class="type-row" style="border:none;">
+        <div class="type-label">label/700</div>
+        <div class="type-preview" style="font-family:'DM Sans',sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:#6366F1;">Categoría · Barcelona</div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;color:#9CA3AF;">
+      Google Fonts: <code style="background:#F3F4F6;padding:1px 6px;border-radius:3px;">Space Grotesk</code> (headings) + <code style="background:#F3F4F6;padding:1px 6px;border-radius:3px;">DM Sans</code> (body)
+    </div>
+  </div>
+
+  <!-- COMPONENTES -->
+  <div class="section">
+    <div class="section-title">03 · Componentes clave</div>
+    <div class="comp-grid">
+
+      <!-- Fila de lote -->
+      <div class="comp-card">
+        <div class="comp-name">Fila de lote (lista densa)</div>
+        <div class="row-item">
+          <div class="thumb">👟</div>
+          <div style="flex:1;">
+            <div class="rname">Nike Air Max · 200 pares <span class="tag-neg">-40%</span></div>
+            <div class="rmeta">Calzado · Barcelona · certificado</div>
+            <div class="progress"><div class="progress-bar" style="width:60%"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="rprice">8.40€/ud</div>
+            <div style="font-size:9px;color:#9CA3AF;text-decoration:line-through;">14€</div>
+          </div>
+          <button class="r-cta">Ver →</button>
+        </div>
+        <div class="row-item">
+          <div class="thumb">💻</div>
+          <div style="flex:1;">
+            <div class="rname">iPad 10 refurb · 12 ud <span class="tag-neg">-32%</span></div>
+            <div class="rmeta">Electrónica · Madrid · A-grade</div>
+            <div class="progress"><div class="progress-bar" style="width:80%"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="rprice">280€/ud</div>
+            <div style="font-size:9px;color:#9CA3AF;text-decoration:line-through;">410€</div>
+          </div>
+          <button class="r-cta">Ver →</button>
+        </div>
+      </div>
+
+      <!-- Botones -->
+      <div class="comp-card">
+        <div class="comp-name">Botones</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <button style="background:#111;color:#fff;border:none;padding:10px 16px;border-radius:7px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;cursor:default;text-align:left;">Entrar a la plataforma →</button>
+          <button style="background:#fff;color:#111;border:1.5px solid #E5E7EB;padding:10px 16px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:12px;cursor:default;text-align:left;">Ver cómo funciona</button>
+          <button style="background:#EEF2FF;color:#6366F1;border:none;padding:8px 14px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:600;font-size:11px;cursor:default;text-align:left;">+ Publicar lote</button>
+          <div style="display:flex;gap:8px;">
+            <span style="background:#FEF9C3;color:#854D0E;font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;">-40%</span>
+            <div class="pill"><div class="dot"></div>Fase beta</div>
+            <span style="background:#F0FDF4;color:#166534;font-size:10px;font-weight:600;padding:3px 8px;border-radius:4px;">Verificado</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Nav -->
+      <div class="comp-card">
+        <div class="comp-name">Navbar — plataforma</div>
+        <div style="background:#fff;border:1px solid #E5E7EB;border-radius:7px;padding:8px 12px;display:flex;align-items:center;gap:12px;font-size:11px;color:#6B7280;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#111;">restock</span>
+          <span style="margin-right:auto;"></span>
+          <span>Marketplace</span>
+          <span>Mis lotes</span>
+          <span>Mensajes</span>
+          <button style="background:#111;color:#fff;border:none;padding:5px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:default;">+ Publicar</button>
+        </div>
+        <div style="margin-top:8px;background:#111;border-radius:7px;padding:8px 12px;display:flex;align-items:center;gap:12px;font-size:11px;color:#6B7280;">
+          <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:13px;color:#fff;">restock</span>
+          <span style="margin-right:auto;"></span>
+          <span>Cómo funciona</span>
+          <span>Comisiones</span>
+          <button style="background:#6366F1;color:#fff;border:none;padding:5px 10px;border-radius:5px;font-size:10px;font-weight:700;cursor:default;">Ir a la plataforma →</button>
+        </div>
+        <div style="font-size:9px;color:#9CA3AF;margin-top:6px;">↑ Landing (negro) · Plataforma (blanco)</div>
+      </div>
+
+      <!-- Input + chip filtros -->
+      <div class="comp-card">
+        <div class="comp-name">Búsqueda + filtros</div>
+        <div style="background:#F3F4F6;border:1.5px solid #E5E7EB;border-radius:7px;padding:8px 12px;font-size:12px;color:#9CA3AF;margin-bottom:8px;">🔍 &nbsp;Buscar lotes de calzado, textil...</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="background:#EEF2FF;border:1px solid #6366F1;color:#6366F1;border-radius:99px;padding:3px 10px;font-size:10px;font-weight:600;">Todo</span>
+          <span style="background:#fff;border:1px solid #E5E7EB;color:#374151;border-radius:99px;padding:3px 10px;font-size:10px;">Moda</span>
+          <span style="background:#fff;border:1px solid #E5E7EB;color:#374151;border-radius:99px;padding:3px 10px;font-size:10px;">Electrónica</span>
+          <span style="background:#fff;border:1px solid #E5E7EB;color:#374151;border-radius:99px;padding:3px 10px;font-size:10px;">Hogar</span>
+          <span style="background:#fff;border:1px solid #E5E7EB;color:#374151;border-radius:99px;padding:3px 10px;font-size:10px;">Deporte</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PÁGINAS -->
+  <div class="section">
+    <div class="section-title">04 · Páginas del producto</div>
+    <div class="pages-grid">
+      <div class="page-thumb">
+        <div class="page-thumb-header"><div class="page-thumb-title">index.html — Landing</div></div>
+        <div class="page-thumb-body">
+          <div class="page-thumb-desc">Hero negro · Headline bold · Stats · Preview lista lotes · Secciones: cómo funciona, comisiones, early adopter · CTA publicar / entrar</div>
+        </div>
+      </div>
+      <div class="page-thumb">
+        <div class="page-thumb-header"><div class="page-thumb-title">marketplace.html</div></div>
+        <div class="page-thumb-body">
+          <div class="page-thumb-desc">Nav blanco · Búsqueda · Chips categoría · Lista densa de lotes · Paginación · Sin sidebar (móvil-first)</div>
+        </div>
+      </div>
+      <div class="page-thumb">
+        <div class="page-thumb-header"><div class="page-thumb-title">producto.html</div></div>
+        <div class="page-thumb-body">
+          <div class="page-thumb-desc">Imagen/galería · Nombre, precio, condición · Barra progreso vendido · CTA "Contactar vendedor" negro · Info vendedor</div>
+        </div>
+      </div>
+      <div class="page-thumb">
+        <div class="page-thumb-header"><div class="page-thumb-title">publicar.html</div></div>
+        <div class="page-thumb-body">
+          <div class="page-thumb-desc">Form limpio en columna · Labels claros · Upload fotos · Preview card lote en tiempo real · CTA negro "Publicar lote"</div>
+        </div>
+      </div>
+      <div class="page-thumb">
+        <div class="page-thumb-header"><div class="page-thumb-title">mensajes.html</div></div>
+        <div class="page-thumb-body">
+          <div class="page-thumb-desc">Split: lista conversaciones izq · Chat derecha · Burbujas blanco/índigo · Input footer fijo</div>
+        </div>
+      </div>
+      <div class="page-thumb">
+        <div class="page-thumb-header"><div class="page-thumb-title">perfil.html + login.html</div></div>
+        <div class="page-thumb-body">
+          <div class="page-thumb-desc">Login: centrado, minimalista, sin ruido · Perfil: estadísticas + lotes publicados + badge Fundador</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REGLAS -->
+  <div class="section">
+    <div class="section-title">05 · Reglas del sistema</div>
+    <div style="background:#fff;border:1px solid #E5E7EB;border-radius:10px;overflow:hidden;">
+      <div style="display:grid;grid-template-columns:1fr 1fr;">
+        <div style="padding:14px 16px;border-right:1px solid #F3F4F6;border-bottom:1px solid #F3F4F6;">
+          <div style="font-size:10px;font-weight:700;color:#111;margin-bottom:6px;">Siempre</div>
+          <div style="font-size:11px;color:#6B7280;line-height:1.8;">
+            ✓ SVG icons (Heroicons/Lucide), nunca emojis<br/>
+            ✓ cursor-pointer en clickables<br/>
+            ✓ Transiciones 150-200ms<br/>
+            ✓ Focus ring visible (a11y)<br/>
+            ✓ Contraste mínimo 4.5:1<br/>
+            ✓ prefers-reduced-motion
+          </div>
+        </div>
+        <div style="padding:14px 16px;border-bottom:1px solid #F3F4F6;">
+          <div style="font-size:10px;font-weight:700;color:#111;margin-bottom:6px;">Nunca</div>
+          <div style="font-size:11px;color:#6B7280;line-height:1.8;">
+            ✗ Gradientes de color (ni purple/pink)<br/>
+            ✗ Sombras decorativas pesadas<br/>
+            ✗ Más de 2 fuentes<br/>
+            ✗ Botones sin estado hover<br/>
+            ✗ Verde como acento principal<br/>
+            ✗ Diseño "playful" o colorido
+          </div>
+        </div>
+        <div style="padding:14px 16px;border-right:1px solid #F3F4F6;">
+          <div style="font-size:10px;font-weight:700;color:#111;margin-bottom:6px;">Breakpoints</div>
+          <div style="font-size:11px;color:#6B7280;line-height:1.8;">
+            375px · 768px · 1024px · 1440px<br/>
+            Lista densa → tarjetas en móvil<br/>
+            Nav → hamburger en mobile
+          </div>
+        </div>
+        <div style="padding:14px 16px;">
+          <div style="font-size:10px;font-weight:700;color:#111;margin-bottom:6px;">Espaciado</div>
+          <div style="font-size:11px;color:#6B7280;line-height:1.8;">
+            Base: 4px · Escala: 4·8·12·16·24·32·48<br/>
+            Border-radius: 6px cards · 99px pills<br/>
+            Max-width contenido: 1200px
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div style="background:#EEF2FF;border:1px solid #C7D2FE;border-radius:10px;padding:16px;text-align:center;">
+    <div style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:#4338CA;margin-bottom:4px;">¿Este sistema te parece correcto?</div>
+    <div style="font-size:12px;color:#6366F1;">Si das el OK escribo el spec completo y pasamos a implementar.</div>
+  </div>
+
+</div>
+</body>
+</html>

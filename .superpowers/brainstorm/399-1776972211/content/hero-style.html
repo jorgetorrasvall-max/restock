@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F3F4F6; font-family: 'DM Sans', sans-serif; padding: 24px; color: #111; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #6B7280; margin-bottom: 24px; }
+
+  .option-wrap { display: flex; flex-direction: column; gap: 20px; }
+  .option-card {
+    border: 2px solid #E5E7EB; border-radius: 14px; overflow: hidden;
+    cursor: pointer; transition: border-color 0.2s, box-shadow 0.2s; background: #fff;
+  }
+  .option-card:hover { border-color: #6366F1; }
+  .option-card.selected { border-color: #6366F1; box-shadow: 0 0 0 3px rgba(99,102,241,0.15); }
+  .option-label {
+    padding: 10px 16px; border-bottom: 1px solid #F3F4F6;
+    display: flex; align-items: center; gap: 10px; background: #fff;
+  }
+  .letter {
+    width: 24px; height: 24px; border-radius: 6px;
+    background: #EEF2FF; color: #6366F1;
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 13px;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .option-card.selected .letter { background: #6366F1; color: #fff; }
+  .option-title { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 13px; }
+  .option-desc { font-size: 11px; color: #6B7280; margin-left: auto; }
+
+  /* Shared nav mini */
+  .nav-mini {
+    display: flex; align-items: center; padding: 10px 20px;
+    border-bottom: 1px solid #E5E7EB; gap: 16px; font-size: 11px; color: #6B7280;
+  }
+  .logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 15px; color: #111; margin-right: auto; }
+  .nav-cta { background: #111; color: #fff; padding: 5px 12px; border-radius: 5px; font-size: 10px; font-weight: 700; }
+  .pill {
+    display: inline-flex; align-items: center; gap: 6px;
+    background: #EEF2FF; color: #6366F1; border-radius: 99px;
+    padding: 4px 12px; font-size: 10px; font-weight: 600; margin-bottom: 14px;
+  }
+  .dot { width: 6px; height: 6px; background: #6366F1; border-radius: 50%; }
+  .stat { text-align: center; }
+  .stat-n { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; color: #111; }
+  .stat-l { font-size: 10px; color: #6B7280; margin-top: 2px; }
+  .divider { width: 1px; background: #E5E7EB; }
+  .row-mini {
+    display: flex; align-items: center; gap: 8px;
+    border: 1px solid #E5E7EB; border-radius: 7px; padding: 8px 10px; margin-bottom: 6px;
+    background: #fff;
+  }
+  .thumb {
+    width: 32px; height: 32px; border-radius: 5px; flex-shrink: 0;
+    background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+    display: flex; align-items: center; justify-content: center; font-size: 14px;
+  }
+  .rname { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 11px; color: #111; }
+  .rmeta { font-size: 9px; color: #9CA3AF; }
+  .rprice { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12px; margin-left: auto; color: #111; }
+</style>
+<script>
+function pick(el) {
+  document.querySelectorAll('.option-card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</head>
+<body>
+
+<h1>¿Cómo es el hero de la landing?</h1>
+<p class="sub">La primera pantalla que ve alguien que llega a ReStock. Sistema visual: Space Grotesk + Índigo + Negro.</p>
+
+<div class="option-wrap">
+
+  <!-- A: Tipografía grande centrada + preview -->
+  <div class="option-card" onclick="pick(this)">
+    <div class="option-label">
+      <div class="letter">A</div>
+      <div class="option-title">Headline gigante centrado + preview del marketplace</div>
+      <div class="option-desc">Linear, Vercel, Notion style</div>
+    </div>
+    <div style="background:#fff;">
+      <div class="nav-mini">
+        <span class="logo">restock</span>
+        <span>Cómo funciona</span><span>Comisiones</span><span>Early Adopter</span>
+        <span class="nav-cta">Ir a la plataforma →</span>
+      </div>
+      <div style="padding:32px 24px 20px;text-align:center;">
+        <div class="pill"><div class="dot"></div>Fase beta · acceso por invitación</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:14px;color:#111;">
+          El marketplace B2B<br/>del <span style="color:#6366F1;">stock sobrante</span>
+        </div>
+        <div style="font-size:13px;color:#6B7280;max-width:380px;margin:0 auto 20px;line-height:1.6;">
+          Convierte tu inventario parado en liquidez. Compra producto barato para revender. Plataforma pensada para negocios.
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px;">
+          <button style="background:#111;color:#fff;border:none;padding:10px 20px;border-radius:7px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;cursor:default;">Entrar a la plataforma →</button>
+          <button style="background:#fff;color:#111;border:1.5px solid #E5E7EB;padding:10px 20px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:12px;cursor:default;">Ver cómo funciona</button>
+        </div>
+        <!-- Mini stats -->
+        <div style="display:flex;align-items:center;justify-content:center;gap:24px;margin-bottom:20px;">
+          <div class="stat"><div class="stat-n">Desde 3%</div><div class="stat-l">Comisión</div></div>
+          <div class="divider" style="height:32px;"></div>
+          <div class="stat"><div class="stat-n">+2.400</div><div class="stat-l">Vendedores</div></div>
+          <div class="divider" style="height:32px;"></div>
+          <div class="stat"><div class="stat-n">10.000M€</div><div class="stat-l">Stock sobrante/año</div></div>
+        </div>
+        <!-- Mini preview marketplace -->
+        <div style="background:#F8F8F8;border:1px solid #E5E7EB;border-radius:10px;padding:12px;max-width:420px;margin:0 auto;">
+          <div class="row-mini"><div class="thumb">👟</div><div><div class="rname">Nike Air Max · 200 pares</div><div class="rmeta">Calzado · Barcelona · -40%</div></div><div class="rprice">8.40€/ud</div></div>
+          <div class="row-mini"><div class="thumb">💻</div><div><div class="rname">iPad 10 refurb · 12 ud</div><div class="rmeta">Electrónica · Madrid · -32%</div></div><div class="rprice">280€/ud</div></div>
+          <div class="row-mini"><div class="thumb">👕</div><div><div class="rname">Camisetas básicas · 500 ud</div><div class="rmeta">Textil · Valencia · -53%</div></div><div class="rprice">2.10€/ud</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B: Split left text / right preview -->
+  <div class="option-card" onclick="pick(this)">
+    <div class="option-label">
+      <div class="letter">B</div>
+      <div class="option-title">Split — texto izquierda / preview derecha</div>
+      <div class="option-desc">Stripe, Shopify style</div>
+    </div>
+    <div style="background:#fff;">
+      <div class="nav-mini">
+        <span class="logo">restock</span>
+        <span>Cómo funciona</span><span>Comisiones</span><span>Early Adopter</span>
+        <span class="nav-cta">Ir a la plataforma →</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:24px;padding:28px 24px;">
+        <!-- Left -->
+        <div style="flex:1;">
+          <div class="pill" style="margin-bottom:12px;"><div class="dot"></div>Fase beta</div>
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:28px;font-weight:800;letter-spacing:-1px;line-height:1.1;margin-bottom:12px;color:#111;">
+            El marketplace B2B<br/>del <span style="color:#6366F1;">stock sobrante</span>
+          </div>
+          <div style="font-size:12px;color:#6B7280;line-height:1.6;margin-bottom:18px;">
+            Convierte tu inventario parado en liquidez. Compra producto barato para revender.
+          </div>
+          <div style="display:flex;flex-direction:column;gap:8px;margin-bottom:18px;">
+            <button style="background:#111;color:#fff;border:none;padding:10px 16px;border-radius:7px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;cursor:default;text-align:left;">Entrar a la plataforma →</button>
+            <button style="background:#fff;color:#6B7280;border:1.5px solid #E5E7EB;padding:10px 16px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:12px;cursor:default;text-align:left;">Ver cómo funciona</button>
+          </div>
+          <div style="display:flex;gap:20px;">
+            <div class="stat" style="text-align:left;"><div class="stat-n" style="font-size:16px;">3%</div><div class="stat-l">Comisión</div></div>
+            <div class="stat" style="text-align:left;"><div class="stat-n" style="font-size:16px;">+2.4K</div><div class="stat-l">Vendedores</div></div>
+            <div class="stat" style="text-align:left;"><div class="stat-n" style="font-size:16px;">10B€</div><div class="stat-l">Mercado/año</div></div>
+          </div>
+        </div>
+        <!-- Right -->
+        <div style="flex:1;background:#F8F8F8;border:1px solid #E5E7EB;border-radius:10px;padding:12px;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:#6B7280;margin-bottom:8px;text-transform:uppercase;letter-spacing:0.5px;">Últimos lotes</div>
+          <div class="row-mini"><div class="thumb">👟</div><div><div class="rname">Nike Air Max · 200 pares</div><div class="rmeta">-40% · Barcelona</div></div><div class="rprice">8.40€/ud</div></div>
+          <div class="row-mini"><div class="thumb">💻</div><div><div class="rname">iPad 10 refurb · 12 ud</div><div class="rmeta">-32% · Madrid</div></div><div class="rprice">280€/ud</div></div>
+          <div class="row-mini"><div class="thumb">👕</div><div><div class="rname">Camisetas · 500 ud</div><div class="rmeta">-53% · Valencia</div></div><div class="rprice">2.10€/ud</div></div>
+          <div style="text-align:center;margin-top:8px;">
+            <span style="font-size:10px;color:#6366F1;font-weight:600;cursor:default;">Ver todos los lotes →</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C: Full bleed negro + texto blanco -->
+  <div class="option-card" onclick="pick(this)">
+    <div class="option-label">
+      <div class="letter">C</div>
+      <div class="option-title">Hero negro full — texto blanco + preview flotante</div>
+      <div class="option-desc">Bold, editorial, premium</div>
+    </div>
+    <div style="background:#111;">
+      <div class="nav-mini" style="background:#111;border-bottom-color:#222;">
+        <span class="logo" style="color:#fff;">restock</span>
+        <span style="color:#6B7280;">Cómo funciona</span><span style="color:#6B7280;">Comisiones</span>
+        <span style="background:#6366F1;color:#fff;padding:5px 12px;border-radius:5px;font-size:10px;font-weight:700;">Ir a la plataforma →</span>
+      </div>
+      <div style="padding:32px 24px 28px;text-align:center;">
+        <div class="pill" style="background:#1E1E2E;color:#818CF8;border:1px solid #312E81;"><div class="dot" style="background:#818CF8;"></div>Fase beta · acceso por invitación</div>
+        <div style="font-family:'Space Grotesk',sans-serif;font-size:32px;font-weight:800;letter-spacing:-1.5px;line-height:1.1;margin-bottom:14px;color:#fff;">
+          El marketplace B2B<br/>del <span style="color:#818CF8;">stock sobrante</span>
+        </div>
+        <div style="font-size:13px;color:#9CA3AF;max-width:360px;margin:0 auto 20px;line-height:1.6;">
+          Convierte tu inventario parado en liquidez. Plataforma pensada para negocios, no particulares.
+        </div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:24px;">
+          <button style="background:#6366F1;color:#fff;border:none;padding:10px 20px;border-radius:7px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;cursor:default;">Entrar a la plataforma →</button>
+          <button style="background:transparent;color:#fff;border:1.5px solid #374151;padding:10px 20px;border-radius:7px;font-family:'DM Sans',sans-serif;font-weight:500;font-size:12px;cursor:default;">Ver cómo funciona</button>
+        </div>
+        <div style="background:#1A1A2E;border:1px solid #2D2D4E;border-radius:10px;padding:12px;max-width:400px;margin:0 auto;">
+          <div class="row-mini" style="background:#111;border-color:#2D2D4E;"><div class="thumb" style="background:#1E1E2E;">👟</div><div><div class="rname" style="color:#F1F5F9;">Nike Air Max · 200 pares</div><div class="rmeta" style="color:#6B7280;">-40% · Barcelona</div></div><div class="rprice" style="color:#818CF8;">8.40€/ud</div></div>
+          <div class="row-mini" style="background:#111;border-color:#2D2D4E;"><div class="thumb" style="background:#1E1E2E;">💻</div><div><div class="rname" style="color:#F1F5F9;">iPad 10 refurb · 12 ud</div><div class="rmeta" style="color:#6B7280;">-32% · Madrid</div></div><div class="rprice" style="color:#818CF8;">280€/ud</div></div>
+          <div class="row-mini" style="background:#111;border-color:#2D2D4E;"><div class="thumb" style="background:#1E1E2E;">👕</div><div><div class="rname" style="color:#F1F5F9;">Camisetas · 500 ud</div><div class="rmeta" style="color:#6B7280;">-53% · Valencia</div></div><div class="rprice" style="color:#818CF8;">2.10€/ud</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

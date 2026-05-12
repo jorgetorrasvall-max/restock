@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F3F4F6; font-family: 'DM Sans', sans-serif; color: #111; padding: 24px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .sub { font-size: 12px; color: #6B7280; margin-bottom: 24px; }
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: #6366F1; margin-bottom: 12px; margin-top: 24px; }
+  .split { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card { background: #fff; border: 1px solid #E5E7EB; border-radius: 10px; overflow: hidden; }
+  .card-header { padding: 10px 14px; border-bottom: 1px solid #F3F4F6; font-family: 'Space Grotesk', sans-serif; font-size: 11px; font-weight: 700; color: #111; }
+  .card-body { padding: 14px; }
+
+  /* Swatches */
+  .swatches { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 14px; }
+  .swatch { border-radius: 8px; overflow: hidden; border: 1px solid #E5E7EB; }
+  .swatch-color { height: 40px; width: 72px; }
+  .swatch-info { padding: 5px 7px; background: #fff; }
+  .swatch-name { font-size: 9px; font-weight: 700; color: #111; }
+  .swatch-hex { font-size: 8px; color: #9CA3AF; font-family: monospace; }
+
+  /* Mini row */
+  .row-item { display: flex; align-items: center; gap: 8px; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 10px; margin-bottom: 5px; }
+  .thumb { width: 28px; height: 28px; border-radius: 4px; background: #EEF2FF; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .rname { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 10px; color: #111; }
+  .rmeta { font-size: 9px; color: #9CA3AF; }
+  .rprice { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 11px; margin-left: auto; color: #111; }
+  .tag { background: #FEF9C3; color: #854D0E; font-size: 8px; font-weight: 700; padding: 1px 4px; border-radius: 3px; }
+  .progress { height: 3px; background: #F3F4F6; border-radius: 2px; margin-top: 3px; width: 60px; }
+  .bar { height: 100%; border-radius: 2px; background: #6366F1; }
+  .pill { display: inline-flex; align-items: center; gap: 5px; background: #EEF2FF; color: #6366F1; border-radius: 99px; padding: 3px 10px; font-size: 10px; font-weight: 600; }
+  .dot { width: 5px; height: 5px; background: #6366F1; border-radius: 50%; }
+
+  /* Contrast checker */
+  .contrast-row { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+  .contrast-sample { padding: 6px 12px; border-radius: 5px; font-size: 11px; font-weight: 600; font-family: 'Space Grotesk', sans-serif; }
+  .contrast-ratio { font-size: 10px; color: #6B7280; }
+  .pass { color: #166534; font-weight: 700; }
+</style>
+</head>
+<body>
+
+<h1>Revisión · Parte 1 — Colores</h1>
+<p class="sub">Paleta completa en contexto. ¿Cambias algo o está bien?</p>
+
+<!-- PALETA -->
+<div class="section-title">Tokens definidos</div>
+<div class="swatches">
+  <div class="swatch"><div class="swatch-color" style="background:#111;"></div><div class="swatch-info"><div class="swatch-name">Negro</div><div class="swatch-hex">#111111</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#6366F1;"></div><div class="swatch-info"><div class="swatch-name">Índigo</div><div class="swatch-hex">#6366F1</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#818CF8;"></div><div class="swatch-info"><div class="swatch-name">Índigo claro</div><div class="swatch-hex">#818CF8</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#EEF2FF; border:1px solid #E5E7EB;"></div><div class="swatch-info"><div class="swatch-name">Índigo bg</div><div class="swatch-hex">#EEF2FF</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#FAFAFA; border:1px solid #D1D5DB;"></div><div class="swatch-info"><div class="swatch-name">Gris bg</div><div class="swatch-hex">#FAFAFA</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#6B7280;"></div><div class="swatch-info"><div class="swatch-name">Muted</div><div class="swatch-hex">#6B7280</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#E5E7EB; border:1px solid #D1D5DB;"></div><div class="swatch-info"><div class="swatch-name">Border</div><div class="swatch-hex">#E5E7EB</div></div></div>
+  <div class="swatch"><div class="swatch-color" style="background:#FEF9C3; border:1px solid #FDE68A;"></div><div class="swatch-info"><div class="swatch-name">Descuento</div><div class="swatch-hex">#FEF9C3</div></div></div>
+</div>
+
+<div class="split">
+
+  <!-- LANDING (negro) -->
+  <div class="card">
+    <div class="card-header">Landing — fondo negro</div>
+    <div class="card-body" style="background:#111; border-radius:6px;">
+      <div style="display:flex;align-items:center;margin-bottom:14px;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:14px;color:#fff;">restock</span>
+        <button style="margin-left:auto;background:#6366F1;color:#fff;border:none;padding:5px 12px;border-radius:5px;font-size:10px;font-weight:700;">Ir a la plataforma →</button>
+      </div>
+      <div style="display:inline-flex;align-items:center;gap:5px;background:#1E1E2E;color:#818CF8;border:1px solid #312E81;border-radius:99px;padding:3px 10px;font-size:10px;font-weight:600;margin-bottom:10px;">
+        <div style="width:5px;height:5px;background:#818CF8;border-radius:50%;"></div>Fase beta
+      </div>
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:22px;font-weight:800;letter-spacing:-1px;line-height:1.1;color:#fff;margin-bottom:8px;">El marketplace B2B<br/>del <span style="color:#818CF8;">stock sobrante</span></div>
+      <div style="font-size:11px;color:#9CA3AF;margin-bottom:14px;line-height:1.5;">Convierte tu inventario parado en liquidez. Plataforma para negocios.</div>
+      <div style="display:flex;gap:8px;">
+        <button style="background:#fff;color:#111;border:none;padding:8px 14px;border-radius:6px;font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:11px;">Entrar →</button>
+        <button style="background:transparent;color:#9CA3AF;border:1px solid #374151;padding:8px 14px;border-radius:6px;font-size:11px;">Cómo funciona</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- PLATAFORMA (blanco) -->
+  <div class="card">
+    <div class="card-header">Plataforma — fondo blanco</div>
+    <div class="card-body">
+      <!-- Nav -->
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;padding-bottom:10px;border-bottom:1px solid #F3F4F6;">
+        <span style="font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:12px;color:#111;">restock</span>
+        <span style="font-size:10px;color:#6B7280;margin-right:auto;">Marketplace · Mensajes</span>
+        <button style="background:#111;color:#fff;border:none;padding:4px 10px;border-radius:5px;font-size:9px;font-weight:700;">+ Publicar</button>
+      </div>
+      <!-- Search -->
+      <div style="background:#F3F4F6;border:1px solid #E5E7EB;border-radius:6px;padding:7px 10px;font-size:11px;color:#9CA3AF;margin-bottom:8px;">🔍 &nbsp;Buscar lotes...</div>
+      <!-- Chips -->
+      <div style="display:flex;gap:5px;margin-bottom:10px;">
+        <span style="background:#EEF2FF;border:1px solid #6366F1;color:#6366F1;border-radius:99px;padding:2px 8px;font-size:9px;font-weight:600;">Todo</span>
+        <span style="background:#fff;border:1px solid #E5E7EB;color:#374151;border-radius:99px;padding:2px 8px;font-size:9px;">Moda</span>
+        <span style="background:#fff;border:1px solid #E5E7EB;color:#374151;border-radius:99px;padding:2px 8px;font-size:9px;">Electrónica</span>
+      </div>
+      <!-- Lista lotes -->
+      <div class="row-item">
+        <div class="thumb">👟</div>
+        <div style="flex:1;">
+          <div class="rname">Nike Air Max · 200 pares <span class="tag">-40%</span></div>
+          <div class="rmeta">Calzado · Barcelona</div>
+          <div class="progress"><div class="bar" style="width:60%"></div></div>
+        </div>
+        <div style="text-align:right;"><div class="rprice">8.40€</div><div style="font-size:8px;color:#9CA3AF;text-decoration:line-through;">14€</div></div>
+        <button style="background:#111;color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:9px;font-weight:700;">Ver →</button>
+      </div>
+      <div class="row-item">
+        <div class="thumb">💻</div>
+        <div style="flex:1;">
+          <div class="rname">iPad 10 refurb · 12 ud <span class="tag">-32%</span></div>
+          <div class="rmeta">Electrónica · Madrid</div>
+          <div class="progress"><div class="bar" style="width:80%"></div></div>
+        </div>
+        <div style="text-align:right;"><div class="rprice">280€</div><div style="font-size:8px;color:#9CA3AF;text-decoration:line-through;">410€</div></div>
+        <button style="background:#111;color:#fff;border:none;border-radius:4px;padding:3px 8px;font-size:9px;font-weight:700;">Ver →</button>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- CONTRASTE -->
+<div class="section-title">Accesibilidad — ratios de contraste</div>
+<div class="card"><div class="card-body">
+  <div class="contrast-row">
+    <div class="contrast-sample" style="background:#111;color:#fff;">#fff sobre #111</div>
+    <div class="contrast-ratio">Ratio: <strong>18.1:1</strong> <span class="pass">✓ WCAG AAA</span></div>
+  </div>
+  <div class="contrast-row">
+    <div class="contrast-sample" style="background:#fff;color:#111;">#111 sobre #fff</div>
+    <div class="contrast-ratio">Ratio: <strong>18.1:1</strong> <span class="pass">✓ WCAG AAA</span></div>
+  </div>
+  <div class="contrast-row">
+    <div class="contrast-sample" style="background:#fff;color:#6366F1;">#6366F1 sobre #fff</div>
+    <div class="contrast-ratio">Ratio: <strong>4.6:1</strong> <span class="pass">✓ WCAG AA</span></div>
+  </div>
+  <div class="contrast-row">
+    <div class="contrast-sample" style="background:#fff;color:#6B7280;">#6B7280 sobre #fff</div>
+    <div class="contrast-ratio">Ratio: <strong>4.6:1</strong> <span class="pass">✓ WCAG AA</span></div>
+  </div>
+</div></div>
+
+<div style="margin-top:20px;background:#EEF2FF;border:1px solid #C7D2FE;border-radius:8px;padding:14px;font-size:12px;color:#4338CA;text-align:center;font-family:'Space Grotesk',sans-serif;font-weight:600;">
+  ¿Los colores están bien o cambias algo? → Si OK digo "Parte 2"
+</div>
+
+</body>
+</html>

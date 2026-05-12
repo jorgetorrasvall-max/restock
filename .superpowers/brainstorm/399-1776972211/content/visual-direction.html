@@ -1,0 +1,119 @@
+<h2>¿Qué personalidad visual debe tener ReStock?</h2>
+<p class="subtitle">Elige la dirección que mejor representa cómo quieres que se sienta la plataforma</p>
+
+<div class="cards">
+
+  <!-- OPCIÓN A: Profesional B2B -->
+  <div class="card" data-choice="professional" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0F172A; padding:20px; font-family:Inter,sans-serif;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span style="color:#fff;font-weight:800;font-size:18px;">Re<span style="color:#3B82F6">Stock</span></span>
+        <span style="margin-left:auto;background:#3B82F6;color:#fff;font-size:10px;padding:2px 8px;border-radius:99px;">B2B</span>
+      </div>
+      <div style="background:#1E293B;border-radius:8px;padding:14px;margin-bottom:10px;">
+        <div style="color:#94A3B8;font-size:10px;margin-bottom:4px;">CATEGORÍA</div>
+        <div style="color:#F1F5F9;font-size:13px;font-weight:600;">Textil — 847 lotes</div>
+        <div style="color:#3B82F6;font-size:12px;margin-top:4px;">desde 2.40€/ud · stock certificado</div>
+      </div>
+      <div style="display:flex;gap:8px;">
+        <div style="flex:1;background:#1E293B;border-radius:6px;padding:10px;text-align:center;">
+          <div style="color:#3B82F6;font-size:16px;font-weight:700;">3%</div>
+          <div style="color:#64748B;font-size:9px;">comisión</div>
+        </div>
+        <div style="flex:1;background:#1E293B;border-radius:6px;padding:10px;text-align:center;">
+          <div style="color:#10B981;font-size:16px;font-weight:700;">+2.4K</div>
+          <div style="color:#64748B;font-size:9px;">vendedores</div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Profesional Oscuro</h3>
+      <p>Dark navy + azul eléctrico. Inspira confianza institucional. Para compradores serios que gestionan volúmenes grandes.</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B: Moderno Minimalista -->
+  <div class="card" data-choice="minimal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#FAFAFA;padding:20px;font-family:Inter,sans-serif;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span style="color:#111;font-weight:900;font-size:18px;letter-spacing:-1px;">restock</span>
+        <span style="margin-left:auto;background:#111;color:#fff;font-size:10px;padding:2px 8px;border-radius:4px;">beta</span>
+      </div>
+      <div style="border:1.5px solid #E5E7EB;border-radius:8px;padding:14px;margin-bottom:10px;">
+        <div style="color:#6B7280;font-size:10px;text-transform:uppercase;letter-spacing:1px;margin-bottom:6px;">Electrónica · 124 lotes</div>
+        <div style="color:#111;font-size:14px;font-weight:700;margin-bottom:2px;">iPhone 13 refurb · A-grade</div>
+        <div style="display:flex;align-items:baseline;gap:6px;margin-top:6px;">
+          <span style="font-size:20px;font-weight:900;color:#111;">312€</span>
+          <span style="color:#9CA3AF;text-decoration:line-through;font-size:12px;">480€</span>
+        </div>
+      </div>
+      <button style="width:100%;background:#111;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:600;font-size:12px;cursor:pointer;">Ver lote →</button>
+    </div>
+    <div class="card-body">
+      <h3>B — Minimalista Clean</h3>
+      <p>Blanco puro + tipografía negra bold. Maximalismo tipográfico, zero decoración. Parece una startup europea premium.</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN C: Marketplace vivo -->
+  <div class="card" data-choice="marketplace" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:20px;font-family:Inter,sans-serif;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;">
+        <span style="background:linear-gradient(135deg,#6366F1,#8B5CF6);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:800;font-size:18px;">ReStock</span>
+        <span style="margin-left:auto;background:#EEF2FF;color:#6366F1;font-size:10px;padding:2px 8px;border-radius:99px;">marketplace</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px;">
+        <div style="background:#F5F3FF;border-radius:8px;padding:10px;">
+          <div style="font-size:9px;color:#7C3AED;font-weight:600;margin-bottom:4px;">MODA</div>
+          <div style="font-size:12px;color:#1F2937;font-weight:600;">2.847 prendas</div>
+          <div style="font-size:10px;color:#6B7280;">desde 1.20€/ud</div>
+        </div>
+        <div style="background:#FFF7ED;border-radius:8px;padding:10px;">
+          <div style="font-size:9px;color:#EA580C;font-weight:600;margin-bottom:4px;">ELECTRÓNICA</div>
+          <div style="font-size:12px;color:#1F2937;font-weight:600;">412 lotes</div>
+          <div style="font-size:10px;color:#6B7280;">desde 45€/ud</div>
+        </div>
+      </div>
+      <div style="background:#F0FDF4;border-radius:8px;padding:10px;display:flex;align-items:center;gap:8px;">
+        <div style="width:8px;height:8px;background:#22C55E;border-radius:50%;"></div>
+        <span style="font-size:11px;color:#166534;font-weight:500;">847 lotes publicados esta semana</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Marketplace Vivo</h3>
+      <p>Colores por categoría, mucho movimiento visual, sensación de actividad. Como un Wallapop o Vinted pero B2B.</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN D: Premium Industrial -->
+  <div class="card" data-choice="industrial" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#18181B;padding:20px;font-family:'Inter',sans-serif;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px;">
+        <span style="color:#FAFAFA;font-weight:800;font-size:18px;letter-spacing:-0.5px;">RE<span style="color:#F59E0B">STOCK</span></span>
+        <div style="margin-left:auto;width:6px;height:6px;background:#22C55E;border-radius:50%;"></div>
+      </div>
+      <div style="border:1px solid #3F3F46;border-radius:6px;padding:12px;margin-bottom:8px;">
+        <div style="display:flex;justify-content:space-between;margin-bottom:8px;">
+          <span style="color:#71717A;font-size:10px;text-transform:uppercase;letter-spacing:1.5px;">Lote #4821</span>
+          <span style="color:#F59E0B;font-size:10px;font-weight:700;">-35%</span>
+        </div>
+        <div style="color:#FAFAFA;font-size:13px;font-weight:600;margin-bottom:6px;">Calzado deportivo · 200 pares</div>
+        <div style="display:flex;align-items:center;gap:4px;">
+          <div style="flex:1;height:3px;background:#3F3F46;border-radius:2px;">
+            <div style="width:68%;height:100%;background:#F59E0B;border-radius:2px;"></div>
+          </div>
+          <span style="color:#71717A;font-size:9px;">68% vendido</span>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;">
+        <button style="flex:1;background:#F59E0B;color:#18181B;border:none;padding:8px;border-radius:4px;font-weight:700;font-size:11px;cursor:pointer;">Comprar lote</button>
+        <button style="background:transparent;color:#71717A;border:1px solid #3F3F46;padding:8px 12px;border-radius:4px;font-size:11px;cursor:pointer;">♥</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>D — Premium Oscuro Amber</h3>
+      <p>Negro zinc + dorado ámbar. Robusto, serio, premium. Recuerda a plataformas de trading o fintech. Alta autoridad.</p>
+    </div>
+  </div>
+
+</div>

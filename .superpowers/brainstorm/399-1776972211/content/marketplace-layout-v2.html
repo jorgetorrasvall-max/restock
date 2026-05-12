@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F3F4F6; font-family: 'DM Sans', sans-serif; padding: 24px; color: #111; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+  .sub { font-size: 13px; color: #6B7280; margin-bottom: 20px; }
+  .mockup-wrap {
+    background: #fff; border: 2px solid #6366F1;
+    box-shadow: 0 0 0 3px rgba(99,102,241,0.15);
+    border-radius: 14px; overflow: hidden; padding: 16px;
+  }
+  .mini-nav {
+    background: #fff; border: 1px solid #E5E7EB; border-radius: 8px;
+    padding: 8px 12px; display: flex; align-items: center; gap: 10px;
+    margin-bottom: 10px;
+  }
+  .mini-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; color: #111; }
+  .mini-search {
+    flex: 1; background: #F3F4F6; border-radius: 6px;
+    padding: 6px 10px; font-size: 11px; color: #9CA3AF;
+    border: 1px solid #E5E7EB;
+  }
+  /* Publicar → negro */
+  .mini-btn {
+    background: #111; color: #fff;
+    border-radius: 5px; padding: 5px 12px;
+    font-size: 10px; font-weight: 700;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .chip {
+    display: inline-block; background: #fff; border: 1px solid #E5E7EB;
+    border-radius: 99px; padding: 3px 10px; font-size: 10px; color: #374151;
+  }
+  .chip.active { background: #EEF2FF; border-color: #6366F1; color: #6366F1; font-weight: 600; }
+  .row-item {
+    background: #fff; border: 1px solid #E5E7EB; border-radius: 8px;
+    padding: 10px 12px; display: flex; align-items: center; gap: 10px; margin-bottom: 6px;
+  }
+  .row-thumb {
+    width: 42px; height: 42px; border-radius: 6px; flex-shrink: 0;
+    background: linear-gradient(135deg, #EEF2FF, #E0E7FF);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 18px;
+  }
+  .row-info { flex: 1; }
+  .row-name { font-family: 'Space Grotesk', sans-serif; font-weight: 600; font-size: 12px; color: #111; }
+  .row-meta { font-size: 10px; color: #6B7280; margin-top: 2px; }
+  .row-price { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 14px; color: #111; }
+  /* Ver → negro */
+  .row-cta {
+    background: #111; color: #fff; border: none;
+    border-radius: 5px; padding: 5px 12px;
+    font-size: 10px; font-weight: 700; cursor: default;
+    font-family: 'DM Sans', sans-serif;
+    white-space: nowrap;
+  }
+  .progress { height: 3px; background: #F3F4F6; border-radius: 2px; margin-top: 5px; width: 90px; }
+  /* Barra de progreso → índigo */
+  .progress-bar { height: 100%; border-radius: 2px; background: #6366F1; }
+  .discount {
+    display: inline-block; background: #FEF9C3; color: #854D0E;
+    font-size: 9px; font-weight: 700; padding: 1px 5px; border-radius: 3px;
+    margin-left: 4px;
+  }
+  .sold-pct { font-size: 9px; color: #6366F1; font-weight: 600; margin-top: 3px; }
+</style>
+</head>
+<body>
+
+<h1>Lista densa — ajustada</h1>
+<p class="sub">Verde eliminado → negro. Publicar → negro. Progreso → índigo. ¿Así está bien o seguimos ajustando?</p>
+
+<div class="mockup-wrap">
+
+  <!-- NAV -->
+  <div class="mini-nav">
+    <span class="mini-logo">restock</span>
+    <div class="mini-search">Buscar lotes de calzado, textil, electrónica...</div>
+    <nav style="display:flex;gap:8px;font-size:11px;color:#6B7280;">
+      <span>Marketplace</span>
+      <span>Mis lotes</span>
+      <span>Mensajes</span>
+    </nav>
+    <div class="mini-btn">+ Publicar lote</div>
+  </div>
+
+  <!-- CHIPS -->
+  <div style="display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap;">
+    <span class="chip active">Todo</span>
+    <span class="chip">Moda</span>
+    <span class="chip">Electrónica</span>
+    <span class="chip">Hogar</span>
+    <span class="chip">Deporte</span>
+    <span class="chip">Alimentación</span>
+  </div>
+
+  <!-- LISTA -->
+  <div class="row-item">
+    <div class="row-thumb">👟</div>
+    <div class="row-info">
+      <div class="row-name">Nike Air Max — 200 pares <span class="discount">-40%</span></div>
+      <div class="row-meta">Calzado · Barcelona · Stock certificado</div>
+      <div class="progress"><div class="progress-bar" style="width:60%"></div></div>
+      <div class="sold-pct">60% vendido</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0;">
+      <div class="row-price">8.40€/ud</div>
+      <div style="font-size:10px;color:#9CA3AF;text-decoration:line-through;">14€</div>
+      <button class="row-cta" style="margin-top:6px;">Ver lote →</button>
+    </div>
+  </div>
+
+  <div class="row-item">
+    <div class="row-thumb">💻</div>
+    <div class="row-info">
+      <div class="row-name">iPad 10 refurb — 12 unidades <span class="discount">-32%</span></div>
+      <div class="row-meta">Electrónica · Madrid · A-grade</div>
+      <div class="progress"><div class="progress-bar" style="width:80%"></div></div>
+      <div class="sold-pct">80% vendido</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0;">
+      <div class="row-price">280€/ud</div>
+      <div style="font-size:10px;color:#9CA3AF;text-decoration:line-through;">410€</div>
+      <button class="row-cta" style="margin-top:6px;">Ver lote →</button>
+    </div>
+  </div>
+
+  <div class="row-item">
+    <div class="row-thumb">👕</div>
+    <div class="row-info">
+      <div class="row-name">Camisetas básicas — 500 unidades <span class="discount">-53%</span></div>
+      <div class="row-meta">Textil · Valencia · Nuevo · Mín. 50 ud</div>
+      <div class="progress"><div class="progress-bar" style="width:30%"></div></div>
+      <div class="sold-pct">30% vendido</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0;">
+      <div class="row-price">2.10€/ud</div>
+      <div style="font-size:10px;color:#9CA3AF;text-decoration:line-through;">4.50€</div>
+      <button class="row-cta" style="margin-top:6px;">Ver lote →</button>
+    </div>
+  </div>
+
+  <div class="row-item">
+    <div class="row-thumb">🪑</div>
+    <div class="row-info">
+      <div class="row-name">Sillas de oficina — 30 unidades <span class="discount">-49%</span></div>
+      <div class="row-meta">Hogar · Sevilla · Outlet</div>
+      <div class="progress"><div class="progress-bar" style="width:10%"></div></div>
+      <div class="sold-pct">10% vendido</div>
+    </div>
+    <div style="text-align:right;flex-shrink:0;">
+      <div class="row-price">45€/ud</div>
+      <div style="font-size:10px;color:#9CA3AF;text-decoration:line-through;">89€</div>
+      <button class="row-cta" style="margin-top:6px;">Ver lote →</button>
+    </div>
+  </div>
+
+</div>
+
+</body>
+</html>

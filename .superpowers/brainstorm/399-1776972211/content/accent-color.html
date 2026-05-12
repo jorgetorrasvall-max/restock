@@ -1,0 +1,110 @@
+<h2>¿Qué color de acento?</h2>
+<p class="subtitle">Base siempre blanco + negro bold. El acento define la personalidad. ¿Cuál encaja mejor con ReStock?</p>
+
+<div class="cards">
+
+  <!-- Verde esmeralda -->
+  <div class="card" data-choice="green" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:20px;font-family:Inter,sans-serif;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <span style="font-weight:900;font-size:18px;letter-spacing:-1px;color:#111;">restock</span>
+        <span style="margin-left:auto;background:#16A34A;color:#fff;font-size:10px;padding:3px 10px;border-radius:4px;font-weight:600;">En venta</span>
+      </div>
+      <div style="border:1.5px solid #E5E7EB;border-radius:8px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:11px;color:#6B7280;margin-bottom:4px;">Calzado deportivo · 200 pares</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+          <span style="font-size:22px;font-weight:900;color:#111;">8.40€</span>
+          <span style="color:#9CA3AF;text-decoration:line-through;font-size:13px;">14€/ud</span>
+        </div>
+        <div style="height:4px;background:#F0FDF4;border-radius:2px;overflow:hidden;margin-bottom:6px;">
+          <div style="width:60%;height:100%;background:#16A34A;border-radius:2px;"></div>
+        </div>
+        <div style="font-size:10px;color:#16A34A;font-weight:600;">60% vendido</div>
+      </div>
+      <button style="width:100%;background:#16A34A;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;">Comprar lote →</button>
+    </div>
+    <div class="card-body">
+      <h3>A — Verde Esmeralda</h3>
+      <p>Dinero, liquidez, beneficio. Muy directo para un marketplace de stock. Revolut, Robinhood, Mercado.</p>
+    </div>
+  </div>
+
+  <!-- Azul eléctrico -->
+  <div class="card" data-choice="blue" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:20px;font-family:Inter,sans-serif;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <span style="font-weight:900;font-size:18px;letter-spacing:-1px;color:#111;">restock</span>
+        <span style="margin-left:auto;background:#2563EB;color:#fff;font-size:10px;padding:3px 10px;border-radius:4px;font-weight:600;">En venta</span>
+      </div>
+      <div style="border:1.5px solid #E5E7EB;border-radius:8px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:11px;color:#6B7280;margin-bottom:4px;">Calzado deportivo · 200 pares</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+          <span style="font-size:22px;font-weight:900;color:#111;">8.40€</span>
+          <span style="color:#9CA3AF;text-decoration:line-through;font-size:13px;">14€/ud</span>
+        </div>
+        <div style="height:4px;background:#EFF6FF;border-radius:2px;overflow:hidden;margin-bottom:6px;">
+          <div style="width:60%;height:100%;background:#2563EB;border-radius:2px;"></div>
+        </div>
+        <div style="font-size:10px;color:#2563EB;font-weight:600;">60% vendido</div>
+      </div>
+      <button style="width:100%;background:#2563EB;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;">Comprar lote →</button>
+    </div>
+    <div class="card-body">
+      <h3>B — Azul Eléctrico</h3>
+      <p>Tecnología, confianza, plataforma. Linear, Notion, Stripe. SaaS puro. Muy legible y profesional.</p>
+    </div>
+  </div>
+
+  <!-- Naranja -->
+  <div class="card" data-choice="orange" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:20px;font-family:Inter,sans-serif;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <span style="font-weight:900;font-size:18px;letter-spacing:-1px;color:#111;">restock</span>
+        <span style="margin-left:auto;background:#EA580C;color:#fff;font-size:10px;padding:3px 10px;border-radius:4px;font-weight:600;">En venta</span>
+      </div>
+      <div style="border:1.5px solid #E5E7EB;border-radius:8px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:11px;color:#6B7280;margin-bottom:4px;">Calzado deportivo · 200 pares</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+          <span style="font-size:22px;font-weight:900;color:#111;">8.40€</span>
+          <span style="color:#9CA3AF;text-decoration:line-through;font-size:13px;">14€/ud</span>
+        </div>
+        <div style="height:4px;background:#FFF7ED;border-radius:2px;overflow:hidden;margin-bottom:6px;">
+          <div style="width:60%;height:100%;background:#EA580C;border-radius:2px;"></div>
+        </div>
+        <div style="font-size:10px;color:#EA580C;font-weight:600;">60% vendido</div>
+      </div>
+      <button style="width:100%;background:#EA580C;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;">Comprar lote →</button>
+    </div>
+    <div class="card-body">
+      <h3>C — Naranja Fuego</h3>
+      <p>Urgencia, oportunidad, descuento. Shopify, Amazon Outlet, Aldi. Activa el instinto de compra. Muy marketplace.</p>
+    </div>
+  </div>
+
+  <!-- Violeta -->
+  <div class="card" data-choice="violet" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#fff;padding:20px;font-family:Inter,sans-serif;border-bottom:1px solid #E5E7EB;">
+      <div style="display:flex;align-items:center;margin-bottom:16px;">
+        <span style="font-weight:900;font-size:18px;letter-spacing:-1px;color:#111;">restock</span>
+        <span style="margin-left:auto;background:#7C3AED;color:#fff;font-size:10px;padding:3px 10px;border-radius:4px;font-weight:600;">En venta</span>
+      </div>
+      <div style="border:1.5px solid #E5E7EB;border-radius:8px;padding:12px;margin-bottom:10px;">
+        <div style="font-size:11px;color:#6B7280;margin-bottom:4px;">Calzado deportivo · 200 pares</div>
+        <div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px;">
+          <span style="font-size:22px;font-weight:900;color:#111;">8.40€</span>
+          <span style="color:#9CA3AF;text-decoration:line-through;font-size:13px;">14€/ud</span>
+        </div>
+        <div style="height:4px;background:#F5F3FF;border-radius:2px;overflow:hidden;margin-bottom:6px;">
+          <div style="width:60%;height:100%;background:#7C3AED;border-radius:2px;"></div>
+        </div>
+        <div style="font-size:10px;color:#7C3AED;font-weight:600;">60% vendido</div>
+      </div>
+      <button style="width:100%;background:#7C3AED;color:#fff;border:none;padding:10px;border-radius:6px;font-weight:700;font-size:12px;cursor:pointer;">Comprar lote →</button>
+    </div>
+    <div class="card-body">
+      <h3>D — Violeta</h3>
+      <p>Diferenciación total en el sector. Moderno, audaz, memorable. Nadie en B2B industrial usa violeta — destaca solo.</p>
+    </div>
+  </div>
+
+</div>

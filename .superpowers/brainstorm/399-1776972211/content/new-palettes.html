@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;600;700;800&family=DM+Sans:wght@400;500;700&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F3F4F6; font-family: 'DM Sans', sans-serif; color: #111; padding: 24px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .sub { font-size: 12px; color: #6B7280; margin-bottom: 24px; }
+  .grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; }
+
+  .palette {
+    border: 2px solid #E5E7EB; border-radius: 12px; overflow: hidden;
+    cursor: pointer; transition: border-color .15s, box-shadow .15s;
+    background: #fff;
+  }
+  .palette:hover { border-color: #6B7280; }
+  .palette.selected { border-color: #111; box-shadow: 0 0 0 3px rgba(0,0,0,0.12); }
+  .palette.selected::after {
+    content: '✓ Seleccionada'; display: block;
+    background: #111; color: #fff; text-align: center;
+    padding: 5px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+
+  /* Hero strip */
+  .hero-strip { padding: 14px; }
+  .hs-badge { display: inline-flex; align-items: center; gap: 4px; border-radius: 99px; padding: 2px 8px; font-size: 9px; font-weight: 700; margin-bottom: 7px; }
+  .hs-title { font-family: 'Space Grotesk', sans-serif; font-size: 15px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; margin-bottom: 6px; }
+  .hs-sub { font-size: 10px; line-height: 1.4; margin-bottom: 10px; }
+  .hs-btns { display: flex; gap: 6px; }
+  .btn-p { border: none; padding: 6px 12px; border-radius: 5px; font-size: 10px; font-weight: 700; cursor: default; font-family: 'Space Grotesk', sans-serif; }
+  .btn-g { border: 1px solid; padding: 6px 12px; border-radius: 5px; font-size: 10px; font-weight: 500; cursor: default; background: transparent; }
+
+  /* Platform strip */
+  .platform-strip { padding: 12px 14px; border-top: 1px solid #F3F4F6; }
+  .pt-nav { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .pt-logo { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12px; }
+  .pt-pub { border: none; padding: 3px 8px; border-radius: 4px; font-size: 9px; font-weight: 700; cursor: default; margin-left: auto; }
+  .pt-row { display: flex; align-items: center; gap: 6px; border: 1px solid #E5E7EB; border-radius: 5px; padding: 6px 8px; margin-bottom: 4px; }
+  .pt-thumb { width: 22px; height: 22px; border-radius: 3px; display: flex; align-items: center; justify-content: center; font-size: 11px; flex-shrink: 0; }
+  .pt-name { font-family: 'Space Grotesk', sans-serif; font-size: 9px; font-weight: 600; color: #111; }
+  .pt-meta { font-size: 8px; color: #9CA3AF; }
+  .pt-price { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 10px; margin-left: auto; }
+  .pt-cta { border: none; padding: 2px 7px; border-radius: 3px; font-size: 8px; font-weight: 700; cursor: default; }
+  .pt-bar { height: 2px; border-radius: 2px; margin-top: 2px; }
+  .progress { height: 2px; background: #F3F4F6; border-radius: 2px; margin-top: 2px; }
+
+  /* Swatches row */
+  .swatches-row { display: flex; gap: 4px; padding: 10px 14px 12px; border-top: 1px solid #F3F4F6; }
+  .sw { height: 14px; flex: 1; border-radius: 3px; border: 1px solid rgba(0,0,0,0.06); }
+
+  /* Labels */
+  .palette-name { padding: 8px 14px 0; font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 12px; color: #111; }
+  .palette-desc { padding: 2px 14px 8px; font-size: 10px; color: #6B7280; }
+</style>
+<script>
+function pick(el) {
+  document.querySelectorAll('.palette').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</head>
+<body>
+
+<h1>Nuevas paletas — elige la que más encaja</h1>
+<p class="sub">Cada card muestra la paleta en la landing (arriba) y en la plataforma (abajo). Haz clic para seleccionar.</p>
+
+<div class="grid">
+
+  <!-- 1. Navy B2B -->
+  <div class="palette" onclick="pick(this)">
+    <div class="hero-strip" style="background:#0F172A;">
+      <div class="hs-badge" style="background:#1E3A5F;color:#7DD3FC;"><span style="width:4px;height:4px;background:#7DD3FC;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hs-title" style="color:#F8FAFC;">El marketplace B2B<br/>del <span style="color:#38BDF8;">stock sobrante</span></div>
+      <div class="hs-sub" style="color:#94A3B8;">Convierte tu inventario parado en liquidez real.</div>
+      <div class="hs-btns">
+        <button class="btn-p" style="background:#0369A1;color:#fff;">Entrar →</button>
+        <button class="btn-g" style="border-color:#334155;color:#94A3B8;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-strip" style="background:#F8FAFC;">
+      <div class="pt-nav">
+        <span class="pt-logo" style="color:#0F172A;">restock</span>
+        <span style="font-size:9px;color:#94A3B8;">Marketplace · Mensajes</span>
+        <button class="pt-pub" style="background:#0F172A;color:#fff;">+ Publicar</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#EFF6FF;">👟</div>
+        <div style="flex:1;"><div class="pt-name">Nike Air Max · 200 pares</div><div class="progress"><div class="pt-bar" style="width:60%;background:#0369A1;"></div></div></div>
+        <div class="pt-price">8.40€</div>
+        <button class="pt-cta" style="background:#0F172A;color:#fff;">Ver →</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#EFF6FF;">💻</div>
+        <div style="flex:1;"><div class="pt-name">iPad 10 refurb · 12 ud</div><div class="progress"><div class="pt-bar" style="width:80%;background:#0369A1;"></div></div></div>
+        <div class="pt-price">280€</div>
+        <button class="pt-cta" style="background:#0F172A;color:#fff;">Ver →</button>
+      </div>
+    </div>
+    <div class="swatches-row"><div class="sw" style="background:#0F172A;"></div><div class="sw" style="background:#0369A1;"></div><div class="sw" style="background:#38BDF8;"></div><div class="sw" style="background:#F8FAFC;border-color:#E2E8F0;"></div></div>
+    <div class="palette-name">Navy Profesional</div>
+    <div class="palette-desc">Navy oscuro + azul cielo · Corporate, institución, confianza máxima</div>
+  </div>
+
+  <!-- 2. Negro + Oro -->
+  <div class="palette" onclick="pick(this)">
+    <div class="hero-strip" style="background:#171717;">
+      <div class="hs-badge" style="background:#262626;color:#D4AF37;"><span style="width:4px;height:4px;background:#D4AF37;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hs-title" style="color:#FAFAFA;">El marketplace B2B<br/>del <span style="color:#D4AF37;">stock sobrante</span></div>
+      <div class="hs-sub" style="color:#A3A3A3;">Convierte tu inventario parado en liquidez real.</div>
+      <div class="hs-btns">
+        <button class="btn-p" style="background:#D4AF37;color:#171717;">Entrar →</button>
+        <button class="btn-g" style="border-color:#404040;color:#A3A3A3;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-strip" style="background:#fff;">
+      <div class="pt-nav">
+        <span class="pt-logo" style="color:#171717;">restock</span>
+        <span style="font-size:9px;color:#A3A3A3;">Marketplace · Mensajes</span>
+        <button class="pt-pub" style="background:#171717;color:#fff;">+ Publicar</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#FFFBEB;">👟</div>
+        <div style="flex:1;"><div class="pt-name">Nike Air Max · 200 pares</div><div class="progress"><div class="pt-bar" style="width:60%;background:#D4AF37;"></div></div></div>
+        <div class="pt-price">8.40€</div>
+        <button class="pt-cta" style="background:#171717;color:#fff;">Ver →</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#FFFBEB;">💻</div>
+        <div style="flex:1;"><div class="pt-name">iPad 10 refurb · 12 ud</div><div class="progress"><div class="pt-bar" style="width:80%;background:#D4AF37;"></div></div></div>
+        <div class="pt-price">280€</div>
+        <button class="pt-cta" style="background:#171717;color:#fff;">Ver →</button>
+      </div>
+    </div>
+    <div class="swatches-row"><div class="sw" style="background:#171717;"></div><div class="sw" style="background:#D4AF37;"></div><div class="sw" style="background:#404040;"></div><div class="sw" style="background:#FAFAFA;border-color:#E5E7EB;"></div></div>
+    <div class="palette-name">Negro + Oro</div>
+    <div class="palette-desc">Negro puro + dorado · Premium, luxury, autoridad máxima</div>
+  </div>
+
+  <!-- 3. Dark Navy + Naranja -->
+  <div class="palette" onclick="pick(this)">
+    <div class="hero-strip" style="background:#1E1B4B;">
+      <div class="hs-badge" style="background:#2D2A5E;color:#FBA94C;"><span style="width:4px;height:4px;background:#FBA94C;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hs-title" style="color:#F8FAFC;">El marketplace B2B<br/>del <span style="color:#F97316;">stock sobrante</span></div>
+      <div class="hs-sub" style="color:#A5B4FC;">Convierte tu inventario parado en liquidez real.</div>
+      <div class="hs-btns">
+        <button class="btn-p" style="background:#F97316;color:#fff;">Entrar →</button>
+        <button class="btn-g" style="border-color:#3730A3;color:#A5B4FC;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-strip" style="background:#fff;">
+      <div class="pt-nav">
+        <span class="pt-logo" style="color:#1E1B4B;">restock</span>
+        <span style="font-size:9px;color:#94A3B8;">Marketplace · Mensajes</span>
+        <button class="pt-pub" style="background:#F97316;color:#fff;">+ Publicar</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#FFF7ED;">👟</div>
+        <div style="flex:1;"><div class="pt-name">Nike Air Max · 200 pares</div><div class="progress"><div class="pt-bar" style="width:60%;background:#F97316;"></div></div></div>
+        <div class="pt-price">8.40€</div>
+        <button class="pt-cta" style="background:#1E1B4B;color:#fff;">Ver →</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#FFF7ED;">💻</div>
+        <div style="flex:1;"><div class="pt-name">iPad 10 refurb · 12 ud</div><div class="progress"><div class="pt-bar" style="width:80%;background:#F97316;"></div></div></div>
+        <div class="pt-price">280€</div>
+        <button class="pt-cta" style="background:#1E1B4B;color:#fff;">Ver →</button>
+      </div>
+    </div>
+    <div class="swatches-row"><div class="sw" style="background:#1E1B4B;"></div><div class="sw" style="background:#F97316;"></div><div class="sw" style="background:#A5B4FC;"></div><div class="sw" style="background:#fff;border-color:#E5E7EB;"></div></div>
+    <div class="palette-name">Violeta + Naranja</div>
+    <div class="palette-desc">Azul noche + naranja fuego · Energía, urgencia, marketplace activo</div>
+  </div>
+
+  <!-- 4. Fintech Oscuro + Amber -->
+  <div class="palette" onclick="pick(this)">
+    <div class="hero-strip" style="background:#0F172A;">
+      <div class="hs-badge" style="background:#1E293B;color:#F59E0B;"><span style="width:4px;height:4px;background:#F59E0B;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hs-title" style="color:#F8FAFC;">El marketplace B2B<br/>del <span style="color:#F59E0B;">stock sobrante</span></div>
+      <div class="hs-sub" style="color:#94A3B8;">Convierte tu inventario parado en liquidez real.</div>
+      <div class="hs-btns">
+        <button class="btn-p" style="background:#F59E0B;color:#0F172A;">Entrar →</button>
+        <button class="btn-g" style="border-color:#334155;color:#94A3B8;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-strip" style="background:#fff;">
+      <div class="pt-nav">
+        <span class="pt-logo" style="color:#0F172A;">restock</span>
+        <span style="font-size:9px;color:#94A3B8;">Marketplace · Mensajes</span>
+        <button class="pt-pub" style="background:#0F172A;color:#fff;">+ Publicar</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#FFFBEB;">👟</div>
+        <div style="flex:1;"><div class="pt-name">Nike Air Max · 200 pares</div><div class="progress"><div class="pt-bar" style="width:60%;background:#F59E0B;"></div></div></div>
+        <div class="pt-price">8.40€</div>
+        <button class="pt-cta" style="background:#0F172A;color:#fff;">Ver →</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#FFFBEB;">💻</div>
+        <div style="flex:1;"><div class="pt-name">iPad 10 refurb · 12 ud</div><div class="progress"><div class="pt-bar" style="width:80%;background:#F59E0B;"></div></div></div>
+        <div class="pt-price">280€</div>
+        <button class="pt-cta" style="background:#0F172A;color:#fff;">Ver →</button>
+      </div>
+    </div>
+    <div class="swatches-row"><div class="sw" style="background:#0F172A;"></div><div class="sw" style="background:#F59E0B;"></div><div class="sw" style="background:#334155;"></div><div class="sw" style="background:#F8FAFC;border-color:#E2E8F0;"></div></div>
+    <div class="palette-name">Fintech Oscuro + Amber</div>
+    <div class="palette-desc">Navy profundo + dorado ámbar · Trading, fintech, premium serio</div>
+  </div>
+
+  <!-- 5. Azul + Verde (trust) -->
+  <div class="palette" onclick="pick(this)">
+    <div class="hero-strip" style="background:#0C4A6E;">
+      <div class="hs-badge" style="background:#075985;color:#7DD3FC;"><span style="width:4px;height:4px;background:#7DD3FC;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hs-title" style="color:#F0F9FF;">El marketplace B2B<br/>del <span style="color:#22C55E;">stock sobrante</span></div>
+      <div class="hs-sub" style="color:#BAE6FD;">Convierte tu inventario parado en liquidez real.</div>
+      <div class="hs-btns">
+        <button class="btn-p" style="background:#22C55E;color:#fff;">Entrar →</button>
+        <button class="btn-g" style="border-color:#075985;color:#BAE6FD;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-strip" style="background:#F0F9FF;">
+      <div class="pt-nav">
+        <span class="pt-logo" style="color:#0C4A6E;">restock</span>
+        <span style="font-size:9px;color:#94A3B8;">Marketplace · Mensajes</span>
+        <button class="pt-pub" style="background:#0C4A6E;color:#fff;">+ Publicar</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#F0FDF4;">👟</div>
+        <div style="flex:1;"><div class="pt-name">Nike Air Max · 200 pares</div><div class="progress"><div class="pt-bar" style="width:60%;background:#22C55E;"></div></div></div>
+        <div class="pt-price">8.40€</div>
+        <button class="pt-cta" style="background:#0C4A6E;color:#fff;">Ver →</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#F0FDF4;">💻</div>
+        <div style="flex:1;"><div class="pt-name">iPad 10 refurb · 12 ud</div><div class="progress"><div class="pt-bar" style="width:80%;background:#22C55E;"></div></div></div>
+        <div class="pt-price">280€</div>
+        <button class="pt-cta" style="background:#0C4A6E;color:#fff;">Ver →</button>
+      </div>
+    </div>
+    <div class="swatches-row"><div class="sw" style="background:#0C4A6E;"></div><div class="sw" style="background:#0369A1;"></div><div class="sw" style="background:#22C55E;"></div><div class="sw" style="background:#F0F9FF;border-color:#BAE6FD;"></div></div>
+    <div class="palette-name">Azul + Verde</div>
+    <div class="palette-desc">Azul confianza + verde transacción · Seguridad, marketplace fiable</div>
+  </div>
+
+  <!-- 6. Slate oscuro + Cyan -->
+  <div class="palette" onclick="pick(this)">
+    <div class="hero-strip" style="background:#0F172A;">
+      <div class="hs-badge" style="background:#1E293B;color:#22D3EE;"><span style="width:4px;height:4px;background:#22D3EE;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hs-title" style="color:#F8FAFC;">El marketplace B2B<br/>del <span style="color:#22D3EE;">stock sobrante</span></div>
+      <div class="hs-sub" style="color:#94A3B8;">Convierte tu inventario parado en liquidez real.</div>
+      <div class="hs-btns">
+        <button class="btn-p" style="background:#06B6D4;color:#0F172A;">Entrar →</button>
+        <button class="btn-g" style="border-color:#334155;color:#94A3B8;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-strip" style="background:#fff;">
+      <div class="pt-nav">
+        <span class="pt-logo" style="color:#0F172A;">restock</span>
+        <span style="font-size:9px;color:#94A3B8;">Marketplace · Mensajes</span>
+        <button class="pt-pub" style="background:#0F172A;color:#fff;">+ Publicar</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#ECFEFF;">👟</div>
+        <div style="flex:1;"><div class="pt-name">Nike Air Max · 200 pares</div><div class="progress"><div class="pt-bar" style="width:60%;background:#06B6D4;"></div></div></div>
+        <div class="pt-price">8.40€</div>
+        <button class="pt-cta" style="background:#0F172A;color:#fff;">Ver →</button>
+      </div>
+      <div class="pt-row" style="background:#fff;">
+        <div class="pt-thumb" style="background:#ECFEFF;">💻</div>
+        <div style="flex:1;"><div class="pt-name">iPad 10 refurb · 12 ud</div><div class="progress"><div class="pt-bar" style="width:80%;background:#06B6D4;"></div></div></div>
+        <div class="pt-price">280€</div>
+        <button class="pt-cta" style="background:#0F172A;color:#fff;">Ver →</button>
+      </div>
+    </div>
+    <div class="swatches-row"><div class="sw" style="background:#0F172A;"></div><div class="sw" style="background:#06B6D4;"></div><div class="sw" style="background:#334155;"></div><div class="sw" style="background:#fff;border-color:#E5E7EB;"></div></div>
+    <div class="palette-name">Slate + Cyan</div>
+    <div class="palette-desc">Navy slate + cyan eléctrico · Tech moderno, frío, diferenciador</div>
+  </div>
+
+</div>
+
+<p style="margin-top:16px;font-size:11px;color:#9CA3AF;text-align:center;">Haz clic en la que más encaje · Si ninguna convence dime qué dirección y la ajusto</p>
+
+</body>
+</html>

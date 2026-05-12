@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=DM+Sans:wght@400;500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700;800;900&family=Syne:wght@400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F3F4F6; font-family: 'DM Sans', sans-serif; color: #111; padding: 24px; }
+  h1 { font-family: 'Space Grotesk', sans-serif; font-size: 18px; font-weight: 800; margin-bottom: 4px; }
+  .sub { font-size: 12px; color: #6B7280; margin-bottom: 24px; }
+
+  .grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+  .card {
+    border: 2px solid #E5E7EB; border-radius: 12px; overflow: hidden;
+    cursor: pointer; transition: border-color .15s, box-shadow .15s; background: #fff;
+  }
+  .card:hover { border-color: #0369A1; }
+  .card.selected { border-color: #0F172A; box-shadow: 0 0 0 3px rgba(15,23,42,0.12); }
+  .card.selected::after {
+    content: '✓ Seleccionada'; display: block;
+    background: #0F172A; color: #fff; text-align: center;
+    padding: 5px; font-size: 10px; font-weight: 700; letter-spacing: 0.5px;
+  }
+
+  /* Hero preview */
+  .hero-prev { background: #0F172A; padding: 16px; }
+  .badge { display: inline-flex; align-items: center; gap: 4px; background: #1E3A5F; color: #7DD3FC; border-radius: 99px; padding: 2px 8px; font-size: 9px; font-weight: 700; margin-bottom: 8px; }
+  .hero-title { font-size: 20px; font-weight: 800; letter-spacing: -0.5px; line-height: 1.15; color: #F8FAFC; margin-bottom: 6px; }
+  .hero-sub { font-size: 11px; color: #94A3B8; line-height: 1.5; margin-bottom: 12px; }
+  .hero-btns { display: flex; gap: 8px; }
+  .btn-p { background: #0369A1; color: #fff; border: none; padding: 7px 14px; border-radius: 6px; font-size: 11px; font-weight: 700; cursor: default; }
+  .btn-g { background: transparent; color: #94A3B8; border: 1px solid #334155; padding: 7px 14px; border-radius: 6px; font-size: 11px; cursor: default; }
+
+  /* Platform preview */
+  .platform-prev { padding: 14px; border-top: 1px solid #F3F4F6; }
+  .row { display: flex; align-items: center; gap: 8px; border: 1px solid #E5E7EB; border-radius: 6px; padding: 8px 10px; margin-bottom: 6px; }
+  .thumb { width: 28px; height: 28px; border-radius: 4px; background: #EFF6FF; display: flex; align-items: center; justify-content: center; font-size: 13px; flex-shrink: 0; }
+  .r-price { font-size: 13px; font-weight: 700; color: #0F172A; margin-left: auto; }
+  .r-cta { background: #0F172A; color: #fff; border: none; border-radius: 4px; padding: 4px 9px; font-size: 9px; font-weight: 700; cursor: default; }
+  .r-meta { font-size: 9px; color: #94A3B8; }
+  .tag { background: #FEF9C3; color: #854D0E; font-size: 8px; font-weight: 700; padding: 1px 4px; border-radius: 3px; }
+  .progress { height: 2px; background: #F3F4F6; border-radius: 2px; margin-top: 3px; }
+  .bar { height: 100%; border-radius: 2px; background: #0369A1; }
+
+  /* Label */
+  .card-label { padding: 10px 14px 0; font-weight: 700; font-size: 12px; color: #111; }
+  .card-desc { padding: 3px 14px 12px; font-size: 10px; color: #6B7280; }
+  .font-tag { display: inline-block; background: #F3F4F6; padding: 1px 6px; border-radius: 3px; font-family: monospace; font-size: 9px; color: #6B7280; }
+</style>
+<script>
+function pick(el) {
+  document.querySelectorAll('.card').forEach(c => c.classList.remove('selected'));
+  el.classList.add('selected');
+}
+</script>
+</head>
+<body>
+
+<h1>Revisión · Parte 2 — Tipografía</h1>
+<p class="sub">Space Grotesk + DM Sans vs 3 alternativas · todas con paleta Navy. ¿Confirmas o cambias?</p>
+
+<div class="grid">
+
+  <!-- A: Space Grotesk + DM Sans (actual) -->
+  <div class="card" onclick="pick(this)">
+    <div class="hero-prev">
+      <div class="badge"><span style="width:4px;height:4px;background:#7DD3FC;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hero-title" style="font-family:'Space Grotesk',sans-serif;">El marketplace B2B<br/>del <span style="color:#38BDF8;">stock sobrante</span></div>
+      <div class="hero-sub" style="font-family:'DM Sans',sans-serif;">Convierte tu inventario parado en liquidez. Plataforma pensada para negocios.</div>
+      <div class="hero-btns">
+        <button class="btn-p" style="font-family:'Space Grotesk',sans-serif;">Entrar a la plataforma →</button>
+        <button class="btn-g" style="font-family:'DM Sans',sans-serif;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-prev">
+      <div style="font-family:'Space Grotesk',sans-serif;font-size:13px;font-weight:700;color:#0F172A;margin-bottom:8px;">restock</div>
+      <div class="row">
+        <div class="thumb">👟</div>
+        <div style="flex:1;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:#111;">Nike Air Max · 200 pares <span class="tag">-40%</span></div>
+          <div class="r-meta" style="font-family:'DM Sans',sans-serif;">Calzado · Barcelona</div>
+          <div class="progress"><div class="bar" style="width:60%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Space Grotesk',sans-serif;">8.40€</div>
+        <button class="r-cta" style="font-family:'DM Sans',sans-serif;">Ver →</button>
+      </div>
+      <div class="row">
+        <div class="thumb">💻</div>
+        <div style="flex:1;">
+          <div style="font-family:'Space Grotesk',sans-serif;font-size:10px;font-weight:600;color:#111;">iPad 10 refurb · 12 ud <span class="tag">-32%</span></div>
+          <div class="r-meta" style="font-family:'DM Sans',sans-serif;">Electrónica · Madrid</div>
+          <div class="progress"><div class="bar" style="width:80%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Space Grotesk',sans-serif;">280€</div>
+        <button class="r-cta" style="font-family:'DM Sans',sans-serif;">Ver →</button>
+      </div>
+    </div>
+    <div class="card-label" style="font-family:'Space Grotesk',sans-serif;">A — Space Grotesk + DM Sans ★ actual</div>
+    <div class="card-desc">Técnico, moderno, carácter propio. Tu elección anterior.</div>
+    <div style="padding:0 14px 12px;display:flex;gap:4px;"><span class="font-tag">Space Grotesk</span><span style="font-size:10px;color:#9CA3AF;">+</span><span class="font-tag">DM Sans</span></div>
+  </div>
+
+  <!-- B: Plus Jakarta Sans (todo) -->
+  <div class="card" onclick="pick(this)">
+    <div class="hero-prev">
+      <div class="badge"><span style="width:4px;height:4px;background:#7DD3FC;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hero-title" style="font-family:'Plus Jakarta Sans',sans-serif;">El marketplace B2B<br/>del <span style="color:#38BDF8;">stock sobrante</span></div>
+      <div class="hero-sub" style="font-family:'Plus Jakarta Sans',sans-serif;">Convierte tu inventario parado en liquidez. Plataforma pensada para negocios.</div>
+      <div class="hero-btns">
+        <button class="btn-p" style="font-family:'Plus Jakarta Sans',sans-serif;">Entrar a la plataforma →</button>
+        <button class="btn-g" style="font-family:'Plus Jakarta Sans',sans-serif;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-prev">
+      <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:13px;font-weight:700;color:#0F172A;margin-bottom:8px;">restock</div>
+      <div class="row">
+        <div class="thumb">👟</div>
+        <div style="flex:1;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:600;color:#111;">Nike Air Max · 200 pares <span class="tag">-40%</span></div>
+          <div class="r-meta" style="font-family:'Plus Jakarta Sans',sans-serif;">Calzado · Barcelona</div>
+          <div class="progress"><div class="bar" style="width:60%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Plus Jakarta Sans',sans-serif;">8.40€</div>
+        <button class="r-cta" style="font-family:'Plus Jakarta Sans',sans-serif;">Ver →</button>
+      </div>
+      <div class="row">
+        <div class="thumb">💻</div>
+        <div style="flex:1;">
+          <div style="font-family:'Plus Jakarta Sans',sans-serif;font-size:10px;font-weight:600;color:#111;">iPad 10 refurb · 12 ud <span class="tag">-32%</span></div>
+          <div class="r-meta" style="font-family:'Plus Jakarta Sans',sans-serif;">Electrónica · Madrid</div>
+          <div class="progress"><div class="bar" style="width:80%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Plus Jakarta Sans',sans-serif;">280€</div>
+        <button class="r-cta" style="font-family:'Plus Jakarta Sans',sans-serif;">Ver →</button>
+      </div>
+    </div>
+    <div class="card-label" style="font-family:'Plus Jakarta Sans',sans-serif;">B — Plus Jakarta Sans</div>
+    <div class="card-desc">Una sola fuente, muy limpio. Amigable y moderno. Alternativa de Inter.</div>
+    <div style="padding:0 14px 12px;"><span class="font-tag">Plus Jakarta Sans</span></div>
+  </div>
+
+  <!-- C: Inter (clásico) -->
+  <div class="card" onclick="pick(this)">
+    <div class="hero-prev">
+      <div class="badge"><span style="width:4px;height:4px;background:#7DD3FC;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hero-title" style="font-family:'Inter',sans-serif;letter-spacing:-1px;">El marketplace B2B<br/>del <span style="color:#38BDF8;">stock sobrante</span></div>
+      <div class="hero-sub" style="font-family:'Inter',sans-serif;">Convierte tu inventario parado en liquidez. Plataforma pensada para negocios.</div>
+      <div class="hero-btns">
+        <button class="btn-p" style="font-family:'Inter',sans-serif;">Entrar a la plataforma →</button>
+        <button class="btn-g" style="font-family:'Inter',sans-serif;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-prev">
+      <div style="font-family:'Inter',sans-serif;font-size:13px;font-weight:700;color:#0F172A;margin-bottom:8px;">restock</div>
+      <div class="row">
+        <div class="thumb">👟</div>
+        <div style="flex:1;">
+          <div style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#111;">Nike Air Max · 200 pares <span class="tag">-40%</span></div>
+          <div class="r-meta" style="font-family:'Inter',sans-serif;">Calzado · Barcelona</div>
+          <div class="progress"><div class="bar" style="width:60%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Inter',sans-serif;">8.40€</div>
+        <button class="r-cta" style="font-family:'Inter',sans-serif;">Ver →</button>
+      </div>
+      <div class="row">
+        <div class="thumb">💻</div>
+        <div style="flex:1;">
+          <div style="font-family:'Inter',sans-serif;font-size:10px;font-weight:600;color:#111;">iPad 10 refurb · 12 ud <span class="tag">-32%</span></div>
+          <div class="r-meta" style="font-family:'Inter',sans-serif;">Electrónica · Madrid</div>
+          <div class="progress"><div class="bar" style="width:80%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Inter',sans-serif;">280€</div>
+        <button class="r-cta" style="font-family:'Inter',sans-serif;">Ver →</button>
+      </div>
+    </div>
+    <div class="card-label" style="font-family:'Inter',sans-serif;">C — Inter</div>
+    <div class="card-desc">El estándar de la industria. Zero ruido. Notion, Linear, Vercel.</div>
+    <div style="padding:0 14px 12px;"><span class="font-tag">Inter</span></div>
+  </div>
+
+  <!-- D: Syne + DM Sans (editorial) -->
+  <div class="card" onclick="pick(this)">
+    <div class="hero-prev">
+      <div class="badge"><span style="width:4px;height:4px;background:#7DD3FC;border-radius:50%;display:inline-block;"></span>Fase beta</div>
+      <div class="hero-title" style="font-family:'Syne',sans-serif;letter-spacing:-0.5px;">El marketplace B2B<br/>del <span style="color:#38BDF8;">stock sobrante</span></div>
+      <div class="hero-sub" style="font-family:'DM Sans',sans-serif;">Convierte tu inventario parado en liquidez. Plataforma pensada para negocios.</div>
+      <div class="hero-btns">
+        <button class="btn-p" style="font-family:'Syne',sans-serif;">Entrar a la plataforma →</button>
+        <button class="btn-g" style="font-family:'DM Sans',sans-serif;">Cómo funciona</button>
+      </div>
+    </div>
+    <div class="platform-prev">
+      <div style="font-family:'Syne',sans-serif;font-size:13px;font-weight:700;color:#0F172A;margin-bottom:8px;">restock</div>
+      <div class="row">
+        <div class="thumb">👟</div>
+        <div style="flex:1;">
+          <div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:#111;">Nike Air Max · 200 pares <span class="tag">-40%</span></div>
+          <div class="r-meta" style="font-family:'DM Sans',sans-serif;">Calzado · Barcelona</div>
+          <div class="progress"><div class="bar" style="width:60%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Syne',sans-serif;">8.40€</div>
+        <button class="r-cta" style="font-family:'DM Sans',sans-serif;">Ver →</button>
+      </div>
+      <div class="row">
+        <div class="thumb">💻</div>
+        <div style="flex:1;">
+          <div style="font-family:'Syne',sans-serif;font-size:10px;font-weight:700;color:#111;">iPad 10 refurb · 12 ud <span class="tag">-32%</span></div>
+          <div class="r-meta" style="font-family:'DM Sans',sans-serif;">Electrónica · Madrid</div>
+          <div class="progress"><div class="bar" style="width:80%"></div></div>
+        </div>
+        <div class="r-price" style="font-family:'Syne',sans-serif;">280€</div>
+        <button class="r-cta" style="font-family:'DM Sans',sans-serif;">Ver →</button>
+      </div>
+    </div>
+    <div class="card-label" style="font-family:'Syne',sans-serif;">D — Syne + DM Sans</div>
+    <div class="card-desc">Syne tiene carácter editorial único. Más audaz que Space Grotesk.</div>
+    <div style="padding:0 14px 12px;display:flex;gap:4px;"><span class="font-tag">Syne</span><span style="font-size:10px;color:#9CA3AF;">+</span><span class="font-tag">DM Sans</span></div>
+  </div>
+
+</div>
+
+<p style="margin-top:14px;font-size:11px;color:#9CA3AF;text-align:center;">A es tu elección anterior · ¿la confirmas o cambias a otra?</p>
+
+</body>
+</html>

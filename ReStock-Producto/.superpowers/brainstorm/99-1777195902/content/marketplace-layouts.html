@@ -1,0 +1,295 @@
+<h2>Explorar lotes — 3 enfoques de layout</h2>
+<p class="subtitle">¿Cuál se acerca más a lo que tienes en mente?</p>
+
+<div class="cards" style="grid-template-columns: 1fr 1fr 1fr; gap: 20px;">
+
+  <!-- OPCIÓN A -->
+  <div class="card" data-choice="a" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 16px; background: #FDFBF7; border-bottom: 1px solid #E8E4DC;">
+      <!-- Nav -->
+      <div style="background:#1A3C6E; height:28px; border-radius:4px; margin-bottom:8px; display:flex; align-items:center; padding:0 8px;">
+        <span style="color:white; font-size:9px; font-style:italic; font-weight:600;">ReStock</span>
+        <div style="margin-left:auto; display:flex; gap:6px;">
+          <div style="width:36px; height:10px; background:rgba(255,255,255,0.3); border-radius:2px;"></div>
+          <div style="width:48px; height:10px; background:#E8A020; border-radius:2px;"></div>
+        </div>
+      </div>
+      <!-- Header con búsqueda inline -->
+      <div style="display:flex; align-items:center; gap:6px; margin-bottom:8px;">
+        <div style="font-size:10px; font-weight:700; color:#1A1A1A; font-style:italic;">Explorar lotes</div>
+        <div style="flex:1; height:18px; background:white; border:1px solid #E8E4DC; border-radius:3px; display:flex; align-items:center; padding:0 6px;">
+          <span style="font-size:7px; color:#9CA3AF;">Buscar lotes...</span>
+        </div>
+        <div style="width:50px; height:18px; background:white; border:1px solid #E8E4DC; border-radius:3px;"></div>
+      </div>
+      <!-- Layout: sidebar + grid -->
+      <div style="display:flex; gap:8px;">
+        <!-- Sidebar compacta -->
+        <div style="width:60px; flex-shrink:0;">
+          <div style="font-size:6px; font-weight:700; color:#5C5C5C; text-transform:uppercase; margin-bottom:4px;">Categoría</div>
+          <div style="display:flex; flex-direction:column; gap:2px; margin-bottom:8px;">
+            <div style="height:10px; background:#1A3C6E; border-radius:2px; padding:0 4px; display:flex; align-items:center;"><span style="font-size:6px; color:white;">Moda</span></div>
+            <div style="height:10px; background:white; border:1px solid #E8E4DC; border-radius:2px;"></div>
+            <div style="height:10px; background:white; border:1px solid #E8E4DC; border-radius:2px;"></div>
+          </div>
+          <div style="font-size:6px; font-weight:700; color:#5C5C5C; text-transform:uppercase; margin-bottom:4px;">Condición</div>
+          <div style="display:flex; flex-direction:column; gap:2px; margin-bottom:8px;">
+            <div style="height:9px; background:#ECFDF5; border-radius:2px; display:flex; align-items:center; padding:0 3px;"><span style="font-size:5px; color:#059669;">● Nuevo</span></div>
+            <div style="height:9px; background:#EFF6FF; border-radius:2px; display:flex; align-items:center; padding:0 3px;"><span style="font-size:5px; color:#0284c7;">● Bueno</span></div>
+          </div>
+          <div style="font-size:6px; font-weight:700; color:#5C5C5C; text-transform:uppercase; margin-bottom:4px;">Precio</div>
+          <div style="display:flex; flex-wrap:wrap; gap:2px;">
+            <div style="height:9px; padding:0 4px; background:white; border:1px solid #E8E4DC; border-radius:2px; display:flex; align-items:center;"><span style="font-size:5px;">&lt;500€</span></div>
+            <div style="height:9px; padding:0 4px; background:white; border:1px solid #E8E4DC; border-radius:2px; display:flex; align-items:center;"><span style="font-size:5px;">&lt;1k</span></div>
+          </div>
+        </div>
+        <!-- Grid 3 col -->
+        <div style="flex:1; display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px;">
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:30px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:6px; background:#E8E4DC; border-radius:2px; width:60%; margin-bottom:4px;"></div>
+              <div style="height:8px; font-size:7px; font-weight:700; color:#1A3C6E;">850€</div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:30px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:6px; background:#E8E4DC; border-radius:2px; width:60%; margin-bottom:4px;"></div>
+              <div style="height:8px; font-size:7px; font-weight:700; color:#1A3C6E;">1.200€</div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:30px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:6px; background:#E8E4DC; border-radius:2px; width:60%; margin-bottom:4px;"></div>
+              <div style="height:8px; font-size:7px; font-weight:700; color:#1A3C6E;">450€</div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:30px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:6px; background:#E8E4DC; border-radius:2px; width:60%; margin-bottom:4px;"></div>
+              <div style="height:8px; font-size:7px; font-weight:700; color:#1A3C6E;">320€</div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:30px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:6px; background:#E8E4DC; border-radius:2px; width:60%; margin-bottom:4px;"></div>
+              <div style="height:8px; font-size:7px; font-weight:700; color:#1A3C6E;">2.100€</div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:30px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:6px; background:#E8E4DC; border-radius:2px; width:60%; margin-bottom:4px;"></div>
+              <div style="height:8px; font-size:7px; font-weight:700; color:#1A3C6E;">780€</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>A — Sidebar + Grid denso</h3>
+      <p>Sidebar fija a la izquierda, search en el header, grid de 3 columnas. Máxima densidad de productos. Similar a lo actual pero más limpio y compacto.</p>
+      <p style="margin-top:6px; font-size:0.8em; color:#059669;">✓ Más productos visibles · ✓ Familiar para compradores B2B</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN B -->
+  <div class="card" data-choice="b" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 16px; background: #FDFBF7; border-bottom: 1px solid #E8E4DC;">
+      <!-- Nav -->
+      <div style="background:#1A3C6E; height:28px; border-radius:4px; margin-bottom:8px; display:flex; align-items:center; padding:0 8px;">
+        <span style="color:white; font-size:9px; font-style:italic; font-weight:600;">ReStock</span>
+        <div style="margin-left:auto; display:flex; gap:6px;">
+          <div style="width:36px; height:10px; background:rgba(255,255,255,0.3); border-radius:2px;"></div>
+          <div style="width:48px; height:10px; background:#E8A020; border-radius:2px;"></div>
+        </div>
+      </div>
+      <!-- Hero search centrado -->
+      <div style="text-align:center; padding: 8px 0 10px;">
+        <div style="font-size:10px; font-weight:700; color:#1A1A1A; font-style:italic; margin-bottom:6px;">Explorar lotes</div>
+        <div style="height:22px; background:white; border:1.5px solid #1A3C6E; border-radius:20px; display:flex; align-items:center; padding:0 10px; max-width:200px; margin:0 auto;">
+          <span style="font-size:7px; color:#9CA3AF;">🔍 Buscar por producto, categoría...</span>
+        </div>
+      </div>
+      <!-- Toolbar de filtros horizontal -->
+      <div style="display:flex; gap:4px; margin-bottom:8px; padding-bottom:6px; border-bottom:1px solid #E8E4DC; flex-wrap:wrap;">
+        <div style="height:14px; padding:0 6px; background:#1A3C6E; border-radius:10px; display:flex; align-items:center;"><span style="font-size:6px; color:white;">Moda ✕</span></div>
+        <div style="height:14px; padding:0 6px; background:white; border:1px solid #E8E4DC; border-radius:10px; display:flex; align-items:center;"><span style="font-size:6px; color:#5C5C5C;">+ Condición</span></div>
+        <div style="height:14px; padding:0 6px; background:white; border:1px solid #E8E4DC; border-radius:10px; display:flex; align-items:center;"><span style="font-size:6px; color:#5C5C5C;">+ Precio</span></div>
+        <div style="margin-left:auto; height:14px; padding:0 6px; background:white; border:1px solid #E8E4DC; border-radius:10px; display:flex; align-items:center;"><span style="font-size:6px; color:#5C5C5C;">Ordenar ▾</span></div>
+      </div>
+      <!-- Grid 2 col más espacioso -->
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px;">
+        <div style="background:white; border:1px solid #E8E4DC; border-radius:5px; overflow:hidden;">
+          <div style="height:40px; background:#E8E4DC;"></div>
+          <div style="padding:5px;">
+            <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+            <div style="height:6px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:5px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:8px; font-weight:700; color:#1A3C6E;">850€</span>
+              <div style="height:10px; width:40px; background:#E8A020; border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:white; border:1px solid #E8E4DC; border-radius:5px; overflow:hidden;">
+          <div style="height:40px; background:#E8E4DC;"></div>
+          <div style="padding:5px;">
+            <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+            <div style="height:6px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:5px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:8px; font-weight:700; color:#1A3C6E;">1.200€</span>
+              <div style="height:10px; width:40px; background:#E8A020; border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:white; border:1px solid #E8E4DC; border-radius:5px; overflow:hidden;">
+          <div style="height:40px; background:#E8E4DC;"></div>
+          <div style="padding:5px;">
+            <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+            <div style="height:6px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:5px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:8px; font-weight:700; color:#1A3C6E;">450€</span>
+              <div style="height:10px; width:40px; background:#E8A020; border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+        <div style="background:white; border:1px solid #E8E4DC; border-radius:5px; overflow:hidden;">
+          <div style="height:40px; background:#E8E4DC;"></div>
+          <div style="padding:5px;">
+            <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+            <div style="height:6px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:5px;"></div>
+            <div style="display:flex; justify-content:space-between; align-items:center;">
+              <span style="font-size:8px; font-weight:700; color:#1A3C6E;">320€</span>
+              <div style="height:10px; width:40px; background:#E8A020; border-radius:2px;"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>B — Hero search + filtros en toolbar</h3>
+      <p>Búsqueda grande centrada al entrar, filtros como chips en toolbar horizontal (sin sidebar). Grid de 2 col más holgado. Estilo Etsy / Airbnb.</p>
+      <p style="margin-top:6px; font-size:0.8em; color:#0284c7;">✓ Búsqueda muy prominente · ✗ Menos productos por pantalla</p>
+    </div>
+  </div>
+
+  <!-- OPCIÓN C -->
+  <div class="card" data-choice="c" onclick="toggleSelect(this)">
+    <div class="card-image" style="padding: 16px; background: #FDFBF7; border-bottom: 1px solid #E8E4DC;">
+      <!-- Nav -->
+      <div style="background:#1A3C6E; height:28px; border-radius:4px; margin-bottom:8px; display:flex; align-items:center; padding:0 8px;">
+        <span style="color:white; font-size:9px; font-style:italic; font-weight:600;">ReStock</span>
+        <div style="margin-left:auto; display:flex; gap:6px;">
+          <div style="width:36px; height:10px; background:rgba(255,255,255,0.3); border-radius:2px;"></div>
+          <div style="width:48px; height:10px; background:#E8A020; border-radius:2px;"></div>
+        </div>
+      </div>
+      <!-- Header -->
+      <div style="margin-bottom:8px;">
+        <div style="font-size:10px; font-weight:700; color:#1A1A1A; font-style:italic; margin-bottom:5px;">Explorar lotes</div>
+        <div style="height:20px; background:white; border:1px solid #E8E4DC; border-radius:4px; display:flex; align-items:center; padding:0 8px;">
+          <span style="font-size:7px; color:#9CA3AF;">Buscar lotes...</span>
+          <div style="margin-left:auto; width:30px; height:12px; background:#1A3C6E; border-radius:2px;"></div>
+        </div>
+      </div>
+      <!-- Chips de cat horizontal -->
+      <div style="display:flex; gap:3px; margin-bottom:8px; overflow:hidden;">
+        <div style="height:13px; padding:0 5px; background:#1A3C6E; border-radius:10px; display:flex; align-items:center; flex-shrink:0;"><span style="font-size:6px; color:white; white-space:nowrap;">Todos</span></div>
+        <div style="height:13px; padding:0 5px; background:white; border:1px solid #E8E4DC; border-radius:10px; display:flex; align-items:center; flex-shrink:0;"><span style="font-size:6px; color:#5C5C5C; white-space:nowrap;">Moda</span></div>
+        <div style="height:13px; padding:0 5px; background:white; border:1px solid #E8E4DC; border-radius:10px; display:flex; align-items:center; flex-shrink:0;"><span style="font-size:6px; color:#5C5C5C; white-space:nowrap;">Electrónica</span></div>
+        <div style="height:13px; padding:0 5px; background:white; border:1px solid #E8E4DC; border-radius:10px; display:flex; align-items:center; flex-shrink:0;"><span style="font-size:6px; color:#5C5C5C; white-space:nowrap;">Hogar</span></div>
+      </div>
+      <!-- Layout: sidebar editorial + grid -->
+      <div style="display:flex; gap:8px;">
+        <!-- Sidebar editorial -->
+        <div style="width:58px; flex-shrink:0;">
+          <div style="font-size:7px; font-weight:600; color:#1A1A1A; font-style:italic; margin-bottom:5px;">Condición</div>
+          <div style="display:flex; flex-direction:column; gap:2px; margin-bottom:7px;">
+            <div style="height:10px; background:#ECFDF5; border:1px solid #059669; border-radius:2px; display:flex; align-items:center; padding:0 3px;">
+              <div style="width:5px; height:5px; border-radius:50%; background:#059669; margin-right:3px;"></div>
+              <span style="font-size:5px; color:#059669;">Nuevo</span>
+            </div>
+            <div style="height:10px; background:white; border:1px solid #E8E4DC; border-radius:2px; display:flex; align-items:center; padding:0 3px;">
+              <div style="width:5px; height:5px; border-radius:1px; border:1px solid #E8E4DC; margin-right:3px;"></div>
+              <span style="font-size:5px; color:#5C5C5C;">Sin etiq.</span>
+            </div>
+            <div style="height:10px; background:white; border:1px solid #E8E4DC; border-radius:2px; display:flex; align-items:center; padding:0 3px;">
+              <div style="width:5px; height:5px; border-radius:1px; border:1px solid #E8E4DC; margin-right:3px;"></div>
+              <span style="font-size:5px; color:#5C5C5C;">Buen est.</span>
+            </div>
+          </div>
+          <div style="font-size:7px; font-weight:600; color:#1A1A1A; font-style:italic; margin-bottom:5px;">Precio</div>
+          <div style="display:flex; flex-direction:column; gap:2px;">
+            <div style="height:10px; padding:0 4px; background:white; border:1px solid #E8E4DC; border-radius:2px; display:flex; align-items:center;"><span style="font-size:5px;">Hasta 500€</span></div>
+            <div style="height:10px; padding:0 4px; background:white; border:1px solid #E8E4DC; border-radius:2px; display:flex; align-items:center;"><span style="font-size:5px;">Hasta 1.000€</span></div>
+          </div>
+        </div>
+        <!-- Grid 2x2 equilibrado -->
+        <div style="flex:1; display:grid; grid-template-columns:1fr 1fr; gap:4px;">
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:35px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:5px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:4px;"></div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:8px; font-weight:700; color:#1A3C6E;">850€</span>
+                <span style="font-size:5px; color:#5C5C5C;">200 uds.</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:35px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:5px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:4px;"></div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:8px; font-weight:700; color:#1A3C6E;">1.200€</span>
+                <span style="font-size:5px; color:#5C5C5C;">50 uds.</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:35px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:5px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:4px;"></div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:8px; font-weight:700; color:#1A3C6E;">450€</span>
+                <span style="font-size:5px; color:#5C5C5C;">320 uds.</span>
+              </div>
+            </div>
+          </div>
+          <div style="background:white; border:1px solid #E8E4DC; border-radius:4px; overflow:hidden;">
+            <div style="height:35px; background:#E8E4DC;"></div>
+            <div style="padding:4px;">
+              <div style="height:7px; background:#E8E4DC; border-radius:2px; margin-bottom:3px;"></div>
+              <div style="height:5px; background:#E8E4DC; border-radius:2px; width:70%; margin-bottom:4px;"></div>
+              <div style="display:flex; align-items:center; justify-content:space-between;">
+                <span style="font-size:8px; font-weight:700; color:#1A3C6E;">320€</span>
+                <span style="font-size:5px; color:#5C5C5C;">80 uds.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>C — Categorías en pills + sidebar editorial</h3>
+      <p>Pills de categoría horizontales al entrar (sin sidebar de cats), sidebar solo para condición y precio. Grid 2 col equilibrado. Mezcla densidad y respiro.</p>
+      <p style="margin-top:6px; font-size:0.8em; color:#d97706;">✓ Navegación rápida · ✓ Balance entre A y B</p>
+    </div>
+  </div>
+
+</div>
+
+<p class="subtitle" style="margin-top:20px; text-align:center;">Haz clic para seleccionar. También puedes combinar ideas en el terminal.</p>
